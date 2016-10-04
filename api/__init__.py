@@ -59,7 +59,10 @@ if config["ssl"].getboolean("enabled"):
 
 db = dbConnector.from_object(config["database"])
 
-auth = Auth(db, config['api']['secret_key'])
+from .session import SessionManager
+
+session_manager = SessionManager()
+auth = Auth(db, session_manager, config['api']['secret_key'])
 
 # Configure Flask server from config object
 app.config.from_object(config)
