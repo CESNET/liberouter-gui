@@ -1,3 +1,4 @@
+![Liberouter Logo](http://dmon100.liberouter.org/img/lr_logo_2.png "Liberouter logo")
 # Liberouter GUI
 
 Wrapper for out applications. Currently preparing for Nemea Dashboard and SecurityCloud GUI.
