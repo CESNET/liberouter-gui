@@ -33,7 +33,6 @@ from api.dbConnector import dbConnector
 
 # Flask libraries
 from flask import escape, request, Response, abort
-from flask.ext.cors import CORS
 import ssl
 
 # System tools
@@ -67,8 +66,14 @@ auth = Auth(db, session_manager, config['api']['secret_key'])
 # Configure Flask server from config object
 app.config.from_object(config)
 
-# Enable Cross-Origin
-CORS(app)
+if config['api']['cors']:
+	print("# CORS enabled")
+	try:
+		from flask.ext.cors import CORS
+		CORS(app)
+	except:
+		print("# ERROR: failed to initialize CORS. Is it installed?")
+		exit(1)
 
 @app.route('/')
 def routes():
