@@ -47,6 +47,8 @@ from time import mktime
 from bson import json_util
 from bson.objectid import ObjectId
 
+print("# Setting up the application")
+
 """
 Load user config specified by an argument or in default path.
 """
@@ -56,14 +58,19 @@ if config["ssl"].getboolean("enabled"):
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
 
+print("# Connecting to MongoDB")
 db = dbConnector.from_object(config["database"])
 
 from .session import SessionManager
 
+print("# Session manager setting up")
 session_manager = SessionManager()
+
+print("# Authorization module setting up")
 auth = Auth(db, session_manager, config['api']['secret_key'])
 
 # Configure Flask server from config object
+print("# Configuring server app")
 app.config.from_object(config)
 
 if config['api']['cors']:
@@ -101,12 +108,14 @@ from api.module import Module
 
 modules = pkgutil.iter_modules([config.module_path])
 
+print("# Begin importing modules")
+
 for importer, mod_name, _ in modules:
 	if mod_name not in sys.modules:
 		loaded_mod = __import__("api." +
 				config['api']['modules'].split('/')[-1] + "." +  mod_name,
 				fromlist=[mod_name])
-		print("Imported module \"" + mod_name + "\"")
+		print("   > Imported module \"" + mod_name + "\"")
 
 		for obj in vars(loaded_mod).values():
 			if isinstance(obj, Module):
