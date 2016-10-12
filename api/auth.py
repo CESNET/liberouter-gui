@@ -5,8 +5,22 @@ from flask import request, abort
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 
-from api import config
 from .user import User
+
+class AuthException(Exception):
+	status_code = 404
+
+	def __init__(self, message, status_code=None, payload=None):
+		Exception.__init__(self)
+		self.message = message
+		if status_code is not None:
+			self.status_code=status_code
+		self.payload = payload
+
+	def to_dict(self):
+		rv = dict(self.payload or ())
+		rv['message'] = self.message
+		return rv
 
 class Auth(object):
 	errors = {
@@ -15,8 +29,6 @@ class Auth(object):
 		'2' : 'Expired session.',
 		'3' : 'Authorization header is missing.'
 	}
-	db = None
-	secret_key = ""
 
 	def __init__(self, db, session_manager, secret_key):
 		self.db = db
@@ -24,7 +36,7 @@ class Auth(object):
 		self.secret_key = secret_key
 
 	def check_password(self, password, hash):
-		return bcrypt.checkpw(password, hash)
+		return bcrypt.checkpw(password.encode('utf8'), hash.encode('utf8'))
 
 	def create_hash(self, password):
 		return bcrypt.hashpw(password, bcrypt.gensalt())
@@ -37,17 +49,21 @@ class Auth(object):
 		res = json_util.dumps(msg)
 		return msg
 
-	def login(self, username, password):
+	def login(self, user):
 		query = {
-			'username' : username
+			'username' : user.username
 		}
+
 		res = self.db.users.find_one(query)
 
 		if not res:
-			return(0)
+			raise AuthException("User not found")
 
-		if not self.check_password(password, res['password']):
-			return(1)
+		if not self.check_password(user.password, res['password']):
+			raise AuthException("Password mismatch")
+
+		# Remove password field from the user
+		del res['password']
 
 		return(res)
 
