@@ -19,8 +19,14 @@ class User(object):
 	role = Role.guest
 	config = {}
 
-	def __init__(self, email, user_id=None, config=None, role=None):
-		self.email = email
+	def __init__(self,
+			username,
+			user_id=None,
+			config=None,
+			role=None,
+			password="",
+			email=""):
+		self.username = username
 		self.user_id = user_id
 
 		if config is not None:
@@ -29,3 +35,5 @@ class User(object):
 		if role is not None:
 			self.role = role
 
+		self.password = password
+		self.email = email
