@@ -1,4 +1,5 @@
 import configparser
+import argparse
 import sys
 from api import app
 
@@ -12,7 +13,9 @@ class Config(object):
 
 	version = '1.0'
 
-	def __init__(self, args, base_path=None):
+	def __init__(self, base_path=None):
+		args = self.parse_arguments()
+
 		"""
 		Load configuration
 		"""
@@ -29,7 +32,7 @@ class Config(object):
 
 		self.version = self.config["api"].get("version", "v1")
 
-		self.module_path = base_path + self.config["api"].get("modules", "/modules")
+		self.config.set("api", "module_path", base_path + self.config["api"].get("modules", "/modules"))
 
 		self.create_urls()
 
@@ -45,3 +48,29 @@ class Config(object):
 
 	def __getitem__(self, key):
 		return self.config[key]
+
+
+	def parse_arguments(self):
+		"""
+		Handle arguments
+		"""
+		parser = argparse.ArgumentParser(description="""REST API CESNET 2016.\n\n
+				Authors: Petr Stehlik <stehlik@cesnet.cz>""", add_help=False)
+
+		parser.add_argument('--config', '-c', default='./config.ini', dest='config',
+				help='Load given configuration file')
+		parser.add_argument('--help', '-h', help="Print this help", action='store_true',
+				dest='help')
+
+		try:
+			args = vars(parser.parse_args())
+
+			if args['help']:
+				parser.print_help()
+				exit(0)
+		except:
+			print("Failed to parse arguments")
+			exit(1)
+
+		return args
+
