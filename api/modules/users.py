@@ -1,36 +1,61 @@
+import bcrypt
+from flask import request
+from bson import json_util
+
 from api import auth, db
 from api.module import Module
+from api.user import User
+from api.role import Role
 
 users = Module('users', __name__, url_prefix='/users')
 
-@auth.required
+def count_users():
+	return db.users.count()
+
+@auth.required()
 def get_users():
 	res = list(db.users.find())
 
 	# Remove password hash from the resulting query
 	for user in res:
 		user.pop("password", None)
+		user["id"] = user.pop("_id", None)
 	return(json_util.dumps(res))
 
-@auth.required
-def add_user():
+def unprotected_add_user(user_data):
 	"""
 	Create a user and add it to database
 
 	Fields:
 		* password
 		* email
+		* username
 
 	TODO: insert only needed fields
 	"""
-	user_data = request.get_json()
-	hash = auth.create_hash(user_data["password"])
-	user_data["password"] = hash
+	user = User(user_data['username'], password=user_data['password'])
 
-	res = db.users.insert(user_data)
-	return(json_util.dumps(res))
+	if 'email' in user_data:
+		user.email = user_data['email']
 
-@auth.required
+	if 'config' in user_data:
+		user.config = user_data['config']
+
+	# Default role is guest
+	if 'role' in user_data:
+		user.setRole(user_data['role'])
+
+	user.password = auth.create_hash(user.password)
+
+	res = db.users.insert(user.to_dict())
+	return(res)
+
+
+@auth.required(Role.admin)
+def add_user():
+	return(json_util.dumps(unprotected_add_user(request.get_json())))
+
+@auth.required(Role.admin)
 def remove_user():
 	"""
 	Remove the user
@@ -43,19 +68,18 @@ def remove_user():
 	res = db.users.delete_one({"_id" : ObjectId(req["userId"])})
 	return(json_util.dumps(res.deleted_count))
 
-@auth.required
+@auth.required()
 def edit_user():
 	"""
 	TODO: differentiate between PUT and PATCH -> PATCH partial update
 	"""
-	user = request.get_json()
-	token = auth.jwt_decode(request.headers.get('Authorization', None))
-	user_info = auth.get_session(token['_id'])
+	user_data = request.get_json()
+	user = User.from_dict(user_data)
 
 	# Create basic query for user updating
 	query = {
 			"$set" : {
-				'settings' : user['settings']
+				'settings' : user.settings
 				}
 			}
 
@@ -71,37 +95,22 @@ def edit_user():
 
 	# In case of password change, verify that it is really him (revalidate their password)
 	if "password" in user:
-		verify = auth.login(user["username"], user["password"])
-		
-		# This is really stupid, I have to change it
-		# TODO: better password verification returning values
-		if verify != 0 and verify != 1:
-			hash = auth.create_hash(user["password_new"])
-			query["$set"]["password"] = hash
-		else:
-			return (json_util.dumps( {'error' : auth.errors[str(verify)]}), 403)
+		auth_verify = User.from_object(auth.login(user))
+
+		query["$set"]["password"] = auth.create_hash(user_data["password_new"])
 
 	# The query is built up, lets update the user and return updated document
-	res_raw = db.users.find_one_and_update(
-			{'_id' : ObjectId(user_info['user_id'])},
+	res = db.users.find_one_and_update(
+			{'_id' : ObjectId(user.user_id)},
 			query,
 			return_document=pymongo.ReturnDocument.AFTER)
 
 	# Remove password hash from the response
-	res = res_raw.pop("password", None)
+	del res['password']
 
-	jwt_res = auth.jwt_create({
-		'username' : res_raw['username'],
-		'name' : res_raw.get('name', ""),
-		'surname' : res_raw.get('surname', ""),
-		'email' : res_raw.get('email', ""),
-		'_id' : str(token['_id']),           # Keep the same session ID!
-		'created' : mktime(datetime.utcnow().timetuple())
-	})
+	return(json_util.dumps(res))
 
-	return(json_util.dumps({"jwt" : jwt_res}))
-
-users.add_url_rule('/', view_func=get_users, methods=['GET'])
-users.add_url_rule('/', view_func=edit_user, methods=['PUT'])
-users.add_url_rule('/', view_func=add_user, methods=['POST'])
-users.add_url_rule('/', view_func=remove_user, methods=['DELETE'])
+users.add_url_rule('', view_func=get_users, methods=['GET'])
+users.add_url_rule('', view_func=edit_user, methods=['PUT'])
+users.add_url_rule('', view_func=add_user, methods=['POST'])
+users.add_url_rule('', view_func=remove_user, methods=['DELETE'])
