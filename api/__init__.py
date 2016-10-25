@@ -1,9 +1,19 @@
-#!/usr/bin/env python3
-
-import argparse
-
 """
-Handle arguments
+Liberouter GUI 2016
+File: __init__.py
+Author: Petr Stehlik <stehlik@cesnet.cz>
+
+The basic initialization of the REST API happens within this file.
+The basic steps:
+	* app init and its configuration
+	* configuration init
+	* SSL init (if enabled)
+	* base database connection to MongoDB (for users mainly)
+	* Session manager
+	* Authorization manager
+	* Check if there are any users, if not set up a new admin
+	* Enable CORS if requested
+	* import all modules and its Blueprints
 """
 parser = argparse.ArgumentParser(description="""REST API CESNET 2016.\n\n
 		Authors: Petr Stehlik <stehlik@cesnet.cz>""", add_help=False)
