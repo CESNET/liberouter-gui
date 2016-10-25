@@ -16,33 +16,19 @@ def login():
 	"""
 
 	user_data = request.get_json()
-	print(user_data)
 	user = User(user_data['username'], password=user_data['password'])
 
-	try:
-		auth_user = auth.login(user)
-	except AuthException as e:
-		print(e)
-		return json_util.dumps({"error" : str(e)}), 401
+	auth_user = auth.login(user)
 
-	session_id = auth.store_session(auth_user['username'], auth_user['_id'])
+	user = User.from_dict(auth_user)
 
-	# Attach JWT for further authentication
-	"""auth_user['jwt'] = auth.jwt_create({
-		'username' : auth_user['username'],
-		'name' : auth_user.get('name', ""),
-		'surname' : auth_user.get('surname', ""),
-		'email' : auth_user.get('email', ""),
-		'_id' : str(_id),
-		'created' : mktime(datetime.utcnow().timetuple())
-		})"""
+	session_id = auth.store_session(user)
+
 	return(json_util.dumps({"session_id" : session_id, "user" : auth_user}))
 
-
 @au.route('', methods=['DELETE'])
-@auth.required
+@auth.required()
 def logout():
-	jwt = request.headers.get('Authorization', None)
-	decoded_jwt = auth.jwt_decode(jwt)
-	res = auth.delete_session(decoded_jwt['_id'])
-	return(str(res))
+	session_id = request.headers.get('Authorization', None)
+	auth.delete(session_id)
+	return(json_util.dumps({"success" : True}))
