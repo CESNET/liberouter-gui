@@ -15,54 +15,26 @@ The basic steps:
 	* Enable CORS if requested
 	* import all modules and its Blueprints
 """
-parser = argparse.ArgumentParser(description="""REST API CESNET 2016.\n\n
-		Authors: Petr Stehlik <stehlik@cesnet.cz>""", add_help=False)
 
-parser.add_argument('--config', '-c', default='./config.ini', dest='config',
-		help='Load given configuration file')
-parser.add_argument('--help', '-h', help="Print this help", action='store_true',
-		dest='help')
-
-try:
-	args = vars(parser.parse_args())
-
-	if args['help']:
-		parser.print_help()
-		exit(0)
-except:
-	print("Failed to parse arguments")
-	exit(1)
-
-from api.Router import Router
+from .Router import Router
+print("# Setting up the application")
 app = Router(__name__)
 
-# Own classes and helpers
-from api.auth import Auth
-from api.config import Config
-from api.dbConnector import dbConnector
-
-# Flask libraries
-from flask import escape, request, Response, abort
-import ssl
-
-# System tools
-import sys
-from subprocess import Popen, PIPE, check_output
-
-# Date manipulations
-from datetime import date, datetime, timedelta
-from time import mktime
-
-# MongoDB data manipulation
-from bson import json_util
-from bson.objectid import ObjectId
-
-print("# Setting up the application")
-
+from .configurator import Config
 """
 Load user config specified by an argument or in default path.
 """
-config = Config(args, base_path = __path__[0])
+config = Config(base_path = __path__[0])
+
+from .dbConnector import dbConnector
+from .session import SessionManager
+from .bootstrap import routes, import_modules, admin_setup
+from .auth import Auth
+from .role import Role
+
+# System tools
+import ssl
+from bson import json_util
 
 if config["ssl"].getboolean("enabled"):
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
@@ -71,19 +43,18 @@ if config["ssl"].getboolean("enabled"):
 print("# Connecting to MongoDB")
 db = dbConnector.from_object(config["database"])
 
-from .session import SessionManager
-
 print("# Session manager setting up")
-session_manager = SessionManager()
+session_manager = SessionManager.from_object(config)
 
 print("# Authorization module setting up")
 auth = Auth(db, session_manager, config['api']['secret_key'])
 
-# Configure Flask server from config object
+admin = admin_setup(db)
+
 print("# Configuring server app")
 app.config.from_object(config)
 
-if config['api']['cors']:
+if config['api'].getboolean('cors', False):
 	print("# CORS enabled")
 	try:
 		from flask.ext.cors import CORS
