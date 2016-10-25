@@ -5,13 +5,8 @@ class dbConnector(object):
 	host = ""
 	port = ""
 	dbName = ""
-	eventsCollection = ""
 	usersCollection = ""
-	sessionsCollection = ""
-	collection = None
 	users = None
-	events = None
-	sessions = None
 	db = None
 	socket = None
 
@@ -20,16 +15,12 @@ class dbConnector(object):
 		return self(host = config.get("host", "localhost"),
 				port = config.getint("port", 27017),
 				db = config["database"],
-				events = config["events"],
-				users = config["users"],
-				sessions = config["sessions"])
+				users = config["users"])
 
 	def __init__(self, host = "localhost",
 			port = 27017,
-			db = "nemeadb",
-			events = "events",
-			users = "users",
-			sessions = "sessions"):
+			db = "liberouter",
+			users = "users"):
 
 		# Setup host and port for DB
 		self.host = host
@@ -38,13 +29,8 @@ class dbConnector(object):
 		# Set up database name
 		self.dbName = db
 
-		# Set up events collection
-		self.eventsCollection = events
-
 		# Set up users collection
 		self.usersCollection = users
-
-		self.sessionsCollection = sessions
 
 		# Connect to database and bind events and users collections
 		try:
@@ -57,9 +43,7 @@ class dbConnector(object):
 			self.socket.server_info()
 
 			self.db = self.socket[self.dbName]
-			self.collection = self.events = self.db[self.eventsCollection]
 			self.users = self.db[self.usersCollection]
-			self.sessions = self.db[self.sessionsCollection]
 
 		# Small trick to catch exception for unavailable database
 		except pymongo.errors.ServerSelectionTimeoutError as err:
