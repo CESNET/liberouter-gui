@@ -1,38 +1,36 @@
 from uuid import uuid1 as uuid
 from datetime import datetime, timedelta
 
-class SessionException(Exception):
+from .error import ApiException
+
+class SessionException(ApiException):
 	status_code = 401
-
-	def __init__(self, message, status_code=None, payload=None):
-		Exception.__init__(self)
-		self.message = message
-		if status_code is not None:
-			self.status_code=status_code
-		self.payload = payload
-
-	def to_dict(self):
-		rv = dict(self.payload or ())
-		rv['message'] = self.message
-		return rv
 
 class SessionManager(object):
 	def __init__(self, timeout = 900, max_user_sessions = 10):
 		self.timeout = timedelta(seconds=timeout)
 		self.max_user_sessions = max_user_sessions
+		self.sessions = {}
+
+	@classmethod
+	def from_object(self, config):
+		timeout = config['api'].getint('session_timeout', 900)
+		max_user_sessions = config['api'].getint('session_max_per_user', 10)
+		return self(timeout = timeout,
+				max_user_sessions = max_user_sessions)
 
 	def lookup(self, session_id):
 		try:
 			session = self.sessions[session_id]
 
 			if datetime.utcnow() > session["expire_time"]:
-				__delete(session_id)
+				self.__delete(session_id)
 				raise SessionException("Session expired", payload=session)
 
 			self.__update_expire_time(session)
 			return session
 
-		except KeyValueError:
+		except KeyError:
 			raise SessionException("Missing session", payload=session_id)
 
 	def create(self, user):
@@ -47,12 +45,22 @@ class SessionManager(object):
 			raise SessionException("Session \"" + session_id +
 					"\" already exists")
 
+		for id, session in self.sessions.items():
+			print(session.user.to_dict())
+
 		self.sessions[session_id] = {
 			"user" : user,
-			"expire_time" : datetime.utcnow() + self.timeout
+			"expire_time" : datetime.utcnow() + self.timeout,
+			"session_id" : session_id
 		}
 
 		return(session_id)
+
+	def delete(self, session_id):
+		try:
+			self.__delete(session_id)
+		except KeyError:
+			raise SessionException("Missing session", payload=session_id)
 
 	def __delete(self, session_id):
 		del self.sessions[session_id]

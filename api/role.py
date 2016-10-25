@@ -1,6 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
-class Role(Enum):
+class Role(IntEnum):
+	undefined = -1
 	admin = 0
 	user = 10
 	guest = 255

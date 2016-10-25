@@ -1,26 +1,15 @@
 import bcrypt
 from functools import wraps
-import jwt
-from flask import request, abort
-from bson.objectid import ObjectId
+from flask import request
 from datetime import datetime, timedelta
 
 from .user import User
+from .role import Role
+from .session import SessionException
+from .error import ApiException
 
-class AuthException(Exception):
+class AuthException(ApiException):
 	status_code = 404
-
-	def __init__(self, message, status_code=None, payload=None):
-		Exception.__init__(self)
-		self.message = message
-		if status_code is not None:
-			self.status_code=status_code
-		self.payload = payload
-
-	def to_dict(self):
-		rv = dict(self.payload or ())
-		rv['message'] = self.message
-		return rv
 
 class Auth(object):
 	errors = {
@@ -36,10 +25,10 @@ class Auth(object):
 		self.secret_key = secret_key
 
 	def check_password(self, password, hash):
-		return bcrypt.checkpw(password.encode('utf8'), hash.encode('utf8'))
+		return bcrypt.checkpw(password.encode('utf8'), hash)
 
 	def create_hash(self, password):
-		return bcrypt.hashpw(password, bcrypt.gensalt())
+		return bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
 
 	def auth_error(self, code):
 		msg = {
@@ -67,16 +56,7 @@ class Auth(object):
 
 		return(res)
 
-	def jwt_create(self, payload):
-		encoded = jwt.encode(payload, self.secret_key, algorithm='HS256')
-		return str(encoded.decode('utf-8'))
-
-	def jwt_decode(self, token):
-		decoded = jwt.decode(token, self.secret_key, algorithm=['HS256'])
-		return decoded
-
-	def store_session(self, username, user_id):
-		user = User(username, user_id = user_id)
+	def store_session(self, user):
 		session_id = self.session_manager.create(user)
 		return session_id
 
@@ -86,26 +66,41 @@ class Auth(object):
 			return session
 		except SessionException:
 			print("Couldn't find given session")
-			return False
+			raise
 
-	def delete_session(self, _id):
-		res = self.db.sessions.remove({"_id" : ObjectId(_id)})
-		return res['ok']
+	def delete(self, session_id):
+		try:
+			self.session_manager.delete(session_id)
+		except SessionException:
+			print("Couldn't find given session")
+			raise
 
-    # Decorator for required Authorization JWT token
-	def required(self, f):
-		@wraps(f)
-		def verify_jwt(*args, **kwargs):
-			auth = request.headers.get('Authorization', None)
-			if not auth:
-				return abort(401)
-			decoded_token = self.jwt_decode(auth)
-            #print(decoded_token)
-			session_token = self.get_session(decoded_token['_id'])
-            #print(session_token)
-			if not session_token:
-				return abort(401)
-			else:
-				self.update_session(session_token['_id'])
-			return f(*args, **kwargs)
-		return verify_jwt
+	def required(self, role=Role.undefined):
+		"""
+		Decorator for required Authorization JWT token
+
+		Usage: (auth is the initialized Auth object instance)
+		@auth.required() -	Don't look for user's role.
+							Only check if they have valid session.
+
+		@auth.role(Role.[admin|user|guest]) - check session validity and their role
+		"""
+		def auth_decorator(f):
+			@wraps(f)
+			def verify(*args, **kwargs):
+				session_id = request.headers.get('Authorization', None)
+				if not session_id:
+					raise SessionException("Header field 'Authorization' not found")
+
+				try:
+					session = self.lookup(session_id)
+					print(session['user'].to_dict())
+				except SessionException:
+					raise SessionException("Session not found")
+
+				if role > role.undefined:
+					pass
+
+				return f(*args, **kwargs)
+			return verify
+		return auth_decorator
