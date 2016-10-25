@@ -69,13 +69,6 @@ Import all modules from module path
 print("# Begin importing modules")
 import_modules()
 
-for importer, mod_name, _ in modules:
-	if mod_name not in sys.modules:
-		loaded_mod = __import__("api." +
-				config['api']['modules'].split('/')[-1] + "." +  mod_name,
-				fromlist=[mod_name])
-		print("   > Imported module \"" + mod_name + "\"")
+app.add_url_rule('/', view_func = routes, methods=['GET'])
 
-		for obj in vars(loaded_mod).values():
-			if isinstance(obj, Module):
-				app.register_blueprint(obj)
+print("### All is set up. Ready to rock.")
