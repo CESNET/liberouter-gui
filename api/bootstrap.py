@@ -20,12 +20,9 @@ def routes():
 			"desc" : rule.endpoint
 		})
 
-	if config["api"]["debug"]:
-		print(json_util.dumps(routes, indent=4))
+	app.logger.debug(json_util.dumps(routes))
 
 	return(json_util.dumps(routes))
-
-
 
 def import_modules():
 	"""
