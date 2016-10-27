@@ -1,16 +1,36 @@
 import bcrypt
 from flask import request
-from bson import json_util
+from bson import json_util, ObjectId
+import pymongo
 
 from api import auth, db
 from api.module import Module
-from api.user import User
+from api.user import User, UserException
 from api.role import Role
 
-users = Module('users', __name__, url_prefix='/users')
+users = Module('users', __name__, url_prefix='/users', no_version=True)
 
 def count_users():
 	return db.users.count()
+
+def lookup_user(user):
+	user_id = user.get("user_id", None)
+
+	query = {"$or" : [
+		{"_id" : None if user_id == None else ObjectId(user_id)},
+		{"username" : user.get("username", None)},
+		{"email" : user.get("email", None)}
+		]}
+
+	cursor = db.users.find(query)
+
+	return list(cursor)
+
+def user_exists(user):
+	return False if db.users.find({"$or" : [
+		{"username" : user.get("username", None)},
+		{"email" : user.get("email", None)}
+		]}).count() == 0 else True
 
 @auth.required()
 def get_users():
@@ -53,53 +73,74 @@ def unprotected_add_user(user_data):
 
 @auth.required(Role.admin)
 def add_user():
-	return(json_util.dumps(unprotected_add_user(request.get_json())))
+	r = request.get_json()
+	user = User.from_dict(r)
+
+	if user_exists(user):
+		raise UserException("User already exists", status_code = 400)
+
+	user.user_id = str(unprotected_add_user(user.to_dict()))
+	user.password = None
+
+	return(json_util.dumps(user.to_dict()))
 
 @auth.required(Role.admin)
-def remove_user():
+def remove_user(user_id):
 	"""
 	Remove the user
-
-	TODO: specify UserID by URI, not by body
-	TODO: return the deleted user not just int
 	"""
-	req = request.args
-	req = req.to_dict()
-	res = db.users.delete_one({"_id" : ObjectId(req["userId"])})
-	return(json_util.dumps(res.deleted_count))
+
+	user_dict = dict(db.users.find_one({"_id" :ObjectId(user_id)}))
+
+	if user_dict == {}:
+		raise UserException("User not found", status_code = 404)
+
+	user = User.from_dict(user_dict)
+	res = db.users.delete_one({"_id" : ObjectId(user_id)})
+
+	if res.deleted_count == 0:
+		raise UserException("User not deleted", status_code = 404)
+
+	user.password = None
+
+	return(json_util.dumps(user.to_dict()))
 
 @auth.required()
-def edit_user():
+def edit_user(user_id):
 	"""
 	TODO: differentiate between PUT and PATCH -> PATCH partial update
 	"""
-	user_data = request.get_json()
-	user = User.from_dict(user_data)
+	user = User.from_dict(request.get_json())
+	user.user_id = user_id
 
 	# Create basic query for user updating
 	query = {
-			"$set" : {
-				'settings' : user.settings
-				}
+			"$set" : {}
 			}
 
 	# If the user updates their profile check for all fields to be updated
-	if "name" in user:
-		query["$set"]["name"] = user["name"]
+	if user.first_name and user.first_name != "":
+		query["$set"]["first_name"] = user.first_name
 
-	if "surname" in user:
-		query["$set"]["surname"] = user["surname"]
+	if user.last_name and user.last_name != "":
+		query["$set"]["last_name"] = user.last_name
 
-	if "email" in user:
-		query["$set"]["email"] = user["email"]
+	if user.email and user.email != "":
+		query["$set"]["email"] = user.email
+
+	if user.role:
+		query["$set"]["role"] = user.role
+
+	if user.settings and user.settings != {}:
+		query['$set']['settings'] = user.settings
 
 	# In case of password change, verify that it is really him (revalidate their password)
-	if "password" in user:
+	if user.password and user.password != "":
 		auth_verify = User.from_object(auth.login(user))
 
 		query["$set"]["password"] = auth.create_hash(user_data["password_new"])
 
-	# The query is built up, lets update the user and return updated document
+	# Update the user and return updated document
 	res = db.users.find_one_and_update(
 			{'_id' : ObjectId(user.user_id)},
 			query,
@@ -111,6 +152,6 @@ def edit_user():
 	return(json_util.dumps(res))
 
 users.add_url_rule('', view_func=get_users, methods=['GET'])
-users.add_url_rule('', view_func=edit_user, methods=['PUT'])
 users.add_url_rule('', view_func=add_user, methods=['POST'])
-users.add_url_rule('', view_func=remove_user, methods=['DELETE'])
+users.add_url_rule('/<string:user_id>', view_func=edit_user, methods=['PUT'])
+users.add_url_rule('/<string:user_id>', view_func=remove_user, methods=['DELETE'])
