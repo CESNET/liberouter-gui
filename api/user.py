@@ -5,57 +5,111 @@ class UserException(ApiException):
 	status_code = 401
 
 class User(object):
-	role = Role.undefined
+	"""
+	User data model representation.
+
+	Username is the default identifier and is required.
+	"""
+
+	username = None
+	user_id = None
+	first_name = None
+	last_name = None
+	email = None
+	password = None
+	role = None
 	settings = {}
 
 	def __init__(self,
 			username,
-			user_id=None,
-			settings=None,
-			role=None,
-			password="",
-			email=""):
+			user_id		= None,
+			first_name	= None,
+			last_name	= None,
+			email		= None,
+			password	= None,
+			role		= None,
+			settings	= None,
+			):
 		self.username = username
 		self.user_id = user_id
-
-		if settings is not None:
-			self.settings = settings
-
-		if role is not None:
-			self.role = role
-
-		self.password = password
+		self.first_name = first_name
+		self.last_name = last_name
 		self.email = email
+		self.password = password
+		self.role = self.parseRole(role)
+		self.settings = settings
+
+	def get(self, key, default):
+		if key == "username":
+			return self.username
+		elif key == "user_id":
+			return self.user_id
+		elif key == "first_name":
+			return self.first_name
+		elif key == "last_name":
+			return self.last_name
+		elif key == "email":
+			return self.email
+		elif key == "password":
+			return self.password
+		elif key == "role":
+			return self.role
+		elif key == "settings":
+			return self.settings
+
+		return default
+
+	@classmethod
+	def parseRole(self, role):
+		if role == "admin" or role == Role.admin:
+			return Role.admin
+		elif role == "user" or role == Role.user:
+			return Role.user
+		elif role == "guest" or role == Role.guest:
+			return Role.guest
+		else:
+			return None
 
 	def setRole(self, role):
-		if role == "admin" or role == Role.admin:
-			self.role = Role.admin
-		elif role == "user" or role == Role.user:
-			self.role = Role.user
-		elif role == "guest" or role == Role.guest:
-			self.role = Role.guest
+		self.role = self.parseRole(role)
 
 	def to_dict(self):
 		"""
 		Return the internal data in dictionary
 		"""
-		return({
-			"username" : self.username,
-			"user_id" : self.user_id,
-			"settings" : self.settings,
-			"role" : int(self.role),
-			"password" : self.password,
-			"email" : self.email,
-		})
+		tmp = {
+			'username' : self.username,
+			'user_id' : self.user_id,
+			'first_name' : self.first_name,
+			'last_name' : self.last_name,
+			'email' : self.email,
+			'role' : int(self.role),
+			'settings' : self.settings,
+		}
+
+		if self.password:
+			tmp['password'] = self.password
+
+		return tmp
 
 	@classmethod
 	def from_dict(self, user):
 		"""
 		Create new user from dictionary
 		"""
-		return(self(user.get("username", "undefined"),
-			role = user.get("role", Role.undefined),
-			settings = user.get("settings", {}),
-			user_id = str(user["_id"]),
-			password = user.get("password", ""),
-			email = user.get("email", "")))
+		# First try MongoDB id field, otherwise use API defined field
+		if str(user.get("_id", None)):
+			user_id = str(user.get("_id", None))
+		else:
+			user_id = str(user.get("user_id", None))
+
+		return(self(
+			username	= user.get("username", None),
+			user_id		= user_id,
+			first_name	= user.get("first_name", None),
+			last_name	= user.get("last_name", None),
+			email		= user.get("email", None),
+			password	= user.get("password", None),
+			role		= User.parseRole(user.get("role", None)),
+			settings	= user.get("settings", {})
+			))
