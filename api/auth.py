@@ -94,7 +94,6 @@ class Auth(object):
 
 				try:
 					session = self.lookup(session_id)
-					print(session['user'].to_dict())
 				except SessionException:
 					raise SessionException("Session not found")
 
