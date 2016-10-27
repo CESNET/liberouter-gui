@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import configparser
 import argparse
 import sys
 from api import app
 
+import unittest
 class Config(object):
 	"""
 	@class Config
@@ -57,10 +60,8 @@ class Config(object):
 		parser = argparse.ArgumentParser(description="""REST API CESNET 2016.\n\n
 				Authors: Petr Stehlik <stehlik@cesnet.cz>""", add_help=False)
 
-		parser.add_argument('--config', '-c', default='./config.ini', dest='config',
-				help='Load given configuration file')
-		parser.add_argument('--help', '-h', help="Print this help", action='store_true',
-				dest='help')
+		parser.add_argument('--config', '-c', default='./config.ini', dest='config', help='Load given configuration file')
+		parser.add_argument('--help', '-h', help="Print this help", dest='help')
 
 		try:
 			args = vars(parser.parse_args())
@@ -68,9 +69,10 @@ class Config(object):
 			if args['help']:
 				parser.print_help()
 				exit(0)
-		except:
+
+		except Exception as e:
+			print(e)
 			print("Failed to parse arguments")
 			exit(1)
-
 		return args
 
