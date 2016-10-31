@@ -97,8 +97,8 @@ class Auth(object):
 				except SessionException:
 					raise SessionException("Session not found")
 
-				if role > role.undefined:
-					pass
+				if role != Role.undefined and role < session["user"].role:
+					raise SessionException("Insufficient privileges.")
 
 				return f(*args, **kwargs)
 			return verify

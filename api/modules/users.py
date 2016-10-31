@@ -105,7 +105,7 @@ def remove_user(user_id):
 
 	return(json_util.dumps(user.to_dict()))
 
-@auth.required()
+@auth.required(Role.admin)
 def edit_user(user_id):
 	"""
 	TODO: differentiate between PUT and PATCH -> PATCH partial update
