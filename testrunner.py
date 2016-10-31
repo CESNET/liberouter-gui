@@ -7,4 +7,4 @@ if __name__ == '__main__':
 	suite.addTest(unittest.makeSuite(BasicTestCase))
 	suite.addTest(unittest.makeSuite(UsersTestCase))
 
-	unittest.main()
+	unittest.TextTestRunner(verbosity=2).run(suite)
