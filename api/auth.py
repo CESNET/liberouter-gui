@@ -83,22 +83,22 @@ class Auth(object):
 		@auth.required() -	Don't look for user's role.
 							Only check if they have valid session.
 
-		@auth.role(Role.[admin|user|guest]) - check session validity and their role
+		@auth.required(Role.[admin|user|guest]) - check session validity and their role
 		"""
 		def auth_decorator(f):
 			@wraps(f)
 			def verify(*args, **kwargs):
 				session_id = request.headers.get('Authorization', None)
 				if not session_id:
-					raise SessionException("Header field 'Authorization' not found")
+					raise SessionException("Header field 'Authorization' not found.")
 
 				try:
 					session = self.lookup(session_id)
 				except SessionException:
 					raise SessionException("Session not found")
 
-				if role > role.undefined:
-					pass
+				if role != Role.undefined and role < session["user"].role:
+					raise SessionException("Insufficient privileges.")
 
 				return f(*args, **kwargs)
 			return verify

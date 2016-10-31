@@ -77,7 +77,7 @@ def add_user():
 	user = User.from_dict(r)
 
 	if user_exists(user):
-		raise UserException("User already exists", status_code = 400)
+		raise UserException("User '" + user.username + "' already exists", status_code = 400)
 
 	user.user_id = str(unprotected_add_user(user.to_dict()))
 	user.password = None
@@ -105,7 +105,7 @@ def remove_user(user_id):
 
 	return(json_util.dumps(user.to_dict()))
 
-@auth.required()
+@auth.required(Role.admin)
 def edit_user(user_id):
 	"""
 	TODO: differentiate between PUT and PATCH -> PATCH partial update
