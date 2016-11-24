@@ -91,3 +91,8 @@ ENV/
 
 *.swp
 .DS_Store
+
+# Angular JS and webdev
+
+node_modules
+dist
