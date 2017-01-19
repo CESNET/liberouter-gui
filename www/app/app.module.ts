@@ -7,6 +7,7 @@ import { MaterialModule }   from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent }  from './app.component';
+import { AuthGuard } from './guards/auth.guard';
 import { LoginBox }  from './components/login.component';
 import { UserToolbar }  from './components/toolbar.component';
 import { Home }  from './components/home.component';
@@ -19,8 +20,9 @@ const appRoutes: Routes = [
 	},
 	{
 		path: '',
-		component: Home
-		},
+		component: Home,
+		canActivate : [AuthGuard]
+	},
 	{
 		path: 'heroes',
 		component: NullComponent
@@ -46,6 +48,9 @@ const appRoutes: Routes = [
 		NullComponent,
 		UserToolbar,
 		Home
+	],
+	providers : [
+		AuthGuard
 	],
 	bootstrap : [
 		AppComponent
