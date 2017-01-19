@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'toolbar-home',
@@ -7,11 +8,14 @@ import { Component } from '@angular/core';
 export class UserToolbar {
 	user = {};
 
-	constructor() {}
+	constructor(private router : Router) {}
 
 	ngOnInit() {
 		this.user = JSON.parse(localStorage.getItem('currentUser'));
-		console.log(this.user);
+	}
+
+	logout() {
+		this.router.navigate(['/logout']);
 	}
 }
 

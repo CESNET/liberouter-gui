@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { User } from './user.component';
 import { AuthService } from '../services/index';
 
@@ -18,13 +18,24 @@ export class LoginBox  {
 	};
 	formError = false;
 	formErrorMsg = "";
+	returnUrl : String;
 
 	constructor(
+		private route : ActivatedRoute,
 		private router : Router,
 		private authService: AuthService) {}
 
-	ngOnit() {
-	// TODO: check if the user is logged in and if so redirect them to HP
+	ngOnInit() {
+		// fetch the return URL and use it if set
+		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+		// check if the user is logged in and if so redirect them to HP
+		let lsUser = JSON.parse(localStorage.getItem("currentUser"));
+
+		if (lsUser != null && lsUser['session_id']) {
+			this.user = lsUser;
+			this.router.navigate([this.returnUrl]);
+		}
 	}
 
 	setError(msg : string) {
@@ -53,7 +64,7 @@ export class LoginBox  {
 				data => {
 					console.log("Success!!!");
 					this.unsetError();
-					this.router.navigate(['/success']);
+					this.router.navigate([this.returnUrl]);
 				},
 				error => {
 					let body = JSON.parse(error['_body']);
@@ -61,17 +72,4 @@ export class LoginBox  {
 				}
 			);
 	}
-
-	logout() {
-		this.authService.logout()
-			.subscribe(
-				data => {
-					console.log('Success logging out.');
-				},
-				error => {
-					console.log('Error logging out.');
-				}
-			);
-	}
-
 }
