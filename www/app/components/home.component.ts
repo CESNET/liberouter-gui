@@ -11,9 +11,24 @@ import { AuthService } from '../services/index';
 
 })
 export class Home {
-ngOnInit() {
-		console.log("hello oninit");
+	modules : {name : string, path : string}[] = [];
+
+	constructor(private router : Router) {
 	}
 
+	ngOnInit() {
+		// Inspect all available routes and find all modules
+		for(let route of this.router.config ) {
+			try {
+				let tmp = new route.component();
+				this.modules.push({
+					name : tmp.getName(),
+					path : route.path
+				});
+			} catch (e) {
+				console.debug(e);
+			}
+		}
+	}
 }
 

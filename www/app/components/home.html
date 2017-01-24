@@ -1,3 +1,9 @@
 <toolbar-home></toolbar-home>
 
 Hello Home
+
+<ul>
+	<li *ngFor="let module of modules">
+		{{ module.name }} and I live in <a routerLink="{{ module.path }}" routerLinkActive="active"> {{ module.path }} </a>
+	</li>
+</ul>
