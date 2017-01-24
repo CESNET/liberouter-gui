@@ -14,6 +14,8 @@ import { UserToolbar }  from './components/toolbar.component';
 import { Home }  from './components/home.component';
 import { NullComponent }  from './components/null.component';
 
+import { dummyModule } from './modules/dummy/dummy.module';
+
 const appRoutes: Routes = [
 	{
 		path : 'login',
@@ -44,6 +46,7 @@ const appRoutes: Routes = [
 	imports : [
 		BrowserModule,
 		FormsModule,
+		dummyModule,
 		MaterialModule.forRoot(),
 		FlexLayoutModule.forRoot(),
 		RouterModule.forRoot(appRoutes)
