@@ -11,7 +11,7 @@ import { AuthService } from '../services/index';
 
 })
 export class Home {
-	modules : {name : string, path : string}[] = [];
+	modules : Array<Object> = [];
 
 	constructor(private router : Router) {
 	}
@@ -19,14 +19,9 @@ export class Home {
 	ngOnInit() {
 		// Inspect all available routes and find all modules
 		for(let route of this.router.config ) {
-			try {
-				let tmp = new route.component();
-				this.modules.push({
-					name : tmp.getName(),
-					path : route.path
-				});
-			} catch (e) {
-				console.debug(e);
+			if (route.data && route.data['name']) {
+				route.data['path'] = route.path;
+				this.modules.push(route.data);
 			}
 		}
 	}
