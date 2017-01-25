@@ -6,8 +6,4 @@ import { dummyComponent } from './dummy.component';
 	imports : [dummyRouting],
 	//	declarations : [dummyComponent]
 })
-export class dummyModule {
-	getName() {
-		return "I am Dummy!";
-	}
-};
+export class dummyModule {};
