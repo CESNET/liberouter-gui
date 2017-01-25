@@ -66,7 +66,7 @@ export class LoginBox  {
 					this.router.navigate([this.returnUrl]);
 				},
 				error => {
-					if (error.status != 401) {
+					if (error.status > 499) {
 						this.setError("Can't connect to server.");
 						return;
 					}
