@@ -7,50 +7,33 @@ import { MaterialModule }   from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent }  from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+
+/** GUARDS **/
 import { AuthGuard } from './guards/auth.guard';
-import { LoginBox }  from './components/login.component';
-import { LogoutComponent }  from './components/logout.component';
-import { UserToolbar }  from './components/toolbar.component';
+
+/** BASE **/
 import { Home }  from './components/home.component';
+import { UserToolbar }  from './components/toolbar.component';
+import { LogoutComponent }  from './components/logout.component';
+import { LoginBox }  from './components/login.component';
 import { NullComponent }  from './components/null.component';
 
-import { dummyModule } from './modules/dummy/dummy.module';
+/** MODULES **/
+import { modules } from './modules';
+//import * as Module from './modules/index';
 
-const appRoutes: Routes = [
-	{
-		path : 'login',
-		component : LoginBox
-	},
-	{
-		path : 'logout',
-		component : LogoutComponent,
-		canActivate : [AuthGuard]
-	},
-	{
-		path: '',
-		component: Home,
-		canActivate : [AuthGuard]
-	},
-	{
-		path: 'heroes',
-		component: NullComponent
-	},
 
-	{
-		path: '**',
-		component: NullComponent
-	}
-];
-
-@NgModule({
-	imports : [
+const baseModules : Array<Object> = [
 		BrowserModule,
 		FormsModule,
-		dummyModule,
+		AppRoutingModule,
 		MaterialModule.forRoot(),
 		FlexLayoutModule.forRoot(),
-		RouterModule.forRoot(appRoutes)
-	],
+]
+
+@NgModule({
+	imports : [modules, baseModules],
 	declarations : [
 		AppComponent,
 		LoginBox,
