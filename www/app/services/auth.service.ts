@@ -16,22 +16,27 @@ export class AuthService {
 			JSON.stringify({ username: username, password: password }),
 			this.options)
             .map((response: Response) => {
-                // login successful if there's a jwt token in the response
+                // login successful
 				let resp = response.json();
 
-				if (resp['error']) {
-					console.log("Error");
+				if (resp && resp['error']) {
+					console.error(resp['error']);
 					return;
 				}
 
-				console.log(resp)
+				console.debug(resp)
 
 				if (resp) {
                     // store user details and token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(resp));
                 }
-            });
+			})
+			.catch(this.handleError);
     }
+
+	handleError(err : Response | any) {
+		return Promise.reject(err);
+	}
 
     logout() {
 		// remove user from local storage to log user out

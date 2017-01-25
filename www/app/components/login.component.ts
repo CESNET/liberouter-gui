@@ -62,13 +62,16 @@ export class LoginBox  {
 		this.authService.login(this.user.username, this.user.password)
 			.subscribe(
 				data => {
-					console.log("Success!!!");
 					this.unsetError();
 					this.router.navigate([this.returnUrl]);
 				},
 				error => {
+					if (error.status != 401) {
+						this.setError("Can't connect to server.");
+						return;
+					}
 					let body = JSON.parse(error['_body']);
-					this.setError(body['message']);
+					this.setError(body['message'] || "Error logging in.");
 				}
 			);
 	}
