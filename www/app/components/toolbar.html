@@ -1,8 +1,29 @@
-<md-toolbar class="toolbar" [color]="warn">
+<md-toolbar class="toolbar" [color]="warn" *ngIf="!hide">
 	<h1 class="title flex-item" fxFlex="20">Liberouter GUI</h1>
 
 	<div class="flex-item" fxFlex></div>
 
-	<div class="flex-item" fxFlex="20">{{ user.user.username }}</div>
-	<a md-raised-button color="primary" routerLink="logout" class="flex-item">Logout</a>
+	<div class="flex-item align-right" fxFlex="20">
+		<span class="username">{{ user.user.username }}</span>
+
+		<button md-icon-button [mdMenuTriggerFor]="menu">
+			<md-icon>more_vert</md-icon>
+		</button>
+		<md-menu #menu="mdMenu" x-position="before" #posXMenu="mdMenu" class="before flex-item">
+			<button md-menu-item>
+				<md-icon>person</md-icon>
+				My Profile </button>
+			<button md-menu-item>
+				<md-icon>settings</md-icon>
+				Settings
+			</button>
+			<button md-menu-item routerLink="logout"> <md-icon> exit_to_app </md-icon> <span>Sign Out</span> </button>
+		</md-menu>
+
+	</div>
+	<!-- menu opens when trigger button is clicked -->
+
 </md-toolbar>
+
+
+
