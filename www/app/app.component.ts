@@ -11,12 +11,38 @@ import { LoginBox } from './components/login.component';
 		opened="true"
 		mode="side"
 		*ngIf="!isLoginPage">
-	  Start Sidenav.
+
+		<h1 class="user-area flex-container"
+			fxLayout="row"
+			fxLayoutAlign="center center">
+			Liberouter
+		</h1>
+
+		<div class="user-area flex-container"
+			fxLayout="row"
+			fxLayoutAlign="center center">
+
+			{{ user.user.username }}
+
+			<button md-icon-button [mdMenuTriggerFor]="menu">
+				<md-icon>more_vert</md-icon>
+			</button>
+			<md-menu #menu="mdMenu" x-position="before" #posXMenu="mdMenu" class="before flex-item">
+				<button md-menu-item>
+					<md-icon>person</md-icon>
+					My Profile </button>
+				<button md-menu-item>
+					<md-icon>settings</md-icon>
+					Settings
+				</button>
+				<button md-menu-item routerLink="logout"> <md-icon> exit_to_app </md-icon> <span>Sign Out</span> </button>
+			</md-menu>
+		</div>
 
 	  <ul class="menu">
 		<li
 			class="flex-container"
-			fxLayout="column"
+			fxLayout="row"
 			fxLayoutAlign="center center"
 			routerLink="/"
 			routerLinkActive="active-link"
@@ -26,21 +52,32 @@ import { LoginBox } from './components/login.component';
 		</li>
 
 		<li
+			*ngFor="let module of modules"
 			class="flex-container"
-			fxLayout="column"
+			fxLayout="row"
 			fxLayoutAlign="center center"
-			routerLink="/dummy"
+			routerLink="{{module.path}}"
 			routerLinkActive="active-link"
-			[routerLinkActiveOptions]="{exact:true}">
+			>
 			<md-icon class="flex-item">apps</md-icon>
-			<span class="flex-item">Dummy</span>
+			<span class="flex-item">{{ module.name }}</span>
+
+			<!-- <div *ngIf="router.url == '/' + module.path" class="flex-item">
+				<div *ngFor="let child of children">
+					<span *ngIf="child.path != ''">
+						<span (click)="setPath([module.path,'protected'])">
+							{{ child.data.name }}
+						</span>
+					</span>
+
+				</div>
+			</div> -->
 		</li>
 
 		</ul>
       <br>
       <!--button md-button #closeStartButton (click)="start.close()">Close</button-->
     </md-sidenav>
-<toolbar-home></toolbar-home>
 
 	<router-outlet></router-outlet>
   </md-sidenav-container>
@@ -48,7 +85,9 @@ import { LoginBox } from './components/login.component';
 })
 export class AppComponent  {
 	isLoginPage : boolean = false;
-	user = {};
+	user =  { user : {username : ""}};
+	modules : Array<Object> = [];
+	children : Array<Object>= [];
 
 	constructor(private router : Router, private route:ActivatedRoute) {}
 
@@ -60,23 +99,36 @@ export class AppComponent  {
 			/* the router will fire multiple events */
 			/* we only want to react if it's the final active route */
 			if (val instanceof NavigationEnd) {
-
 				/* the variable curUrlTree holds all params, queryParams, segments and fragments from the current (active) route */
-				//let curUrlTree = this.router.parseUrl(this.router.url);
-				//console.info(curUrlTree);
-				console.info(this.router.url);
 				this.user = JSON.parse(localStorage.getItem('currentUser'));
 
 				if (!this.user || this.router.url == "/login") {
 					this.isLoginPage = true;
+					this.user = { user : {username : ""}};
+					this.router.navigate(['/login']);
 				} else {
-					this.isLoginPage = false;
+				this.isLoginPage = false;
+
+					console.log(this.route.children)
+
+					this.children = this.route.children[0].routeConfig.children;
 				}
 			}
 		});
 
-	/*this.router.events.subscribe((event: Event) => {
-            console.log(event.url);//this will give you required url
-	});*/
+		this.getModules();
+	}
+
+	getModules() {
+		for(let route of this.router.config ) {
+			if (route.data && route.data['name']) {
+				route.data['path'] = route.path;
+				this.modules.push(route.data);
+			}
+		}
+	}
+
+	setPath(path : Array<String>) {
+		this.router.navigate(path);
 	}
 }
