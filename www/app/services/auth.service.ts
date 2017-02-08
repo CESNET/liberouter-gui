@@ -6,15 +6,12 @@ import 'rxjs/add/operator/map'
 @Injectable()
 export class AuthService {
 
-	headers = new Headers({ 'Content-Type': 'application/json' });
-	options = new RequestOptions({ headers: this.headers });
-
 	constructor(private http: Http) { }
 
 	login(username: string, password: string) {
 		return this.http.post('/api/authorization',
-			JSON.stringify({ username: username, password: password }),
-			this.options)
+			JSON.stringify({ username: username, password: password })
+			)
             .map((response: Response) => {
                 // login successful
 				let resp = response.json();
@@ -42,8 +39,7 @@ export class AuthService {
 		// remove user from local storage to log user out
 		let user = JSON.parse(localStorage.getItem('currentUser'));
 		console.log(user);
-		this.headers.append('Authorization', user['session_id']);
-		return this.http.delete('/api/authorization', {headers : this.headers})
+		return this.http.delete('/api/authorization')
 			.map((response : Response) => {
 				console.log(response);
 			});
