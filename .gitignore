@@ -96,3 +96,7 @@ ENV/
 
 node_modules
 dist
+
+# Ignore local configs
+config.ini
+config.ts
