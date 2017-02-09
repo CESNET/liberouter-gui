@@ -1,3 +1,5 @@
+<h2><a routerLink='/users'><md-icon>keyboard_arrow_left</md-icon></a> Add new user</h2>
+
 <form class="example-form">
 	<div class="flex-container"
 		fxLayout="column"
@@ -36,17 +38,17 @@
 		<md-input-container class="flex-item">
 			<input
 				md-input
-				#passwordValidation
 				placeholder="Password verification"
 				required
+				[(ngModel)]="passwordValidation"
 				name="password_validation"
 				type="password">
 
 		</md-input-container>
 
-		<div class="pw-verify" *ngIf="passwordValidation.value">
-			<span *ngIf="passwordValidation.value == user.password">Password OK</span>
-			<span *ngIf="passwordValidation.value != user.password">Password mismatch</span>
+		<div class="pw-verify flex-item" *ngIf="passwordValidation">
+			<span *ngIf="passwordValidation == user.password"><md-icon>done</md-icon></span>
+			<span *ngIf="passwordValidation != user.password"><md-icon>clear</md-icon></span>
 		</div>
 	</div>
 
@@ -78,15 +80,12 @@
 	</div>
 
 	<div class="flex-item">
-		<input
-			md-button
-			title="Add new user"
+		<button
+			md-raised-button
 			name="last_name"
 			type="submit"
-			(click)="addUser()">
+		   (click)="addUser()">Add user</button>
+
+		<span *ngIf="error">Error: {{ error }}</span>
 	</div>
 </form>
-
-{{roles | json }}
-
-User: {{ user | json }}

@@ -31,6 +31,7 @@ export class usersAddComponent {
 	}
 
 	error = "";
+	passwordValidation : string = "";
 
 	roles = [
 		{value: 0, viewValue: 'Administrator'},
@@ -44,22 +45,25 @@ export class usersAddComponent {
 	}
 
 	addUser() {
-		// Check is required fields are set
-		if (this.user.username == "" ||
+		// Check if all required fields are set
+		// Check password verification
+		if ((this.user.username == "" ||
 			this.user.email == ""	||
-			this.user.password == "") {
+			this.user.password == "" ||
+			this.passwordValidation == "") &&
+			this.passwordValidation == this.user.password) {
 			this.error = "Required fields are missing.";
 			return;
 		} else {
 			this.usersService.add(this.user).subscribe(
 			data => {
-				console.log(data);
+				// Successfully created user, redirect to users listing
+				this.router.navigate([this.returnUrl]);
 			},
 			error => {
-				console.log(error)
-			},
-			() => {
-				this.router.navigate([this.returnUrl]);
+				// Handle error response and display it as error
+				let response = JSON.parse(error['_body']);
+				this.error = response['message'];
 			})
 		}
 	}
