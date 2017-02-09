@@ -1,0 +1,29 @@
+/*input {
+
+	padding: $pad/2 $pad;
+	font-size: $font-size;
+
+	&[type="text"] {
+	}
+}*/
+
+label {
+	font-size: $font-size*0.8;
+	float: left;
+	clear: both;
+}
+
+.input {
+	label, input {
+		float: left;
+		clear: both;
+	}
+}
+
+.btn {
+	padding: $pad/2 $pad;
+	font-size: $font-size;
+	font-weight: 600;
+	background-color: $blue;
+	border: 1px solid $light-gray;
+}

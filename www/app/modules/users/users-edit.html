@@ -1,0 +1,87 @@
+<h2><a routerLink='/users'><md-icon>keyboard_arrow_left</md-icon></a> Edit user "{{ user.username }}"</h2>
+
+<form class="example-form">
+	<div class="flex-container"
+		fxLayout="column"
+		fxLayoutAlign="center left">
+
+		<md-input-container class="flex-item">
+			<input
+				md-input
+				placeholder="E-mail"
+				[(ngModel)]="user.email"
+				required
+				name="email"
+				type="email">
+		</md-input-container>
+	</div>
+
+	<div class="flex-container">
+		<md-input-container class="flex-item">
+			<input
+				md-input
+				placeholder="Password"
+				[(ngModel)]="user.password"
+				required
+				name="password_new"
+				type="password">
+		</md-input-container>
+
+		<md-input-container class="flex-item">
+			<input
+				md-input
+				placeholder="Password verification"
+				required
+				[(ngModel)]="passwordValidation"
+				name="password_validation"
+				type="password">
+
+		</md-input-container>
+
+		<div class="pw-verify flex-item" *ngIf="passwordValidation">
+			<span *ngIf="passwordValidation == user.password"><md-icon>done</md-icon></span>
+			<span *ngIf="passwordValidation != user.password"><md-icon>clear</md-icon></span>
+		</div>
+	</div>
+
+	<div class="flex-container">
+		<md-input-container class="flex-item">
+			<input
+				md-input
+				placeholder="First name"
+				[(ngModel)]="user.first_name"
+				name="first_name">
+		</md-input-container>
+
+		<md-input-container class="flex-item">
+			<input
+				md-input
+				placeholder="Last name"
+				[(ngModel)]="user.last_name"
+				name="last_name">
+		</md-input-container>
+	</div>
+
+	<div class="flex-container">
+		<md-select placeholder="Role" [(ngModel)]="user.role" name="role">
+		<md-option *ngFor="let role of roles" [value]="role.value">
+		  {{role.viewValue}}
+		</md-option>
+	  </md-select>
+
+	</div>
+
+	<div class="flex-item">
+		<button
+			md-raised-button
+			name="last_name"
+			type="submit"
+		   (click)="updateUser()">Update user</button>
+
+		<span *ngIf="error">Error: {{ error }}</span>
+	</div>
+</form>
+
+
+{{ user | json }}
+{{ user_original | json }}

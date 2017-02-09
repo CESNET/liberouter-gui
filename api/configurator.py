@@ -15,6 +15,7 @@ class Config(object):
 	PROPAGATE_EXCEPTIONS = True
 
 	version = '1.0'
+	modules = dict()
 
 	def __init__(self, base_path=None):
 		args = self.parse_arguments()
@@ -49,9 +50,17 @@ class Config(object):
 		self.config.set("api", "users", '/' + self.version + '/users/')
 		self.config.set("api", "db", '/' + self.version + '/db/')
 
+	def load(self, path='../../config.ini'):
+		"""
+		Load external configuration file and parse it
+		"""
+		tmp_config = configparser.ConfigParser()
+		tmp_config.read(path)
+		print(tmp_config.sections())
+		self.modules[tmp_config.sections()[0]] = tmp_config[tmp_config.sections()[0]]
+
 	def __getitem__(self, key):
 		return self.config[key]
-
 
 	def parse_arguments(self):
 		"""
