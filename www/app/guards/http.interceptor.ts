@@ -55,8 +55,9 @@ export class HttpInterceptor extends Http {
 	private catchErrors() {
 		return (res : Response) => {
 			if (res.status == 401) {
-				console.debug('Cought 401, logging out!')
-				this.router.navigate(['logout']);
+				console.debug('Caught 401, logging out!')
+				localStorage.removeItem("currentUser");
+				this.router.navigate(['login']);
 			}
 			return Observable.throw(res);
 		};
