@@ -7,7 +7,8 @@ import { HttpService } from '../../services/http.service';
 import {
 	usersComponent,
 	usersAddComponent,
-	usersListComponent
+	usersListComponent,
+	usersEditComponent
 	} from './users.component';
 
 import { AuthGuard } from  '../../guards/auth.guard';
@@ -40,6 +41,15 @@ const usersRoutes : Routes = [
 					role : 0,
 					name : 'Add User'
 				}
+			},
+			{
+				path : ':id',
+				component : usersEditComponent,
+				canActivate : [AuthGuard],
+				data : {
+					role : 0,
+					name : 'Edit User'
+				}
 			}
 		]
 	}
@@ -54,8 +64,8 @@ const usersRoutes : Routes = [
 		FormsModule,
 		RouterModule.forChild(usersRoutes)
 	],
-	declarations : [usersComponent, usersAddComponent, usersListComponent],
-	exports : [usersComponent, usersAddComponent, RouterModule],
+	declarations : [usersComponent, usersAddComponent, usersListComponent, usersEditComponent],
+	exports : [usersComponent, usersAddComponent, usersEditComponent, RouterModule],
 	providers : [HttpService]
 })
 export class usersRouting {};
