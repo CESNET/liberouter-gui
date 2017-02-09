@@ -42,6 +42,12 @@ def get_users():
 		user["id"] = user.pop("_id", None)
 	return(json_util.dumps(res))
 
+@auth.required()
+def get_user(user_id):
+	user = dict(db.users.find_one({"_id" :ObjectId(user_id)}))
+	user.pop('password', None)
+	return(json_util.dumps(user))
+
 def unprotected_add_user(user_data):
 	"""
 	Create a user and add it to database
@@ -153,5 +159,6 @@ def edit_user(user_id):
 
 users.add_url_rule('', view_func=get_users, methods=['GET'])
 users.add_url_rule('', view_func=add_user, methods=['POST'])
+users.add_url_rule('/<string:user_id>', view_func=get_user, methods=['GET'])
 users.add_url_rule('/<string:user_id>', view_func=edit_user, methods=['PUT'])
 users.add_url_rule('/<string:user_id>', view_func=remove_user, methods=['DELETE'])
