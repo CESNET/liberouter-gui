@@ -2,3 +2,6 @@
 	path = modules/Nemea-Dashboard
 	url = https://github.com/CESNET/Nemea-Dashboard
 	branch = liberouter-gui
+[submodule "modules/Nemea-Supervisor"]
+	path = modules/Nemea-Supervisor
+	url = https://github.com/CESNET/Nemea-Supervisor
