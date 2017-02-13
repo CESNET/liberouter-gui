@@ -1,0 +1,177 @@
+html {
+  font-size: 10pt;
+}
+
+body {
+  background: #eee;
+  color: #000;
+  font-family: sans-serif;
+  margin: 0;
+}
+
+#content {
+  margin: 0.5em 1em;
+}
+
+#links {
+  background: #333;
+  color: #fff;
+  font-size: 1.0em;
+  padding: 0 1em; 
+}
+#links a {
+  display: inline-block;
+  margin: 0;
+  padding: 0.4em 0.5em;
+  
+  text-decoration: none;
+  color: #ccf;
+}
+#links a:hover {
+  background: #555;
+  color: #ccf;
+}
+
+p.error {
+  background: #fcc;
+  border: 1px solid #c00;
+  padding: 0.5em 1em;
+}
+
+table.modules {
+  margin: 1em 2em;
+  border: 0px;
+  border-spacing: 2px 12px;
+  border-collapse: separate;
+  width: 70em;
+  font-size: 1.0rem;
+}
+
+table.modules td.module-col {
+  border: 2px solid black;
+  text-align: center;
+  table-layout: fixed;
+  min-width: 20em;
+  max-width: 30em;
+  height: 5em;
+  padding: 0.5em 1em;
+}
+
+table.modules td.module-col.running {
+  background: #afa;
+  color: #000;
+}
+table.modules td.module-col.stopped {
+  background: #dcc;
+  color: #666;
+  border-color: #666;
+}
+
+
+table.modules td.input-col {
+  text-align: right;
+  width: 50%;
+}
+table.modules td.output-col {
+  text-align: left;
+  width: 50%;
+}
+
+
+.module-name {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.exec-name {
+  font-size: 0.8em;
+}
+.module-cpu {
+  float: left;
+  text-align: left;
+}
+.module-mem {
+  float: right;
+  text-align: right;
+}
+.module-cpu, .module-mem {
+  width: 5em;
+  font-size: 0.8em;
+}
+
+
+div.ifc {
+  background: #ccc;
+  margin: 0.5em 0;
+  padding: 0.25em 0.75em;
+  position: relative;
+}
+
+.ifc-counter,
+.ifc-counter-dropped {
+  font-weight: bold;
+  padding: 0 0.5em;
+  vertical-align: center;
+  text-align: right;
+  display: inline-block;
+  min-width: 5.5em;
+}
+.ifc-counter-dropped {
+  min-width: 3em;
+  font-size: 0.8em;
+}
+.drop-rate-ok {
+  color: #444;
+}
+.drop-rate-low {
+  color: #ff5;
+}
+.drop-rate-high {
+  color: #e00;
+}
+.ifc-name {
+  font-size: 0.8em;
+}
+
+.ifc-marker {
+  display: inline-block;
+  position: absolute;
+  vertical-align: middle;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #000;
+  background: #ddf;
+}
+.input-col .ifc-marker {
+  right: -10px;
+}
+.output-col .ifc-marker {
+  left: -10px;
+}
+.ifc-marker.notconnected {
+  /* static/cross.png */
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAAADaua+7AAAACXBIWXMAAAsSAAALEgHS3X78AAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAADhJREFUCNdjYEADPAwGDHwMBQzsDA8YmBsPMDAebmBgeA6UqANiGygGsYFiIDmQGpBakB6QXjQAACcIC5XbyfptAAAAAElFTkSuQmCC);
+  background-size: contain;
+  background-color: #ebb;
+}
+.input-col .ifc-marker.connected {
+  /* static/arrowright.png */
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAAADaua+7AAAACXBIWXMAAAsSAAALEgHS3X78AAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAClJREFUCNdjYMACmEH4ABB/AOI/QPwfhA8A8QMoPgAR+wNVcwCiBwsAAMCoDr2g1DISAAAAAElFTkSuQmCC );
+  background-size: contain;
+}
+.output-col .ifc-marker.connected {
+  font-family: monospace;
+  text-align: center;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 0;
+}
+
+/* Override some default jQueryUI styles */
+.ui-tooltip {
+  max-width: 600px;
+}
+.ui-widget-shadow {
+  -webkit-box-shadow: 0px 0px 8px #aaaaaa;
+  box-shadow: 0px 0px 8px #aaaaaa;
+}
+
