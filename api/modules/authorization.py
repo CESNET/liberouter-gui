@@ -14,8 +14,11 @@ def login():
 	Authorize user using their username and password
 	@return user's document from the DB including config
 	"""
-
 	user_data = request.get_json()
+
+	if not user_data:
+		raise AuthException("Missing user data")
+
 	user = User(user_data['username'], password=user_data['password'])
 
 	auth_user = auth.login(user)
