@@ -30,10 +30,6 @@ export class nemeaStatusComponent {
 	constructor(private api : nStatService) {}
 
 	ngOnInit() {
-		this.img_path = require('./static/');
-		console.log(this.img_path)
-
-		console.log('Hello from nemea status');
 		this.api.topology().subscribe(
 			(data : Object) => this.processTopology(data),
 			(error : Object) => this.processError(error));
