@@ -14,8 +14,9 @@ import { UsersService } from './users.service';
 export class usersComponent {};
 
 @Component({
+	moduleId : module.id.replace("/dist/", "/"),
 	selector : 'users-add',
-	templateUrl : 'app/modules/users/users-add.html',
+	templateUrl : './users-add.html',
 	providers : [UsersService]
 })
 export class usersAddComponent {
@@ -142,8 +143,9 @@ export class usersListComponent {
 };
 
 @Component({
+	moduleId : module.id.replace("/dist/", "/"),
 	selector : 'edit-user',
-	templateUrl : 'app/modules/users/users-edit.html',
+	templateUrl : './users-edit.html',
 	providers : [UsersService]
 })
 export class usersEditComponent {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { MaterialModule }   from "@angular/material";
 import { FormsModule }		from '@angular/forms';
-import { HttpService } from '../../services/http.service';
+//import { HttpService } from '../../services/http.service';
 import {
 	usersComponent,
 	usersAddComponent,
@@ -66,6 +66,6 @@ const usersRoutes : Routes = [
 	],
 	declarations : [usersComponent, usersAddComponent, usersListComponent, usersEditComponent],
 	exports : [usersComponent, usersAddComponent, usersEditComponent, RouterModule],
-	providers : [HttpService]
+	//	providers : [HttpService]
 })
 export class usersRouting {};
