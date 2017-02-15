@@ -1,0 +1,24 @@
+<div class="page login">
+
+	<div class="login-box box flex-container">
+		<div class="row flex-item">
+			<h2>Liberouter GUI</h2>
+		</div>
+
+		<form class="form">
+			<label class="sr-only" for="inlineFormInput">Username</label>
+			<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" [(ngModel)]="user.username" placeholder="Username" name="username">
+
+			<label class="sr-only" for="inlineFormInputGroup">Password</label>
+			<input type="password" class="form-control" id="password" placeholder="Password" [(ngModel)]="user.password" name="password">
+
+			<button type="submit" class="btn btn-primary" (click)="login()">Login</button>
+
+			<div class="error-message" *ngIf="formError">
+				Error: {{ formErrorMsg }}
+			</div>
+		</form>
+	</div>
+</div>
+
+
