@@ -1,0 +1,124 @@
+//@import "normalize";
+//@import '../node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css';
+
+//$candy-app-primary: md-palette($md-indigo);
+//$candy-app-accent:  md-palette($md-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+//$candy-app-warn:    md-palette($md-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+//$candy-app-theme: md-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+//@include angular-material-theme($candy-app-theme);
+
+@import "variables";
+@import "typography";
+//@import "mixins";
+//@import "login";
+//@import "forms";
+
+html, body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+
+	font-size: $font-size;
+	font-family: $font-family;
+}
+
+.preloader {
+	text-align: center;
+	color: #369;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 250%;
+	margin-top: 25%;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.username {
+	font-size: 0.85em;
+}
+
+section.main {
+	height: 100%;
+
+	.content {
+		padding: 0.5em 1em;
+		float: left;
+		margin-left: 150px;
+
+		&.no-sidebar {
+			margin-left: 0;
+		}
+	}
+
+	.sidebar {
+		box-shadow: none;
+		background: $dark-menu;
+		color: $light-gray;
+		width: 150px;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+		display: block;
+		float: left;
+
+		h1 img {
+			display: block;
+			width: 90%;
+			margin: 0.5em auto;
+		}
+
+		.menu {
+			ul {
+				list-style-type: none;
+				padding: 0!important;
+				width: 100%;
+
+				li {
+					padding: 1em 0;
+					text-align: center;
+
+					&:hover {
+						background: $dark-menu-active;
+					}
+
+					i.fa {
+						font-size: 1.25em;
+						padding-right: 5px;
+					}
+				}
+
+				.active-link {
+					//border-left: 3px solid #1f6eaa;
+					-webkit-box-shadow:inset 3px 0 0 0 $blue;
+					box-shadow:inset 3px 0 0 0 $blue;
+					background: $dark-menu-active;
+				}
+			}
+		}
+
+		.user-area {
+			a.user {
+				color: $light-gray;
+				border-color: $light-gray;
+				cursor: pointer;
+				text-align: center;
+			}
+		}
+	}
+}
+
+[md-menu-item]{
+	font-size: $font-size!important;
+}

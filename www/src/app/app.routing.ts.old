@@ -1,0 +1,45 @@
+import { NgModule }             from '@angular/core';
+import { RouterModule } from '@angular/router';
+
+import { AuthGuard } from './guards/auth.guard';
+import {
+	NullComponent,
+	HomeComponent,
+	LoginComponent,
+	LogoutComponent }  from './components';
+
+export const appRoutes: Routes = [
+	{
+		path : 'login',
+		component : LoginBox
+	},
+	{
+		path : 'logout',
+		component : LogoutComponent,
+		canActivate : [AuthGuard]
+	},
+	{
+		path: '',
+		component: Home,
+		canActivate : [AuthGuard]
+	},
+	{
+		path: '**',
+		component: NullComponent
+	}
+];
+/*
+@NgModule({
+  imports: [
+    RouterModule.forRoot(appRoutes)
+  ],
+  exports: [
+    RouterModule
+  ],
+  providers: [
+  //CanDeactivateGuard,
+  // PreloadSelectedModules
+  ]
+})
+export class AppRoutingModule {}
+*/
