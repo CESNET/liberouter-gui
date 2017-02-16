@@ -61,8 +61,8 @@ class User(object):
 
 	@classmethod
 	def parseRole(self, role):
-		if role == None:
-			return Role.guest
+		if role == None or int(role) == Role.undefined:
+			return Role.undefined
 		elif role == "admin" or int(role) == Role.admin:
 			return Role.admin
 		elif role == "user" or int(role) == Role.user:
