@@ -15,6 +15,11 @@ export class nemeaBase {};
 			<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Status
 		</a>
 	</h2>
+	<h2>
+		<a routerLink='events'>
+			<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Events
+		</a>
+	</h2>
 	`
 })
 export class nemeaComponent {

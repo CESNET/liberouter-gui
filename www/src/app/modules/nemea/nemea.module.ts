@@ -4,6 +4,7 @@ import { Routes, RouterModule} from '@angular/router';
 import { FormsModule }		from '@angular/forms';
 import { nemeaBase, nemeaComponent } from './nemea.component';
 import { nemeaStatusComponent } from './status/nemea_status.component'
+import { EventsComponent } from './events/events.component'
 
 import { AuthGuard } from  'app/utils/auth.guard';
 
@@ -35,6 +36,14 @@ const nemeaRoutes : Routes = [
 				data : {
 					role : 10
 				}
+			},
+			{
+				path : 'events',
+				component: EventsComponent,
+				canActivate : [AuthGuard],
+				data : {
+					role : 10
+				}
 			}
 		]
 	}
@@ -48,7 +57,7 @@ const nemeaRoutes : Routes = [
 		FormsModule,
 		RouterModule.forChild(nemeaRoutes)
 	],
-	declarations : [nemeaBase, nemeaComponent, nemeaStatusComponent],
+	declarations : [nemeaBase, nemeaComponent, nemeaStatusComponent, EventsComponent],
 	exports : [],
 	providers : []
 })
