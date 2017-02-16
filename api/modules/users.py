@@ -134,7 +134,7 @@ def edit_user(user_id):
 	if user.email and user.email != "":
 		query["$set"]["email"] = user.email
 
-	if user.role:
+	if user.role >= 0:
 		query["$set"]["role"] = user.role
 
 	if user.settings and user.settings != {}:
@@ -145,6 +145,9 @@ def edit_user(user_id):
 		auth_verify = User.from_object(auth.login(user))
 
 		query["$set"]["password"] = auth.create_hash(user_data["password_new"])
+
+	if len(query["$set"]) == 0:
+		raise UserException("Nothing to update", status_code=400)
 
 	# Update the user and return updated document
 	res = db.users.find_one_and_update(

@@ -168,6 +168,11 @@ export class usersEditComponent {
 	}
 	user_original : Object;
 
+	roles = [
+		{value: 0, viewValue: 'Administrator'},
+		{value: 10, viewValue: 'User'},
+		{value: 255, viewValue: 'Guest'}
+	];
 
 	constructor(private usersService : UsersService, private route : ActivatedRoute, private router : Router) {}
 
