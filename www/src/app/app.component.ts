@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { AuthService } from './services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers : [AuthService]
 })
 export class AppComponent {
 	isLoginPage : boolean = false;
@@ -12,11 +14,10 @@ export class AppComponent {
 	modules : Array<Object> = [];
 	children : Array<Object>= [];
 
-	constructor(private router : Router, private route:ActivatedRoute) {}
+	constructor(private router : Router, private route:ActivatedRoute, private auth : AuthService) {}
 
 	ngOnInit() {
-		//console.log(this.router.url);
-
+		this.checkSession();
 		this.router.events.subscribe(val => {
 
 			/* the router will fire multiple events */
@@ -27,13 +28,9 @@ export class AppComponent {
 
 				if (!this.user || this.router.url == "/login") {
 					this.isLoginPage = true;
-					this.user = { user : {username : ""}};
-					this.router.navigate(['/login']);
+					this.logout();
 				} else {
-				this.isLoginPage = false;
-
-					console.log(this.route.children)
-
+					this.isLoginPage = false;
 					this.children = this.route.children[0].routeConfig.children;
 				}
 			}
@@ -53,5 +50,28 @@ export class AppComponent {
 
 	setPath(path : Array<String>) {
 		this.router.navigate(path);
+	}
+
+	private checkSession() {
+		this.user = JSON.parse(localStorage.getItem('currentUser'));
+
+		if (!this.user) {
+			this.logout();
+		}
+
+		console.info("I should check the session: " + this.user["session_id"]);
+		this.auth.checkSession().subscribe(
+			data => {},
+			error => {
+				console.error("The session \"" + this.user["session_id"] + "\" is invalid");
+				this.logout();
+			}
+		)
+	}
+
+	private logout() {
+		localStorage.removeItem("currentUser");
+		this.user = { user : {username : ""}};
+		this.router.navigate(['/login']);
 	}
 }

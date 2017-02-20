@@ -31,10 +31,6 @@ export class AuthService {
 			.catch(this.handleError);
     }
 
-	handleError(err : Response | any) {
-		return Promise.reject(err);
-	}
-
     logout() {
 		// remove user from local storage to log user out
 		let user = JSON.parse(localStorage.getItem('currentUser'));
@@ -45,5 +41,17 @@ export class AuthService {
 			});
 			//localStorage.removeItem('currentUser');
 
-    }
+	}
+
+	checkSession() {
+		return this.http.get('/api/authorization').map(
+			(response : Response) => {
+				console.debug('Session is valid');
+			})
+			.catch(this.handleError);
+	}
+
+	private handleError(err : Response | any) {
+		return Promise.reject(err);
+	}
 }
