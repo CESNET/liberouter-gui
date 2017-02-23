@@ -1,0 +1,10 @@
+.home {
+	.card {
+		margin: 1em;
+		width: 25em;
+
+		&:hover {
+			background-color: darken(#FFF, 1%);
+		}
+	}
+}
