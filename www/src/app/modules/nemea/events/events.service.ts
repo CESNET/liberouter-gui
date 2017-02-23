@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
@@ -11,6 +11,20 @@ export class EventsService {
 			(response : Response) => {
 				console.log(response);
 				let body : Object = response.json();
+				return body;
+			})
+			.catch(this.handleError);
+	}
+
+	query(query : Object) {
+		let params: URLSearchParams = new URLSearchParams();
+		for(let key in query) {
+			params.set(key.toString(), query[key]);
+		}
+		return this.http.get('/api/nemea/events/query', {search : params}).map(
+			(response : Response) => {
+				console.log(response);
+				let body = response.json();
 				return body;
 			})
 			.catch(this.handleError);

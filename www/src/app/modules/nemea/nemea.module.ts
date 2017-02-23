@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { FormsModule }		from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { nemeaBase, nemeaComponent } from './nemea.component';
 import { nemeaStatusComponent } from './status/nemea_status.component'
 import { EventsComponent } from './events/events.component'
 
 import { AuthGuard } from  'app/utils/auth.guard';
+import { EventItemComponent } from './events/event-item/event-item.component';
+import { EventDetailComponent } from './events/event-detail/event-detail.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -55,10 +58,18 @@ const nemeaRoutes : Routes = [
 	imports : [
 		CommonModule,
 		FormsModule,
+		NgbModule.forRoot(),
 		RouterModule.forChild(nemeaRoutes)
 	],
-	declarations : [nemeaBase, nemeaComponent, nemeaStatusComponent, EventsComponent],
+	declarations : [
+		nemeaBase,
+		nemeaComponent,
+		nemeaStatusComponent,
+		EventsComponent,
+		EventItemComponent,
+		EventDetailComponent],
 	exports : [],
-	providers : []
+	providers : [],
+	entryComponents : [EventDetailComponent]
 })
 export class nemeaModule {};

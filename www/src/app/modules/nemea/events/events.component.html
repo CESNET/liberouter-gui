@@ -1,12 +1,106 @@
 <h2>
 	<a routerLink='/nemea'>
-		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea Status
+		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea
 	</a>
 </h2>
 
+{{ query | json }}
 
-<p>
-  events works!
-</p>
+<section class="query-builder box">
+	<form (ngSubmit)="runQuery()" name="query_form" class="query box">
+		<ngb-datepicker [(ngModel)]="query.date" (navigate)="date = $event.next" name="datepicker"></ngb-datepicker>
+
+		<label for="timeFrom">Time from</label>
+		<input [(ngModel)]="query.from" type="text" placeholder="12:00" [ngModelOptions]="{ debounce: 100 }" validate-format name="timeTo">
+		<p *ngIf="False">Bad time format</p>
+
+		<label>To</label>
+		<input [(ngModel)]="query.to" type="text" placeholder="13:00" validate-format validate-hours [ngModelOptions]="{ debounce: 100 }" name="timeFrom">
+        <p *ngIf="False">Bad time format or "TO" time sooner than "FROM" time</p>
+
+		<label>Category</label>
+        <input [(ngModel)]="query.category" name="Category">
+
+        <label>Description</label>
+        <input [(ngModel)]="query.description" name="Description">
+
+		<label>Limit</label>
+		<input [(ngModel)]="query.limit" name="Limit">
+
+		<label>Order by</label>
+        <input type="text" [(ngModel)]="query.orderby" name="OrderBy">
+
+                <!--md-autocomplete
+                    md-selected-item="query.orderby"
+                    md-search-text="query.orderby"
+                    md-items="item in orderBy"
+                    md-item-text="item"
+                    md-floating-label="Order by"
+                    [(ngModel)]="query.orderby">
+                    <span md-highlight-text="query.orderby">{{item}}</span>
+                </md-autocomplete>
+                {{ query.orderby }}
+                -->
+        <!--md-switch
+                    flex="20"
+                    [(ngModel)]="query.dir_raw"
+                    aria-label="Direction"
+                    class="md-primary"
+                    ng-change="switchDir(query.dir_raw)"
+                    md-no-ink flex>
+                    Direction:
+                    {{ dirVal }}
+                </md-switch-->
+        <label>Source IP</label>
+        <input type="text" [(ngModel)]="query.srcip" name="srcip">
+
+		<label>Destination IP</label>
+		<input type="text" [(ngModel)]="query.dstip" name="dstip">
+
+        <button class="btn btn-primary" type="submit" [disabled]="">{{ loadBtn }}</button>
+        <button class="btn btn-primary btn-warning" type="button" (click)="reset()">RESET</button>
+
+	</form>
+</section>
+
+<section class="box">
+	<table class="table box table-hover">
+		<thead>
+			<tr>
+				<td>
+					Event Time
+				</td>
+				<td>
+					Category
+				</td>
+				<td>
+					Source
+				</td>
+				<td>
+					Target
+				</td>
+				<td>
+					Description
+				</td>
+				<td>
+					Flows
+				</td>
+				<td>
+					Detail
+				</td>
+			</tr>
+		</thead> <!-- head -->
+
+		<tbody>
+			<tr nemea-event *ngFor="let event of events" [item]="event">
+			</tr>
+		</tbody>
+	</table>
+
+	Remaining: {{ remaining | json }}<br>
+	{{ events?.length }}
+	<button class="btn btn-primary" *ngIf="events" (click)="getNext(events[events.length-1]['DetectTime']['$date'])">Load next {{ query.limit }} items</button>
+</section>
+
 
 {{ events | json }}

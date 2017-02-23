@@ -1,0 +1,29 @@
+<div class="modal-header">
+	<h4 class="modal-title">Event detail</h4>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body">
+	<div class="d-flex flex-column">
+		<span *ngIf="data.DetectTime">Detect Time: {{ data?.DetectTime['$date'] | date : 'yyyy/MM/dd H:mm:ss' }}</span>
+		<span *ngIf="data.DetectTime">Event Time: {{ data?.EventTime['$date'] | date : 'yyyy/MM/dd H:mm:ss' }}</span>
+		<span *ngIf="data.DetectTime">Cease Time: {{ data?.CeaseTime['$date'] | date : 'yyyy/MM/dd H:mm:ss' }}</span>
+		<span *ngIf="data.DetectTime">Category: {{ data?.Category }}</span>
+		<span *ngIf="data.DetectTime">Description: {{ data?.Description }}</span>
+	</div>
+	<br>
+	{{ data | json }}
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" (click)="activeModal.close()" disabled>
+		Source IP
+	</button>
+
+	<button type="button" class="btn btn-secondary" (click)="activeModal.close()" disabled>
+		Target IP
+	</button>
+	<button type="button" class="btn btn-secondary" (click)="activeModal.close()">
+		Close
+	</button>
+</div>

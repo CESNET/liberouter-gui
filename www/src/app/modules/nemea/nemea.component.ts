@@ -7,25 +7,28 @@ import { Component } from '@angular/core';
 export class nemeaBase {};
 
 @Component({
-	//moduleId : module.id.replace("/dist/", "/"),
 	selector : 'nemea-view',
 	template : `
-	<h2>
-		<a routerLink='status'>
-			<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Status
-		</a>
-	</h2>
-	<h2>
-		<a routerLink='events'>
-			<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Events
-		</a>
-	</h2>
+	<section class="d-flex flex-row">
+		<section class="box">
+			<h2>
+				<a routerLink='status'>
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Status
+				</a>
+			</h2>
+		</section>
+		<section class="box">
+			<h2>
+				<a routerLink='events'>
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Events
+				</a>
+			</h2>
+		</section>
+	</section>
 	`
 })
 export class nemeaComponent {
 	constructor() {}
 
-	ngOnInit() {
-		console.log('Hello from Nemea')
-	}
+	ngOnInit() { }
 }
