@@ -5,12 +5,13 @@ import { AuthService } from 'app/services';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./login.component.scss'],
   providers : [AuthService]
 })
 export class LoginComponent implements OnInit {
 
 	loading = false;
+	loginBtn = "Login";
 	user = {
 		id : "",
 		username : "",
@@ -43,17 +44,20 @@ export class LoginComponent implements OnInit {
 		this.formError = true;
 		this.formErrorMsg = msg;
 		this.loading = false;
+		this.loginBtn = "Login";
 	}
 
 	unsetError() {
 		this.formError = false;
 		this.formErrorMsg = "";
 		this.loading = false;
+		this.loginBtn = "Login";
 	}
 
 	login() {
 		// Authenticate the user and redirect them
 		this.loading = true;
+		this.loginBtn = "Loading...";
 
 		if (this.user.username == "" || this.user.password == "") {
 			this.setError("Missing username or password");
