@@ -72,39 +72,42 @@ export class usersAddComponent {
 
 @Component({
 	selector : 'users-list',
-	template : `users-list component to handle everything around users <br />
-	<table class="table table-hover">
-		<thead>
-		<tr>
-			<th>Username</th>
-			<th>E-mail</th>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Role</th>
-			<th>Action</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr *ngFor="let user of users">
-			<td>{{ user.username }}</td>
-			<td>{{ user.email }}</td>
-			<td>{{ user.first_name }}</td>
-			<td>{{ user.last_name }}</td>
-			<td>{{ user.role }}</td>
-			<td>
-				<button class="btn btn-secondary"routerLink="{{user.id.$oid}}">View user</button>
-				<button class="btn btn-danger" title="Remove user" (click)="removeUser(user)"
-				*ngIf="currentUser.user.username != user.username">Delete user</button>
-			</td>
-		</tr>
-		</tbody>
-		<tfoot>
+	template : `
+	<h2>Users management</h2>
+	<section class="box d-flex flex-row">
+		<table class="table table-hover">
+			<thead>
 			<tr>
-				<td colspan="6"><button type="button" class="btn btn-primary" routerLink="add" routerLinkActive="active-link">Add new user</button>
-				<td>
+				<th>Username</th>
+				<th>E-mail</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Role</th>
+				<th>Action</th>
 			</tr>
-		</tfoot>
-	</table>
+			</thead>
+			<tbody>
+			<tr *ngFor="let user of users">
+				<td>{{ user.username }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.first_name }}</td>
+				<td>{{ user.last_name }}</td>
+				<td>{{ user.role }}</td>
+				<td>
+					<button class="btn btn-secondary"routerLink="{{user.id.$oid}}">View user</button>
+					<button class="btn btn-danger" title="Remove user" (click)="removeUser(user)"
+					*ngIf="currentUser.user.username != user.username">Delete user</button>
+				</td>
+			</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5"><button type="button" class="btn btn-primary" routerLink="add" routerLinkActive="active-link">Add new user</button>
+					<td>
+				</tr>
+			</tfoot>
+		</table>
+	</section>
 
 		`,
 	providers : [UsersService]

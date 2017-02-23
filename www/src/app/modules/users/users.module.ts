@@ -20,6 +20,7 @@ const usersRoutes : Routes = [
 		data : {
 			basepath : true,
 			name : "Users",
+			description : "Manage users, update profiles and passwords.",
 			icon : "fa-user-circle",
 			role : 0
 		},
