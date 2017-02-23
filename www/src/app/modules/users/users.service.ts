@@ -9,7 +9,7 @@ export class UsersService {
 	constructor(private http: Http) { }
 
 	add(user : Object) {
-		return this.http.post('/api/users', user)
+		return this.http.post('/users', user)
             .map((response: Response) => {
 				// User successfully added
 				// Extract data from response
@@ -22,7 +22,7 @@ export class UsersService {
 	}
 
 	remove(id : string) {
-		return this.http.delete('/api/users/' + id)
+		return this.http.delete('/users/' + id)
 			.map((response: Response) => {
 				// User successfully added
 				// Extract data from response
@@ -35,13 +35,13 @@ export class UsersService {
 	}
 
 	list() {
-		return this.http.get('/api/users')
+		return this.http.get('/users')
 			.map((response : Response) => response.json())
 			.catch(this.handleError);
 	}
 
 	get(id : String) {
-		return this.http.get('/api/users/' + id)
+		return this.http.get('/users/' + id)
 			.map((response: Response) => {
 				// User successfully added
 				// Extract data from response
@@ -54,7 +54,7 @@ export class UsersService {
 	}
 
 	update(id : String, user : Object) {
-		return this.http.put('/api/users/' + id, user)
+		return this.http.put('/users/' + id, user)
 			.map((response: Response) => {
 				// User successfully updated
 				// Extract data from response

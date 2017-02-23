@@ -9,6 +9,7 @@ import { Request,
 	Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
@@ -16,6 +17,7 @@ import 'rxjs/add/observable/throw';
 export class HttpInterceptor extends Http {
 	currentUser : Object;
 	headers : Headers = new Headers({ 'Content-Type': 'application/json' });
+	prefixUrl : string = environment.apiUrl;
 
 	constructor(backend: XHRBackend,
 		defaultOptions: RequestOptions,
@@ -24,29 +26,28 @@ export class HttpInterceptor extends Http {
 		)
 	{
 		super(backend, defaultOptions);
+		this.prefixUrl = environment.apiUrl;
 	}
 
 	// During each request append Authorization header if session is present
 	request(url: Request,
 		options?: RequestOptionsArgs): Observable<Response>
 	{
+		// Prefix the URL with environment prefix
+		url.url = this.prefixUrl + url.url;
 		this.currentUser = this.getCurrentUser();
 
 		if (this.currentUser != undefined) {
 			this.headers.set('Authorization', this.currentUser['session_id']);
-			}
+		}
 
-			console.log(url)
+		url.headers = this.headers;
 
-			if (!options) {
-				url.headers = this.headers;
-				return super.request(url).catch(this.catchErrors());
-			}
-
-				console.log(options);
-		//options.headers = this.headers;
-		//console.log(options);
-
+		console.log(url)
+		if (!options) {
+			url.headers = this.headers;
+			return super.request(url).catch(this.catchErrors());
+		}
 
 		// Call the original Http
 		return super.request(url, options).catch(this.catchErrors());

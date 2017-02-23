@@ -7,7 +7,7 @@ export class EventsService {
 	constructor(private http : Http) {}
 
 	last_events(items : number) {
-		return this.http.get('/api/nemea/events/' + String(items)).map(
+		return this.http.get('/nemea/events/' + String(items)).map(
 			(response : Response) => {
 				console.log(response);
 				let body : Object = response.json();
@@ -21,7 +21,7 @@ export class EventsService {
 		for(let key in query) {
 			params.set(key.toString(), query[key]);
 		}
-		return this.http.get('/api/nemea/events/query', {search : params}).map(
+		return this.http.get('/nemea/events/query', {search : params}).map(
 			(response : Response) => {
 				console.log(response);
 				let body = response.json();

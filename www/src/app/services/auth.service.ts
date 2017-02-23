@@ -9,7 +9,7 @@ export class AuthService {
 	constructor(private http: Http) { }
 
 	login(username: string, password: string) {
-		return this.http.post('/api/authorization',
+		return this.http.post('/authorization',
 			JSON.stringify({ username: username, password: password })
 			)
             .map((response: Response) => {
@@ -35,7 +35,7 @@ export class AuthService {
 		// remove user from local storage to log user out
 		let user = JSON.parse(localStorage.getItem('currentUser'));
 		console.log(user);
-		return this.http.delete('/api/authorization')
+		return this.http.delete('/authorization')
 			.map((response : Response) => {
 				console.log(response);
 			});
@@ -44,7 +44,7 @@ export class AuthService {
 	}
 
 	checkSession() {
-		return this.http.get('/api/authorization').map(
+		return this.http.get('/authorization').map(
 			(response : Response) => {
 				console.debug('Session is valid');
 			})
