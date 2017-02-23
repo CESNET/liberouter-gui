@@ -57,6 +57,7 @@ export class AppComponent {
 
 		if (!this.user) {
 			this.logout();
+			return;
 		}
 
 		console.info("I should check the session: " + this.user["session_id"]);
