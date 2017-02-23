@@ -4,6 +4,6 @@ import { nemeaModule } from './modules/nemea/nemea.module';
 
 export const modules : Array<Object> = [
 	//		dummyModule,
-	usersModule,
-	nemeaModule
+	nemeaModule,
+	usersModule
 ]
