@@ -2,5 +2,10 @@
 	"/api": {
 		"target": "https://localhost/",
 	  	"secure": false
+	},
+	"/virt/*": {
+		"target": "http://localhost:15555/",
+		"secure": false,
+		"pathRewrite": {"/virt" : ""}
 	}
 }
