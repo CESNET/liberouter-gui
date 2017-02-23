@@ -1,5 +1,5 @@
 {
-	"/api": {
+	"/libapi": {
 		"target": "https://localhost/",
 	  	"secure": false
 	},
