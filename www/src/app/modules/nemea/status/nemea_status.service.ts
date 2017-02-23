@@ -7,7 +7,7 @@ export class nStatService {
 	constructor(private http : Http) {}
 
 	stats() {
-		return this.http.get('/virt/nemea/status/stats').map(
+		return this.http.get('/api/nemea/status/stats').map(
 			(response : Response) => {
 				let body : Object = response.json();
 				return body;
@@ -16,7 +16,7 @@ export class nStatService {
 	}
 
 	topology() {
-		return this.http.get('/virt/nemea/status').map(
+		return this.http.get('/api/nemea/status').map(
 			(response : Response) => {
 				let body = response.json();
 				return body;

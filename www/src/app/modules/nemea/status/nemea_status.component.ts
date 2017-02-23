@@ -9,12 +9,22 @@ import { nStatService } from './nemea_status.service';
 	providers : [nStatService]
 })
 export class nemeaStatusComponent {
-	error : String = ""
+	error : Object;
 	refreshing : Boolean = false;
 	last_refresh_time : Date = new Date();
 	img_path : any;
 	data : Object;
 	id : any;
+
+	intervals = [
+		{value: 1, viewValue: '1 s'},
+		{value: 2, viewValue: '2 s'},
+		{value: 5, viewValue: '5 s'},
+		{value: 10, viewValue: '10 s'},
+		{value: 30, viewValue: '30 s'},
+		{value: 60, viewValue: '60 s'},
+		{value: -1, viewValue: 'Paused'},
+	];
 
 	// Refresh interval in seconds
 	refresh_interval : number = 5;
@@ -51,11 +61,17 @@ export class nemeaStatusComponent {
 	}
 
 	changeInterval() {
+		if (this.refresh_interval < 0 && this.id) {
+			clearInterval(this.id);
+			this.refreshing = false;
+			return;
+		}
+
 		if (this.id) {
 			clearInterval(this.id)
 		}
 
-		this.id = setInterval(() => { this.refresh() }, this.refresh_interval);
+		this.id = setInterval(() => { this.refresh() }, this.refresh_interval*1000);
 	}
 
 	processTopology(data : any) {
@@ -104,6 +120,9 @@ export class nemeaStatusComponent {
 	}
 
 	processError(error : Object) {
+		if (error['status'] >= 404) {
+			this.error = error;
+		}
 		console.log(error);
 	}
 
