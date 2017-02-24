@@ -61,14 +61,16 @@ class User(object):
 
 	@classmethod
 	def parseRole(self, role):
-		if role == "admin" or role == Role.admin:
+		if role == None or int(role) == Role.undefined:
+			return Role.undefined
+		elif role == "admin" or int(role) == Role.admin:
 			return Role.admin
-		elif role == "user" or role == Role.user:
+		elif role == "user" or int(role) == Role.user:
 			return Role.user
-		elif role == "guest" or role == Role.guest:
+		elif role == "guest" or int(role) == Role.guest:
 			return Role.guest
 		else:
-			return None
+			return Role.guest
 
 	def setRole(self, role):
 		self.role = self.parseRole(role)

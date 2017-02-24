@@ -1,0 +1,30 @@
+.login-container {
+	height: 100%;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c5deea+0,066dab+100 */
+background: #c5deea; /* Old browsers */
+background: -moz-linear-gradient(-45deg, #c5deea 0%, #066dab 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(-45deg, #c5deea 0%,#066dab 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(135deg, #c5deea 0%,#066dab 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.login {
+	width: 25%;
+	max-width: 300px;
+	max-height: 300px;
+	-webkit-box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
+	box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
+	padding: 2em;
+
+	h2 {
+		padding-bottom: 0.25em;
+		span {
+			display: none;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+		}
+	}
+}

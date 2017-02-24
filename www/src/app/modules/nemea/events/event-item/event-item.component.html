@@ -1,0 +1,40 @@
+<td>{{ item?.DetectTime['$date'] | date : 'dd/MM/y H:mm:ss'}}</td>
+<td>{{ item?.Category }}</td>
+<td>
+	<span *ngIf="item.Source && item.Source[0].IP4">{{ item.Source[0].IP4 }}</span>
+	<small *ngIf="!item.Source || !item.Source[0].IP4">N/A</small>
+</td>
+<td>
+	<span *ngIf="item.Target && item.Target[0].IP4">{{ item.Target[0].IP4 }}</span>
+	<small *ngIf="!item.Target || !item.Target[0].IP4">N/A</small>
+</td>
+<td>{{ item?.Description }}</td>
+<td>{{ item?.FlowCount | number }}</td>
+
+<td>
+	<!-- button (click)="expandRow()" class="btn btn-primary btn-sm">Expand</button -->
+	<button [routerLink]="['.']" [queryParams]="{id : item._id.$oid }" class="btn btn-primary btn-sm">Expand</button>
+</td>
+
+<template ngbModalContainer class="item-detail"></template>
+
+<!--
+	Source: <span *ngIf="item.Source[0]">{{ item.Source[0].IP4[0] }} | {{ item.Source[0].Proto[0] }}</span>
+			<span *ngIf="!item.Source[0]">Data not available</span>
+	Target: <span *ngIf="item.Target[0]">{{ item.Target[0].IP4[0] }} | {{ item.Target[0].Proto[0] }}</span>
+			<span *ngIf="!item.Target[0]">Data not available</span>
+	Flow count: {{ item.FlowCount | number }}
+
+	<div style="text-align: center;" >
+		<button class="btn" *ngIf="item.Source[0].IP4[0]"
+			(click)="getQuery(item.Source[0].IP4[0], 'src')">
+			Source IP
+		</button>
+		<button class="btn" *ngIf="item.Target[0].IP4[0]"
+			(click)="getQuery(item.Target[0].IP4[0], 'trg')">
+			Target IP
+		</button>
+		<button class="btn" routerLink="{item['_id']['$oid']}">
+			Details
+		</button>
+	</div-->

@@ -1,0 +1,62 @@
+<h2>
+	<a routerLink='/users'>
+		<i class="fa fa-chevron-left" aria-hidden="true"></i>
+	</a> Edit user "{{ user.username }}"</h2>
+
+<form>
+	<div class="form-group">
+		<label for="email">E-mail</label>
+		<input placeholder="E-mail" [(ngModel)]="user.email"
+				name="email" type="email" id="email" class="form-control">
+	</div>
+
+	<div class="form-group">
+		<label for="password">New Password</label>
+		<input placeholder="New password" [(ngModel)]="user.password"
+				name="password" type="password" id="password" class="form-control">
+
+		<label for="password_validation">Password Validation</label>
+		<input placeholder="Password validation" [(ngModel)]="passwordValidation"
+				name="password" type="password" id="password_validation" class="form-control">
+
+
+		<div class="pw-verify flex-item" *ngIf="passwordValidation">
+			<span *ngIf="passwordValidation == user.password">
+				<i class="fa fa-check" aria-hidden="true"></i>
+			</span>
+			<span *ngIf="passwordValidation != user.password">
+				<i class="fa fa-times" aria-hidden="true"></i>
+			</span>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="first-name">First Name</label>
+		<input placeholder="First name" [(ngModel)]="user.first_name" name="first_name"
+			id="first-name" class="form-control">
+
+		<label for="last-name">Last Name</label>
+		<input placeholder="Last name" [(ngModel)]="user.last_name" name="last_name"
+			id="last-name" class="form-control">
+	</div>
+
+	<div class="form-group">
+		<select placeholder="Role" [(ngModel)]="user.role" name="role" class="custom-select">
+			<option *ngFor="let role of roles" [value]="role.value">
+			  {{role.viewValue}}
+			</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<button class="btn btn-primary"
+			type="submit"
+		   (click)="updateUser()">Update user</button>
+
+		<span *ngIf="error">Error: {{ error }}</span>
+	</div>
+</form>
+
+
+{{ user | json }}
+{{ user_original | json }}

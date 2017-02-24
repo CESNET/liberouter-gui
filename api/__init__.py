@@ -24,7 +24,7 @@ from .configurator import Config
 """
 Load user config specified by an argument or in default path.
 """
-config = Config(base_path = __path__[0])
+config = Config()
 
 from .dbConnector import dbConnector
 from .session import SessionManager
@@ -37,8 +37,8 @@ import ssl
 from bson import json_util
 
 if config["ssl"].getboolean("enabled"):
-    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
+	context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+	context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
 
 print("# Connecting to MongoDB")
 db = dbConnector.from_object(config["database"])

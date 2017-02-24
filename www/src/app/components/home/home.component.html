@@ -1,0 +1,15 @@
+
+<section class="d-flex home align-items-stretch">
+	<div class="card" *ngFor="let module of modules">
+		<div class="card-block">
+			<h4 class="card-title">
+				<i class="fa" aria-hidden="true" *ngIf="module.icon != ''" [ngClass]="module.icon"></i>
+				{{ module.name }}
+			</h4>
+			<p class="card-text" *ngIf="module.description">{{ module.description }}</p>
+			<p class="card-text" *ngIf="!module.description"><em><small>No description available</small></em></p>
+			<a class="btn btn-primary" routerLink="{{ module.path }}" routerLinkActive="active">Go to {{ module.name }} <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+		</div>
+	</div>
+</section>
+

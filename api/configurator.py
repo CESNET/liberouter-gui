@@ -3,6 +3,7 @@
 import configparser
 import argparse
 import sys
+import os
 from api import app
 
 import unittest
@@ -17,7 +18,7 @@ class Config(object):
 	version = '1.0'
 	modules = dict()
 
-	def __init__(self, base_path=None):
+	def __init__(self):
 		args = self.parse_arguments()
 
 		"""
@@ -36,7 +37,7 @@ class Config(object):
 
 		self.version = self.config["api"].get("version", "v1")
 
-		self.config.set("api", "module_path", base_path + self.config["api"].get("modules", "/modules"))
+		self.config.set("api", "module_path", os.path.dirname(__file__) + self.config["api"].get("modules", "/modules"))
 
 		self.create_urls()
 
@@ -56,7 +57,6 @@ class Config(object):
 		"""
 		tmp_config = configparser.ConfigParser()
 		tmp_config.read(path)
-		print(tmp_config.sections())
 		self.modules[tmp_config.sections()[0]] = tmp_config[tmp_config.sections()[0]]
 
 	def __getitem__(self, key):
@@ -69,7 +69,9 @@ class Config(object):
 		parser = argparse.ArgumentParser(description="""REST API CESNET 2016.\n\n
 				Authors: Petr Stehlik <stehlik@cesnet.cz>""", add_help=False)
 
-		parser.add_argument('--config', '-c', default='./config.ini', dest='config', help='Load given configuration file')
+		parser.add_argument('--config', '-c',
+				default=os.path.join(os.path.dirname(__file__), '../config.ini'),
+				dest='config', help='Load given configuration file')
 		parser.add_argument('--help', '-h', help="Print this help", dest='help')
 
 		try:

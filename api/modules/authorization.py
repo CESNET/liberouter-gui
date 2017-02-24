@@ -35,3 +35,12 @@ def logout():
 	session_id = request.headers.get('Authorization', None)
 	auth.delete(session_id)
 	return(json_util.dumps({"success" : True}))
+
+
+"""
+Checks validity of session using only required() decorator
+"""
+@au.route('', methods=['GET'])
+@auth.required()
+def checkSession():
+	return('')

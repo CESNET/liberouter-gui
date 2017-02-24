@@ -1,0 +1,42 @@
+<section class="d-flex justify-content-center align-content-center align-items-center login-container">
+	<section class="login box">
+		<h2>
+			<span>Liberouter GUI</span>
+			<img src="assets/logo.png" alt="Liberouter logo" />
+		</h2>
+
+		<form>
+			<div class="form-group">
+				<label for="username" class="sr-only">Username</label>
+				<div class="input-group">
+					<div class="input-group-addon">Username</div>
+					<input type="text"
+						class="form-control"
+						id="username"
+						[(ngModel)]="user.username"
+						placeholder="Username"
+						name="username">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="password" class="sr-only">Password</label>
+				<div class="input-group">
+					<div class="input-group-addon">Password&nbsp;</div>
+					<input type="password"
+						class="form-control"
+						id="password"
+						placeholder="Password"
+						[(ngModel)]="user.password"
+						name="password">
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-primary btn-block" (click)="login()" [disabled]="loading">{{ loginBtn }}</button>
+
+			<div class="error-message" *ngIf="formError">
+				Error: {{ formErrorMsg }}
+			</div>
+		</form>
+	</section>
+</section>

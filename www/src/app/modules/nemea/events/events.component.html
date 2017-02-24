@@ -1,0 +1,120 @@
+<h2>
+	<a routerLink='/nemea'>
+		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea
+	</a>
+</h2>
+
+<section class="query-builder box">
+	<form (ngSubmit)="runQuery()" name="query_form" class="query box">
+		<div class="d-flex flex-row">
+			<div class="row-space">
+				<ngb-datepicker [(ngModel)]="query.date" (navigate)="date = $event.next" name="datepicker"></ngb-datepicker>
+			</div>
+
+			<div class="d-flex flex-column row-space">
+
+				<label for="timeFrom">Time from</label>
+				<input [(ngModel)]="query.from" type="text" placeholder="12:00" [ngModelOptions]="{ debounce: 100 }" validate-format name="timeTo">
+				<p *ngIf="False">Bad time format</p>
+
+				<label>To</label>
+				<input [(ngModel)]="query.to" type="text" placeholder="13:00" validate-format validate-hours [ngModelOptions]="{ debounce: 100 }" name="timeFrom">
+				<p *ngIf="False">Bad time format or "TO" time sooner than "FROM" time</p>
+
+				<label>Category</label>
+				<input [(ngModel)]="query.category" name="Category">
+
+				<label>Description</label>
+				<input [(ngModel)]="query.description" name="Description">
+
+				<label>Limit</label>
+				<input [(ngModel)]="query.limit" name="Limit">
+			</div>
+
+			<div class="d-flex flex-column row-space">
+				<label>Order by</label>
+				<input type="text" [(ngModel)]="query.orderby" name="OrderBy">
+
+				<label>Direction</label>
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-primary" [ngClass]="{'active' : query.dir == 1}">
+						<input type="radio" name="options" id="option1"
+							autocomplete="off" [value]="1" [(ngModel)]="query.dir"> Ascending
+					</label>
+					<label class="btn btn-primary" [ngClass]="{'active' : query.dir == -1}">
+						<input type="radio" name="options" id="option1" 
+							autocomplete="off" [value]="-1" [(ngModel)]="query.dir"> Descending
+					</label>
+				</div>
+
+				<label>Source IP</label>
+				<input type="text" [(ngModel)]="query.srcip" name="srcip">
+
+				<label>Destination IP</label>
+				<input type="text" [(ngModel)]="query.dstip" name="dstip">
+			</div>
+
+			<div class="d-flex flex-column row-space">
+				<button class="btn btn-primary btn-lg" type="submit" [disabled]="">{{ loadBtn }}</button>
+				<br/>
+				<button class="btn btn-primary btn-warning btn-lg" type="button" (click)="reset()">RESET</button>
+			</div>
+		</div>
+	</form>
+</section>
+
+<section class="box">
+	<table class="table box table-hover">
+		<thead>
+			<tr>
+				<td>
+					Event Time
+				</td>
+				<td>
+					Category
+				</td>
+				<td>
+					Source
+				</td>
+				<td>
+					Target
+				</td>
+				<td>
+					Description
+				</td>
+				<td>
+					Flows
+				</td>
+				<td>
+					Detail
+				</td>
+			</tr>
+		</thead> <!-- head -->
+
+		<tbody>
+			<tr *ngIf="events?.length == 0">
+				<td colspan="7">
+					<h3 class="text-center"><em>No events match given criteria.</em></h3>
+				</td>
+			</tr>
+			<tr nemea-event *ngFor="let event of events" [item]="event">
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan=7 *ngIf="remaining?.total > 1 || remaining?.total < 0">
+					<button class="btn btn-primary btn-lg text-center next-btn"
+						 *ngIf="(events && events?.length > 0)"
+						(click)="getNext(events[events.length-1]['DetectTime']['$date'])"
+						[disabled]="loadBtn != 'LOAD'">
+						Load next <span *ngIf="remaining?.total > 0">
+							{{ query.limit < remaining?.total ? query.limit : remaining?.total }}</span>
+							<span *ngIf="remaining?.total == -1">{{ query.limit }}</span> items<br/>
+							<small *ngIf="remaining?.total > 0">{{ remaining.total }}<span *ngIf="remaining.total == 10000">+</span> remaining</small>
+					</button>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+
+	</section>

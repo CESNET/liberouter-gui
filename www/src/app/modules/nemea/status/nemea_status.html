@@ -1,0 +1,76 @@
+<h2>
+	<a routerLink='/nemea'>
+		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea Status
+	</a>
+</h2>
+
+
+<div id="content">
+
+ <p class="error" *ngIf="error">ERROR: Getting NEMEA topology failed:
+	<span class="reason">Reason: {{ error }}</span>
+ </p>
+
+<label for="refresh-select">Refresh interval</label>
+<select id="refresh-select" class="custom-select" [(ngModel)]="refresh_interval" (change)="changeInterval()">
+	<option *ngFor="let interval of intervals" [value]="interval.value">
+		{{ interval.viewValue }}
+	</option>
+</select>
+
+<img *ngIf="refreshing" src="assets/spin.gif" alt="Loading" width="16" height="16">
+<br>
+Last refresh: {{ last_refresh_time }}
+
+<table class="modules">
+	<tr *ngFor="let module of data">
+		<td class="input-col">
+			<div *ngFor="let ifc of module[1]['inputs']" class="ifc">
+				<div *ngIf="ifc">
+					<!-- id="{{ name }}_INIFC{{ loop.index-1 }}" -->
+					<span class="ifc-name" title="IFC type and parameters">
+						{{ ifc['type'] }}:{{ ifc['ID'] }}
+					</span>
+					<span class="ifc-counter" title="Number of messages transferred per second">
+						<span *ngIf="module[1]['in_counter'] > 0">{{ module[1].in_counter | number : '1.0-0' }}/s</span>
+						<span *ngIf="module[1]['in_counter'] == 0">--/s</span>
+					</span>
+					<span class="ifc-marker" [ngClass]="[ifc['cli-num'] > 0 ? 'notconnected' : 'connected']">
+						{{ ifc['cli-num'] }}
+					</span>
+				</div>
+			</div>
+		</td>
+
+		<td id="{{ module[0] }}" class="module-col" [ngClass]="[module[1].status]">
+			<div class="module-cpu" title="CPU usage">
+				<span *ngIf="module[1]['cpu'] >= 0">{{ module[1]['cpu'] }} %</span>
+				<span *ngIf="module[1]['cpu'] == undefined">-- %</span>
+			</div>
+			<div class="module-mem" title="Memory consumption">
+				<span *ngIf="module[1]['mem'] >= 0">{{ module[1]['mem'] / 1024 | number : '1.2-2' }} MB</span>
+				<span *ngIf="module[1]['mem'] == undefined">-- MB</span>
+			</div>
+			<div class="module-name">{{ module[0] }}</div>
+			<div class="exec-name">{{ module[1]['path'] }}</div>
+		</td>
+
+		<td class="output-col">
+			<div *ngFor="let ifc of module[1]['outputs-avg']" class="ifc">
+				<!-- id="{{ module[0] }}_OUTIFC{{ loop.index-1 }}" -->
+				<span class="ifc-marker" [ngClass]="[ifc['cli-num'] > 0 ? 'connected' : 'notconnected']">
+					<span *ngIf="ifc['cli-num'] > 0">{{ ifc['cli-num'] }}</span>
+				</span>
+				<span class="ifc-counters">
+					<span class="ifc-counter">
+							{{ ifc['sent-msg-avg'] | number : '1.0-2' }}/s
+					</span>
+					<span class="ifc-counter-dropped" [ngClass]="setDropClass(ifc)">
+							{{ ifc['drop-msg-avg'] | number : '1.0-2' }}/s
+					</span>
+				</span>
+				<span class="ifc-name">{{ ifc['type'] }}:{{ ifc['ID'] }}</span>
+			</div>
+		</td>
+	</tr>
+</table>
