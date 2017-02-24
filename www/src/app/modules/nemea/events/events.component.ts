@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { EventsService } from './events.service';
 
@@ -15,7 +16,7 @@ const now = new Date();
 export class EventsComponent implements OnInit {
 
 	events : Array<Object>;
-	remaining : Object;
+	remaining : Object = {total : (-1)};
 	query : Object = {
         from : "12:00",
         to : "",
@@ -27,14 +28,15 @@ export class EventsComponent implements OnInit {
         description : "",
         category : "",
         orderby : "DetectTime",
-        dir : -1,
+        dir : 1,
         limit : 100,
         srcip : "",
         dstip : ""
 	}
 	loadBtn = "LOAD";
+	error;
 
-	constructor(private eventsService : EventsService) { }
+	constructor(private eventsService : EventsService, private router : Router) { }
 
 	ngOnInit() {
 		this.eventsService.last_events(100).subscribe(
@@ -47,16 +49,28 @@ export class EventsComponent implements OnInit {
 	private processData(data : any) {
 		this.remaining = data.pop();
 		this.events = data;
+		this.loadBtn = "LOAD";
+		this.setParams();
 	}
 
 	private appendData(data : any) {
 		this.remaining = data.pop();
 		this.events = this.events.concat(data);
+		this.loadBtn = "LOAD";
+		this.setParams();
 	}
 
 
 	private processError(error : Object) {
 		console.log(error);
+		this.error = error;
+		this.loadBtn = "LOAD";
+		this.setParams();
+	}
+
+	private setParams() {
+		console.log('setting params');
+		this.router.navigate(['nemea/events'], {queryParams : this.query});
 	}
 
 	selectToday() {
@@ -83,7 +97,7 @@ export class EventsComponent implements OnInit {
 	}
 
 	private parseHours(time : any) : number {
-		if (typeof time == "number" && time > 0)
+		if ((typeof time == "number" && time > 0) || time == undefined)
 			return time;
 
 		if (typeof time == "string" && time == "")
@@ -99,12 +113,21 @@ export class EventsComponent implements OnInit {
 	}
 
 	runQuery(append = false) {
+		this.loadBtn = "LOADING...";
+
 		let queryParams = {
 			from : this.parseHours(this.query['from']),
 			to : this.parseHours(this.query['to']),
 			limit : this.query['limit'],
 			dir : this.query['dir'],
 			orderby : this.query['orderby']
+		}
+
+		// Inital load of events and we need deeper history
+		if (this.remaining['total'] == -1 && append) {
+			this.query['to'] = this.query['from'];
+			this.query['from'] = undefined;
+			queryParams['dir'] = (-1);
 		}
 
 		console.log(queryParams);
@@ -120,9 +143,8 @@ export class EventsComponent implements OnInit {
 	}
 
 	getNext(time : number) {
-	console.info(time);
-	this.query['from'] = Math.floor((time)/1000);
-
+		console.info(time);
+		this.query['from'] = Math.floor((time)/1000);
 		this.runQuery(true);
 	}
 }
