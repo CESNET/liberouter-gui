@@ -121,5 +121,20 @@ section.main {
 }
 
 nemea-events .modal-dialog {
-	max-width: 65%!important;
+	//max-width: 65%!important;
+}
+
+.idea-event {
+	em {
+        font-weight: bold;
+        font-style: normal;
+    }
+    .sub {
+        padding-left: 1em;
+    }
+
+    span {
+        font-family: 'Consolas', 'Courier', monospace;
+        font-size: 1.2em;
+    }
 }
