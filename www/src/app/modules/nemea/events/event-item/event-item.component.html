@@ -12,7 +12,8 @@
 <td>{{ item?.FlowCount | number }}</td>
 
 <td>
-	<button (click)="expandRow()" class="btn btn-primary btn-sm">Expand</button>
+	<!-- button (click)="expandRow()" class="btn btn-primary btn-sm">Expand</button -->
+	<button [routerLink]="['.']" [queryParams]="{id : item._id.$oid }" class="btn btn-primary btn-sm">Expand</button>
 </td>
 
 <template ngbModalContainer class="item-detail"></template>

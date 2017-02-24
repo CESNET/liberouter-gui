@@ -8,6 +8,7 @@ import { nemeaStatusComponent } from './status/nemea_status.component'
 import { EventsComponent } from './events/events.component'
 
 import { AuthGuard } from  'app/utils/auth.guard';
+import { IdeaPipe } from './events/idea.pipe';
 import { EventItemComponent } from './events/event-item/event-item.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
 
@@ -62,6 +63,7 @@ const nemeaRoutes : Routes = [
 		RouterModule.forChild(nemeaRoutes)
 	],
 	declarations : [
+		IdeaPipe,
 		nemeaBase,
 		nemeaComponent,
 		nemeaStatusComponent,
