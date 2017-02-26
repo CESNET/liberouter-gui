@@ -19,7 +19,8 @@ const nemeaRoutes : Routes = [
 		canActivate : [AuthGuard],
 		data : {
 			basepath : true,
-			name : "Nemea",
+			name : "NEMEA",
+			description : "System for network traffic analysis and anomaly detection.",
 			icon : "fa-grav",
 			img : "path/to/img",
 			role : 10
