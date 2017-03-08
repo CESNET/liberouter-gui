@@ -20,9 +20,7 @@ def routes():
 			"desc" : rule.endpoint
 		})
 
-	app.logger.debug(json_util.dumps(routes))
-
-	return(json_util.dumps(routes))
+	return(routes)
 
 def import_modules():
 	"""
@@ -90,5 +88,5 @@ def handle_invalid_usage(error):
 	"""
 	print("Caught error!")
 	print(error.to_dict())
-	response = json_util.dumps(error.to_dict())
+	response = error.to_dict()
 	return response, error.status_code
