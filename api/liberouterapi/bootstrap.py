@@ -2,9 +2,9 @@ import sys
 import pkgutil
 from getpass import getpass
 
-from api import app, config
-from api.module import Module
-from api.error import ApiException
+from liberouterapi import app, config
+from .modules.module import Module
+from .error import ApiException
 from .dbConnector import dbConnector
 from .Auth import Auth
 
@@ -30,7 +30,7 @@ def import_modules():
 
 	for importer, mod_name, _ in modules:
 		if mod_name not in sys.modules:
-			loaded_mod = __import__("api." +
+			loaded_mod = __import__("liberouterapi." +
 					config['api']['modules'].split('/')[-1] + "." +  mod_name,
 					fromlist=[mod_name])
 			print("   > Imported module \"" + mod_name + "\"")

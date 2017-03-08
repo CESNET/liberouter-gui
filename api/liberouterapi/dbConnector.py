@@ -1,4 +1,4 @@
-from api import app
+from liberouterapi import app, config
 import sys
 
 class dbConnector(object):
@@ -50,7 +50,6 @@ class dbConnector(object):
 				raise Exception("Unknown database provider")
 
 		def __init__(self):
-			from api import config
 			self.config = config["database"]
 			self.provider = self.config.get("provider", "mongodb")
 			# Setup host and port for DB

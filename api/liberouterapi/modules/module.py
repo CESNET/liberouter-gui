@@ -1,5 +1,5 @@
 from flask import Blueprint
-from api import config
+from liberouterapi import config
 
 class Module(Blueprint):
 	def __init__(self, name, import_name, url_prefix=None, no_version=False):

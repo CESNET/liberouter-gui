@@ -3,10 +3,10 @@ from flask import request
 from bson import json_util, ObjectId
 import pymongo
 
-from api import auth, db
-from api.module import Module
-from api.user import User, UserException
-from api.role import Role
+from liberouterapi import auth, db
+from .module import Module
+from ..user import User, UserException
+from ..role import Role
 
 users = Module('users', __name__, url_prefix='/users', no_version=True)
 

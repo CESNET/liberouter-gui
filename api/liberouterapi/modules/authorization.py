@@ -1,10 +1,10 @@
 from flask import request
 from bson import json_util
 
-from api import auth, db
-from api.module import Module
-from api.Auth import AuthException
-from api.user import User
+from liberouterapi import auth, db
+from .module import Module
+from ..Auth import AuthException
+from ..user import User
 
 au = Module('authorization', __name__, url_prefix='/authorization', no_version=True)
 

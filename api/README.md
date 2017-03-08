@@ -15,10 +15,10 @@ This example is for Apache VirtualHost instance on https. You can of course use 
 
 	# Liberouter GUI WSGI
     WSGIDaemonProcess libapi user=liberouter group=liberouter threads=5
-	WSGIScriptAlias "/libapi" "/var/www/html/liberouter-gui/wsgi.py"
+	WSGIScriptAlias "/libapi" "/var/www/html/liberouter-gui/api/wsgi.py"
 	WSGIPassAuthorization on
 
-	<directory "/var/www/html/liberouter-gui">
+	<directory "/var/www/html/liberouter-gui/api">
         WSGIProcessGroup libapi
         WSGIApplicationGroup %{GLOBAL}
         WSGIScriptReloading On
