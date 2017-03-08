@@ -24,9 +24,11 @@ class Auth(object):
 		self.session_manager = session_manager
 		self.secret_key = secret_key
 
+	@classmethod
 	def check_password(self, password, hash):
 		return bcrypt.checkpw(password.encode('utf8'), hash)
 
+	@classmethod
 	def create_hash(self, password):
 		return bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
 
