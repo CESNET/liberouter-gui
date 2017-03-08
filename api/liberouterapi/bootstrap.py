@@ -90,6 +90,7 @@ def handle_invalid_usage(error):
 def setup_mode(response):
 	if config.setup:
 		response.headers['Warning'] = 'setup-required'
+		response.status_code = 442
 	return response
 
 def setup():
