@@ -41,7 +41,7 @@ if config["ssl"].getboolean("enabled"):
 	context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
 
 print("# Connecting to MongoDB")
-db = dbConnector.from_object(config["database"])
+db = dbConnector()
 
 print("# Session manager setting up")
 session_manager = SessionManager.from_object(config)
