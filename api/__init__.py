@@ -28,7 +28,7 @@ config = Config()
 
 from .dbConnector import dbConnector
 from .session import SessionManager
-from .bootstrap import routes, import_modules, admin_setup
+from .bootstrap import routes, import_modules, check_users
 from .Auth import Auth
 from .role import Role
 
@@ -49,7 +49,7 @@ session_manager = SessionManager.from_object(config)
 print("# Authorization module setting up")
 auth = Auth(db, session_manager, config['api']['secret_key'])
 
-admin = admin_setup(db)
+check_users()
 
 print("# Configuring server app")
 app.config.from_object(config)
