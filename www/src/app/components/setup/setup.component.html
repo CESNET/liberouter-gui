@@ -1,0 +1,25 @@
+<section class="box">
+	<h2>Liberouter GUI Setup</h2>
+
+	<p>You need to setup an administrator account to access Liberouter GUI</p>
+
+	<form (ngSubmit)="onSubmit()">
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input type="text" name="username" id="username" class="form-control" placeholder="admin" [(ngModel)]="admin.username">
+		</div>
+
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password" class="form-control" placeholder="password" [(ngModel)]="admin.password">
+		</div>
+
+		<div class="form-group">
+			<label for="password2">Password Confirmation</label>
+			<input type="password" name="password2" id="password2" class="form-control" placeholder="password" [(ngModel)]="admin.password2">
+			<small>Re-enter the same password as above to make sure you haven't mispelled it</small>
+		</div>
+
+		<button type="submit" class="btn btn-primary" [disabled]="admin.password != admin.password2 || admin.password == ''">Create</button>
+	</form>
+</section>

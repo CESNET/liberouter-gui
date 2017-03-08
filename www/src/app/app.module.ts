@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/';
 import { LoginComponent } from './components/';
 import { LogoutComponent } from './components/';
+import { SetupComponent } from './components/';
 import { NullComponent } from './components/';
 
 import { AuthGuard } from './utils/index';
@@ -26,6 +27,10 @@ export const appRoutes: Routes = [
 		path : 'logout',
 		component : LogoutComponent,
 		canActivate : [AuthGuard]
+	},
+	{
+		path : 'setup',
+		component : SetupComponent
 	},
 	{
 		path: '',
@@ -50,6 +55,7 @@ export function setFactory (xhrBackend: XHRBackend,
     HomeComponent,
     LoginComponent,
     LogoutComponent,
+    SetupComponent,
     NullComponent
   ],
   imports: [
