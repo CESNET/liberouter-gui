@@ -92,9 +92,10 @@
 		</thead> <!-- head -->
 
 		<tbody>
-			<tr *ngIf="events?.length == 0">
+			<tr *ngIf="events?.length == 0 || !events">
 				<td colspan="7">
-					<h3 class="text-center"><em>No events match given criteria.</em></h3>
+					<h3 class="text-center" *ngIf="loadBtn == 'LOADING...'">{{ loadBtn }}</h3>
+					<h3 class="text-center" *ngIf="loadBtn != 'LOADING...'"><em>No events match given criteria.</em></h3>
 				</td>
 			</tr>
 			<tr nemea-event *ngFor="let event of events" [item]="event">
