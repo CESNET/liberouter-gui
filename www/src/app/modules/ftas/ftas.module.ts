@@ -4,7 +4,8 @@ import { Routes, RouterModule} from '@angular/router';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 
-import { FtasComponent, SafePipe } from './ftas.component'
+import { FtasComponent } from './ftas.component'
+import { SafePipe } from 'app/utils/safe.pipe';
 
 const ftasRoutes : Routes = [{
     path : 'ftas',

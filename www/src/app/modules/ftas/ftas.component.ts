@@ -1,15 +1,10 @@
-import { Component, OnInit, SecurityContext, PipeTransform, Pipe } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
-@Pipe({ name: 'safe' })
-export class SafePipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
-  transform(url) {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-}
+import { environment } from 'environments/environment';
+
 
 @Component({
   selector : 'app-ftas',
