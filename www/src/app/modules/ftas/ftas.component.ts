@@ -13,20 +13,33 @@ import { environment } from 'environments/environment';
 })
 export class FtasComponent implements OnInit {
 
-    query : URLSearchParams = new URLSearchParams();
-    baseUrl : string = "https://ftas.cesnet.cz/ftas/stat.pl";
-    url: SafeResourceUrl;
-    filter : string;
+    baseUrl : string = "https://";  // FTAS URL for iframe
+    url: SafeResourceUrl;           // Sanitizied URL for iframe
+    filter : string;                // Advanced filter field for FTAS
+    iframeInit : Boolean = false;   // Flag for iframe initialization routine
+    ftasMsg : string = "";          // The loading message
 
-    constructor(private sanitizer : DomSanitizer, private route : ActivatedRoute ) { }
+    /**
+      * Construct the FTAS URL from environment variables
+      */
+    constructor( private route : ActivatedRoute ) {
+        /**
+          * Environment can set full url of the FTAS instance
+          */
+        if (environment.ftas.fulllUrl) {
+            this.baseUrl = environment.ftas.fullUrl
+        } else if (environment.ftas.url) {
+            this.baseUrl += environment.ftas.url + "/ftas/stat.pl";
+        } else {
+            console.warn("FTAS URL isn't set.");
+        }
+    }
 
+    /**
+      * Get URL params and prepare the advanced query field for FTAS iframe
+      */
     ngOnInit() {
-
-        // Get all the URL params and prepare the advanced query field (basically filter)
         this.route.params.subscribe(params => {
-            //this.params = params;
-            console.log(params);
-
             for (var key in params) {
                 if (this.filter == undefined) {
                     this.filter = key + "=" + params[key];
@@ -36,47 +49,83 @@ export class FtasComponent implements OnInit {
                 }
             }
 
-            console.log(this.filter)
-        });
+            /**
+              * Setup FTAS URL
+              * If params are set we can do some filtering
+              */
+            if (this.filter == undefined)
+                this.url = this.baseUrl;
+            else {
+                this.url = this.baseUrl + '?'
+                    + this.generateQueryBase()
+                    + "&advanced_query="
+                    + encodeURIComponent(this.filter);
+            }
 
-        // Set URL params as query params
-        this.query.set("select_output", "1402");
-        this.query.set("select_output-use", "yes");
-        this.query.set("query_style", "advanced");
+        });
+    }
+
+    /**
+      * Outputs loading message if iframe is loaded but not its contents
+      * (load) fires two times: first time when iframe element is loaded
+      * and second time when its content is loaded.
+      */
+    iframeLoaded() {
+        if (!this.iframeInit) {
+            this.ftasMsg = "FTAS is loading...";
+        } else {
+            this.ftasMsg = "";
+        }
+
+        this.iframeInit = !this.iframeInit;
+    }
+
+    /**
+      * Set filtering parameters base for FTAS
+      * Filtering something in FTAS requires a lot of parameters to set.
+      *
+      * TODO: Reflect correctly time in "first" and "last" fields
+      */
+    private generateQueryBase() : URLSearchParams {
+        let queryBase = new URLSearchParams();
+
+        queryBase.set("select_output", environment.ftas.output);
+        queryBase.set("select_output-use", "yes");
+        queryBase.set("query_style", "advanced");
         //this.query.set("advanced_query", "dst_ip%3D193.170.227.139");
-        this.query.set("first", "today 8:00");
-        this.query.set("last", "today 10:00");
-        this.query.set("use_all_fields", "1");
-        this.query.set("query", "yes");
-        this.query.set("run_query", "yes");
-        this.query.set("max_query_time", "60");
-        this.query.set("max_query_count", "10000");
-        this.query.set("viewer", "yes");
-        this.query.set("in_one_step", "1");
-        this.query.set("viewer_display", "Show");
-        this.query.set("viewer_aggregate", "yes");
-        this.query.set("viewer_display_type", "graph");
-        this.query.set("graph_order_direction", "desc");
-        this.query.set("viewer_selected_view", "40");
-        this.query.set("viewer_page_size", "1000");
-        this.query.set("resolvegeolocation_global", "yes");
-        this.query.set("show_percent", "yes");
+        queryBase.set("first", "today 8:00");
+        queryBase.set("last", "today 10:00");
+        queryBase.set("use_all_fields", "1");
+        queryBase.set("query", "yes");
+        queryBase.set("run_query", "yes");
+        queryBase.set("max_query_time", "60");
+        queryBase.set("max_query_count", "10000");
+        queryBase.set("viewer", "yes");
+        queryBase.set("in_one_step", "1");
+        queryBase.set("viewer_display", "Show");
+        queryBase.set("viewer_aggregate", "yes");
+        queryBase.set("viewer_display_type", "graph");
+        queryBase.set("graph_order_direction", "desc");
+        queryBase.set("viewer_selected_view", "40");
+        queryBase.set("viewer_page_size", "1000");
+        queryBase.set("resolvegeolocation_global", "yes");
+        queryBase.set("show_percent", "yes");
         //this.query.set("viewer_hide_form", "1");
 
-        this.query.append("viewer_requested_fields", "src_ip");
-        this.query.append("viewer_requested_fields", "dst_ip");
-        this.query.append("viewer_requested_fields", "proto");
-        this.query.append("viewer_requested_fields", "octets");
-        this.query.append("viewer_requested_fields", "dst_ip_cnt");
-        this.query.append("viewer_requested_fields", "flow_source");
-        this.query.append("viewer_requested_fields", "first");
-        this.query.append("viewer_requested_fields", "last");
+        /**
+          * .append must be used here, .set overwrites the existing field
+          */
+        queryBase.append("viewer_requested_fields", "src_ip");
+        queryBase.append("viewer_requested_fields", "dst_ip");
+        queryBase.append("viewer_requested_fields", "proto");
+        queryBase.append("viewer_requested_fields", "octets");
+        queryBase.append("viewer_requested_fields", "dst_ip_cnt");
+        queryBase.append("viewer_requested_fields", "flow_source");
+        queryBase.append("viewer_requested_fields", "first");
+        queryBase.append("viewer_requested_fields", "last");
 
-        if (this.filter == undefined)
-            this.url = this.baseUrl + '?' + this.query.toString();
-        else
-            this.url = this.baseUrl + '?' + this.query.toString() + "&advanced_query=" + encodeURIComponent(this.filter);
-        //this.sanitizer.bypassSecurityTrustResourceUrl(this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.baseUrl))
+        return queryBase;
+
     }
 
 }
