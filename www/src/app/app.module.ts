@@ -15,6 +15,7 @@ import { NullComponent } from './components/';
 
 import { AuthGuard } from './utils/index';
 import { HttpInterceptor } from './utils/index';
+import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { modules } from './modules';
 
@@ -60,6 +61,7 @@ export function setFactory (xhrBackend: XHRBackend,
   ],
   imports: [
 	modules,
+	SafePipeModule,
     BrowserModule,
 	FormsModule,
 	HttpModule,
@@ -68,6 +70,7 @@ export function setFactory (xhrBackend: XHRBackend,
   ],
   providers: [
 	AuthGuard,
+	SafePipe,
 		{
 			provide : Http,
 			useFactory: setFactory,
