@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 
 import { AuthGuard } from  'app/utils/auth.guard';
+import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { FtasComponent } from './ftas.component'
-import { SafePipe } from 'app/utils/safe.pipe';
 
 const ftasRoutes : Routes = [{
     path : 'ftas',
@@ -22,10 +22,13 @@ const ftasRoutes : Routes = [{
 @NgModule({
   imports: [
     CommonModule,
+    SafePipeModule,
     RouterModule.forChild(ftasRoutes)
   ],
   declarations: [
-    FtasComponent,
+    FtasComponent
+  ],
+  providers : [
     SafePipe
   ]
 })
