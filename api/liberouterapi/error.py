@@ -9,6 +9,12 @@ class ApiException(Exception):
 			self.status_code = status_code
 		self.payload = payload
 
+    def __str__(self):
+        return repr(self.message)
+
+    def __repr__(self):
+        return repr(self.message)
+
 	def to_dict(self):
 		rv = dict(self.payload or ())
 		rv['message'] = self.message
