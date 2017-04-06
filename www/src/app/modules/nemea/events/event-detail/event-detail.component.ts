@@ -12,10 +12,14 @@ export class EventDetailComponent implements OnInit {
   ftasUrl : string = "/ftas";
   ftasUrlParams : Object = {};
 
+  scUrl : string = "/security-cloud";
+  scUrlParams : Object = {};
+
   constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit() {
     this.generateFtasUrl();
+    this.generateScUrl();
   }
 
   generateFtasUrl() {
@@ -32,6 +36,14 @@ export class EventDetailComponent implements OnInit {
     }
 
     console.log(this.ftasUrl)
+  }
+
+  generateScUrl() {
+    console.log(this.data);
+    let time = new Date(this.data["DetectTime"]["$date"])
+    this.scUrlParams = {"eventtime" : Math.floor(time.getTime()/1000)}
+
+    console.log(this.scUrlParams)
   }
 
 }
