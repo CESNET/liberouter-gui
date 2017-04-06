@@ -26,7 +26,7 @@ export class FtasComponent implements OnInit {
         /**
           * Environment can set full url of the FTAS instance
           */
-        if (environment.ftas.fulllUrl) {
+        if (environment.ftas.fullUrl) {
             this.baseUrl = environment.ftas.fullUrl
         } else if (environment.ftas.url) {
             this.baseUrl += environment.ftas.url + "/ftas/stat.pl";
