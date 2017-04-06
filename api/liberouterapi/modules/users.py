@@ -142,7 +142,7 @@ def edit_user(user_id):
 
 	# In case of password change, verify that it is really him (revalidate their password)
 	if user.password and user.password != "":
-		auth_verify = User.from_object(auth.login(user))
+		auth_verify = User.from_dict(auth.login(user))
 
 		query["$set"]["password"] = auth.create_hash(user_data["password_new"])
 
