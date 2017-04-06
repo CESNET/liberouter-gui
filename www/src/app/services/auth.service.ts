@@ -51,6 +51,16 @@ export class AuthService {
 			.catch(this.handleError);
 	}
 
+    admin(user : Object) {
+        return this.http.post('/setup'
+            , JSON.stringify(user))
+            .map(
+            (resp : Response) => {
+                console.debug("Admin inserted");
+            })
+            .catch(this.handleError);
+    }
+
 	private handleError(err : Response | any) {
 		return Promise.reject(err);
 	}

@@ -1,6 +1,8 @@
 import sys
 import pkgutil
 from getpass import getpass
+from flask import request
+from bson import json_util
 
 from liberouterapi import app, config
 from .modules.module import Module
@@ -111,7 +113,8 @@ def setup():
 				"role" : 0
 			}
 		res = unprotected_add_user(user_data)
+
 		config.setup = False
-		return(res)
+		return(json_util.dumps({ "user_id" : res}))
 	except Exception as e:
 		raise ApiException({"error" : str(e)})
