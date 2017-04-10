@@ -27,7 +27,7 @@ export class nemeaBase {};
 
 		<section class="box">
 			<h2>
-				<a routerLink='configuration'>
+				<a routerLink='exporters'>
 					<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Configuration
 				</a>
 			</h2>

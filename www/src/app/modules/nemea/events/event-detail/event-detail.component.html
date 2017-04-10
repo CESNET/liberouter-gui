@@ -8,14 +8,16 @@
 	<div [outerHTML]="data | idea" style="width: 50%"></div>
 </div>
 <div class="modal-footer">
+    <a [routerLink]="[nerdUrl, nerdUrlParams]" class="btn btn-primary">NERD</a>
+    <a [routerLink]="[scUrl, scUrlParams]" class="btn btn-primary">SecurityCloud</a>
     <a [routerLink]="[ftasUrl, ftasUrlParams]" class="btn btn-primary">FTAS</a>
-	<button type="button" class="btn btn-primary" (click)="activeModal.close()" disabled>
+	<!--button type="button" class="btn btn-primary" (click)="activeModal.close()" disabled>
 		Source IP
 	</button>
 
 	<button type="button" class="btn btn-secondary" (click)="activeModal.close()" disabled>
 		Target IP
-	</button>
+	</button-->
 	<button type="button" class="btn btn-secondary" (click)="activeModal.close()">
 		Close
 	</button>

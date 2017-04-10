@@ -1,0 +1,9 @@
+<section class="box">
+    <h4 *ngIf="msg.length > 0">{{ msg }}</h4>
+    <iframe [src]="url | safe" class="frame" (load)="iframeLoaded()"></iframe>
+</section>
+
+<section class="box">
+    <em> Generated URL:</em> <input type="text" [(value)] ="url">
+    <small>If an error occurs, you can use this URL to access ftas directly</small>
+</section>

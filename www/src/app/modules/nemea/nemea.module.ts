@@ -12,6 +12,7 @@ import { AuthGuard } from  'app/utils/auth.guard';
 import { IdeaPipe } from './events/idea.pipe';
 import { EventItemComponent } from './events/event-item/event-item.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
+import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 const nemeaRoutes : Routes = [
 	{
@@ -69,6 +70,7 @@ const nemeaRoutes : Routes = [
 	imports : [
 		CommonModule,
 		FormsModule,
+		SafePipeModule,
 		NgbModule.forRoot(),
 		RouterModule.forChild(nemeaRoutes)
 	],
@@ -77,11 +79,12 @@ const nemeaRoutes : Routes = [
 		nemeaBase,
 		nemeaComponent,
 		nemeaStatusComponent,
+		nemeaExportersConfigurationComponent,
 		EventsComponent,
 		EventItemComponent,
 		EventDetailComponent],
 	exports : [],
-	providers : [],
+	providers : [SafePipe],
 	entryComponents : [EventDetailComponent]
 })
 export class nemeaModule {};

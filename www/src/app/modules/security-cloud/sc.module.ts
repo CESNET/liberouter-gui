@@ -5,17 +5,17 @@ import { Routes, RouterModule} from '@angular/router';
 import { AuthGuard } from  'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
-import { FtasComponent } from './ftas.component'
+import { SecurityCloudComponent } from './sc.component'
 
-const ftasRoutes : Routes = [{
-    path : 'ftas',
-    component : FtasComponent,
+const routes : Routes = [{
+    path : 'security-cloud',
+    component : SecurityCloudComponent,
     canActivate : [AuthGuard],
     data : {
         role : 10,
-        name : "FTAS",
-        description : "The mighty FTAS!",
-        icon : "fa-first-order"
+        name : "Security Cloud",
+        description : "Let's be secure, in cloud!",
+        icon : "fa-cloud"
     }
 }]
 
@@ -23,13 +23,13 @@ const ftasRoutes : Routes = [{
   imports: [
     CommonModule,
     SafePipeModule,
-    RouterModule.forChild(ftasRoutes)
+    RouterModule.forChild(routes)
   ],
   declarations: [
-    FtasComponent
+    SecurityCloudComponent
   ],
   providers : [
     SafePipe
   ]
 })
-export class FtasModule { }
+export class SecurityCloudModule { }

@@ -12,10 +12,18 @@ export class EventDetailComponent implements OnInit {
   ftasUrl : string = "/ftas";
   ftasUrlParams : Object = {};
 
+  scUrl : string = "/security-cloud";
+  scUrlParams : Object = {};
+
+  nerdUrl : string = "/nerd";
+  nerdUrlParams : Object = {};
+
   constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit() {
     this.generateFtasUrl();
+    this.generateScUrl();
+    this.generateNerdUrl();
   }
 
   generateFtasUrl() {
@@ -32,6 +40,23 @@ export class EventDetailComponent implements OnInit {
     }
 
     console.log(this.ftasUrl)
+  }
+
+  generateScUrl() {
+    console.log(this.data);
+    let time = new Date(this.data["DetectTime"]["$date"])
+    this.scUrlParams = {"eventtime" : Math.floor(time.getTime()/1000)}
+
+    console.log(this.scUrlParams)
+  }
+
+  generateNerdUrl() {
+    if (this.data["Source"] != undefined && this.data["Source"][0]["IP4"] != undefined) {
+        this.nerdUrlParams["ip"] = this.data["Source"][0]["IP4"][0];
+    } else if (this.data["Target"] != undefined && this.data["Target"][0]["IP4"] != undefined) {
+        this.nerdUrlParams["ip"] = this.data["Target"][0]["IP4"][0];
+    }
+
   }
 
 }
