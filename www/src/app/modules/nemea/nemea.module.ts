@@ -4,8 +4,9 @@ import { Routes, RouterModule} from '@angular/router';
 import { FormsModule }		from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { nemeaBase, nemeaComponent } from './nemea.component';
-import { nemeaStatusComponent } from './status/nemea_status.component'
-import { EventsComponent } from './events/events.component'
+import { nemeaStatusComponent } from './status/nemea_status.component';
+import { EventsComponent } from './events/events.component';
+import { nemeaExportersConfigurationComponent } from './configuration/exporters_configuration.component';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 import { IdeaPipe } from './events/idea.pipe';
@@ -45,6 +46,14 @@ const nemeaRoutes : Routes = [
 			{
 				path : 'events',
 				component: EventsComponent,
+				canActivate : [AuthGuard],
+				data : {
+					role : 10
+				}
+			},
+			{
+				path : 'exporters',
+				component: nemeaExportersConfigurationComponent,
 				canActivate : [AuthGuard],
 				data : {
 					role : 10
