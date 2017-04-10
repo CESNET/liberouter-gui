@@ -79,7 +79,6 @@ const nemeaRoutes : Routes = [
 		nemeaBase,
 		nemeaComponent,
 		nemeaStatusComponent,
-		nemeaExportersConfigurationComponent,
 		EventsComponent,
 		EventItemComponent,
 		EventDetailComponent],
