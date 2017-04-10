@@ -39,8 +39,9 @@ export class EventsComponent implements OnInit {
 	constructor(private eventsService : EventsService, private router : Router) { }
 
 	ngOnInit() {
+		this.loadBtn = "LOADING...";
 		this.eventsService.last_events(100).subscribe(
-			(data) => { this.events = data; },
+			(data) => { this.events = data; this.loadBtn = "LOAD" },
 			(error : Object) => this.processError(error)
 		);
 		this.selectToday();

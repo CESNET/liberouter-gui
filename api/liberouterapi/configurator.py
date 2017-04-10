@@ -4,7 +4,7 @@ import configparser
 import argparse
 import sys
 import os
-from api import app
+from liberouterapi import app
 
 import unittest
 class Config(object):

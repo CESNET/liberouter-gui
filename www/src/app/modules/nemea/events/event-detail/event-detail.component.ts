@@ -7,10 +7,56 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./event-detail.component.scss']
 })
 export class EventDetailComponent implements OnInit {
-  @Input() event : Object;
+  @Input() data : Object;
+
+  ftasUrl : string = "/ftas";
+  ftasUrlParams : Object = {};
+
+  scUrl : string = "/security-cloud";
+  scUrlParams : Object = {};
+
+  nerdUrl : string = "/nerd";
+  nerdUrlParams : Object = {};
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.generateFtasUrl();
+    this.generateScUrl();
+    this.generateNerdUrl();
+  }
+
+  generateFtasUrl() {
+    console.log(this.data);
+
+    if (this.data["Source"] != undefined && this.data["Source"][0]["IP4"] != undefined) {
+        this.ftasUrlParams["src_ip"] = this.data["Source"][0]["IP4"][0];
+        console.log("adding src IP")
+    }
+
+    if (this.data["Target"] != undefined && this.data["Target"][0]["IP4"] != undefined) {
+        this.ftasUrlParams["dst_ip"] = this.data["Target"][0]["IP4"][0];
+        console.log("adding dst IP")
+    }
+
+    console.log(this.ftasUrl)
+  }
+
+  generateScUrl() {
+    console.log(this.data);
+    let time = new Date(this.data["DetectTime"]["$date"])
+    this.scUrlParams = {"eventtime" : Math.floor(time.getTime()/1000)}
+
+    console.log(this.scUrlParams)
+  }
+
+  generateNerdUrl() {
+    if (this.data["Source"] != undefined && this.data["Source"][0]["IP4"] != undefined) {
+        this.nerdUrlParams["ip"] = this.data["Source"][0]["IP4"][0];
+    } else if (this.data["Target"] != undefined && this.data["Target"][0]["IP4"] != undefined) {
+        this.nerdUrlParams["ip"] = this.data["Target"][0]["IP4"][0];
+    }
+
+  }
 
 }

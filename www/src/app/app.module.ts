@@ -10,10 +10,12 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/';
 import { LoginComponent } from './components/';
 import { LogoutComponent } from './components/';
+import { SetupComponent } from './components/';
 import { NullComponent } from './components/';
 
 import { AuthGuard } from './utils/index';
 import { HttpInterceptor } from './utils/index';
+import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { modules } from './modules';
 
@@ -26,6 +28,10 @@ export const appRoutes: Routes = [
 		path : 'logout',
 		component : LogoutComponent,
 		canActivate : [AuthGuard]
+	},
+	{
+		path : 'setup',
+		component : SetupComponent
 	},
 	{
 		path: '',
@@ -50,10 +56,12 @@ export function setFactory (xhrBackend: XHRBackend,
     HomeComponent,
     LoginComponent,
     LogoutComponent,
+    SetupComponent,
     NullComponent
   ],
   imports: [
 	modules,
+	SafePipeModule,
     BrowserModule,
 	FormsModule,
 	HttpModule,
@@ -62,6 +70,7 @@ export function setFactory (xhrBackend: XHRBackend,
   ],
   providers: [
 	AuthGuard,
+	SafePipe,
 		{
 			provide : Http,
 			useFactory: setFactory,

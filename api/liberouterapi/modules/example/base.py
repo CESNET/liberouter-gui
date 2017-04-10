@@ -1,4 +1,4 @@
-from api import auth
+from liberouterapi import auth
 
 def hello_world():
 	return("Hello from the module!")

@@ -28,8 +28,8 @@ config = Config()
 
 from .dbConnector import dbConnector
 from .session import SessionManager
-from .bootstrap import routes, import_modules, admin_setup
-from .auth import Auth
+from .bootstrap import routes, import_modules, check_users
+from .Auth import Auth
 from .role import Role
 
 # System tools
@@ -41,7 +41,7 @@ if config["ssl"].getboolean("enabled"):
 	context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
 
 print("# Connecting to MongoDB")
-db = dbConnector.from_object(config["database"])
+db = dbConnector()
 
 print("# Session manager setting up")
 session_manager = SessionManager.from_object(config)
@@ -49,7 +49,7 @@ session_manager = SessionManager.from_object(config)
 print("# Authorization module setting up")
 auth = Auth(db, session_manager, config['api']['secret_key'])
 
-admin = admin_setup(db)
+check_users()
 
 print("# Configuring server app")
 app.config.from_object(config)

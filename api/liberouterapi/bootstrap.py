@@ -1,12 +1,14 @@
 import sys
 import pkgutil
-from bson import json_util
 from getpass import getpass
+from flask import request
+from bson import json_util
 
-from api import app, config
-from api.module import Module
-from api.error import ApiException
-from api.role import Role
+from liberouterapi import app, config
+from .modules.module import Module
+from .error import ApiException
+from .dbConnector import dbConnector
+from .Auth import Auth
 
 def routes():
 	"""
@@ -20,9 +22,7 @@ def routes():
 			"desc" : rule.endpoint
 		})
 
-	app.logger.debug(json_util.dumps(routes))
-
-	return(json_util.dumps(routes))
+	return(routes)
 
 def import_modules():
 	"""
@@ -32,7 +32,7 @@ def import_modules():
 
 	for importer, mod_name, _ in modules:
 		if mod_name not in sys.modules:
-			loaded_mod = __import__("api." +
+			loaded_mod = __import__("liberouterapi." +
 					config['api']['modules'].split('/')[-1] + "." +  mod_name,
 					fromlist=[mod_name])
 			print("   > Imported module \"" + mod_name + "\"")
@@ -64,24 +64,19 @@ def ask_for_password():
 
 	return(password)
 
-def admin_setup(db):
+def check_users():
 	"""
 	Count users in the database.
-	If there is no user run initial admin user insertion
+	If there is no user set API to setup state
 	"""
+	db = dbConnector()
 	if db.users.count() == 0:
-		print("No users found!")
+		print("\033[1m" + "# Warning: * No users found *" + "\033[0m")
+		app.add_url_rule('/setup', view_func = setup, methods=['POST'])
+		config.setup = True
 
-		user_data = {
-				"username" : ask_for_username(),
-				"password" : ask_for_password(),
-				"role" : Role.admin
-			}
-
-		# Insert user to database via user module
-		from .modules.users import unprotected_add_user
-		res = unprotected_add_user(user_data)
-		return(res)
+	else:
+		config.setup = False
 
 @app.errorhandler(ApiException)
 def handle_invalid_usage(error):
@@ -90,5 +85,36 @@ def handle_invalid_usage(error):
 	"""
 	print("Caught error!")
 	print(error.to_dict())
-	response = json_util.dumps(error.to_dict())
+	response = error.to_dict()
 	return response, error.status_code
+
+@app.after_request
+def setup_mode(response):
+	if config.setup:
+		response.headers['Warning'] = 'setup-required'
+		response.status_code = 442
+	return response
+
+def setup():
+	"""
+	Setup the API
+	Currently we only need tp create the administrator account
+	"""
+	if config.setup == False:
+		raise ApiException("API is already setup")
+	settings = request.get_json()
+	db = dbConnector()
+	try:
+		# Insert user to database via user module
+		from .modules.users import unprotected_add_user
+		user_data = {
+				"username" : settings['username'],
+				"password" : settings['password'],
+				"role" : 0
+			}
+		res = unprotected_add_user(user_data)
+
+		config.setup = False
+		return(json_util.dumps({ "user_id" : res}))
+	except Exception as e:
+		raise ApiException({"error" : str(e)})

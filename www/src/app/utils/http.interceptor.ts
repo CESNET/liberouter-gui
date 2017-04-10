@@ -43,7 +43,6 @@ export class HttpInterceptor extends Http {
 
 		url.headers = this.headers;
 
-		console.log(url)
 		if (!options) {
 			url.headers = this.headers;
 			return super.request(url).catch(this.catchErrors());
@@ -58,7 +57,14 @@ export class HttpInterceptor extends Http {
 			if (res.status == 401) {
 				console.debug('Caught 401, logging out!')
 				localStorage.removeItem("currentUser");
-				this.router.navigate(['login']);
+				this.router.navigate(['/login']);
+			}
+
+			// SETUP is required
+			// Maybe you ask why 442. Well, 42 is answer to everything, right?
+			else if (res.status == 442) {
+				console.debug("Setup is required. Redirecting to /setup");
+				this.router.navigate(['/setup']);
 			}
 			return Observable.throw(res);
 		};

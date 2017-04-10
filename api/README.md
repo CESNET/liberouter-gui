@@ -1,8 +1,10 @@
 ## How to use API as WSGI (example configuration for Apache)
 
+This example is for Apache VirtualHost instance on https. You can of course use it without the virtualhost but remeber to include the whole Liberouter GUI part and if required, change paths accordingly.
+
 ```
 <VirtualHost *:443>
-    DocumentRoot "/var/www/dev"
+    DocumentRoot "/var/www/html"
     ServerName example.com
     SSLEngine on
     SSLCertificateFile "/etc/apache2/server.crt"
@@ -11,17 +13,18 @@
     ErrorLog "/var/log/apache2/secure-error_log"
     CustomLog "/var/log/apache2/secure-access_log" common
 
-	#Options Includes FollowSymLinks MultiViews
-
+	# Liberouter GUI WSGI
     WSGIDaemonProcess libapi user=liberouter group=liberouter threads=5
-	WSGIScriptAlias "/libapi" "/var/www/dev/liberouter-gui/wsgi.py"
+	WSGIScriptAlias "/libapi" "/var/www/html/liberouter-gui/api/wsgi.py"
+	WSGIPassAuthorization on
 
-	<directory "/var/www/dev/liberouter-gui">
+	<directory "/var/www/html/liberouter-gui/api">
         WSGIProcessGroup libapi
         WSGIApplicationGroup %{GLOBAL}
         WSGIScriptReloading On
         Order deny,allow
         Allow from all
     </directory>
+	# END Liberouter GUI WSGI
 </VirtualHost>
 ```
