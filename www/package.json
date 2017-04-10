@@ -1,6 +1,6 @@
 {
   "name": "Liberouter GUI",
-  "version": "0.2.0-alpha",
+  "version": "0.2.0-beta",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
