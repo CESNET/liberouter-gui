@@ -6,7 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { nemeaBase, nemeaComponent } from './nemea.component';
 import { nemeaStatusComponent } from './status/nemea_status.component';
 import { EventsComponent } from './events/events.component';
-import { nemeaExportersConfigurationComponent } from './configuration/exporters_configuration.component';
+import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 import { IdeaPipe } from './events/idea.pipe';
@@ -53,8 +53,8 @@ const nemeaRoutes : Routes = [
 				}
 			},
 			{
-				path : 'exporters',
-				component: nemeaExportersConfigurationComponent,
+				path : 'reporters',
+				component: nemeaReporterConfComponent,
 				canActivate : [AuthGuard],
 				data : {
 					role : 10
@@ -79,6 +79,7 @@ const nemeaRoutes : Routes = [
 		nemeaBase,
 		nemeaComponent,
 		nemeaStatusComponent,
+		nemeaReporterConfComponent,
 		EventsComponent,
 		EventItemComponent,
 		EventDetailComponent],

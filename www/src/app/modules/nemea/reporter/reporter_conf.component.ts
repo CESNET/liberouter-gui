@@ -2,12 +2,12 @@ import { Component, Pipe, PipeTransform } from '@angular/core';
 //import { nConfService } from './exporter_configuration.service';
 
 @Component({
-	selector : 'nemea-exporters-configuration',
-	templateUrl : './exporters_configuration.html',
-	styleUrls : ['./exporters_configuration.scss'],
+	selector : 'nemea-reporter-conf',
+	templateUrl : './reporter_conf.html',
+	styleUrls : ['./reporter_conf.scss'],
 	providers : []
 })
-export class nemeaExportersConfigurationComponent {
+export class nemeaReporterConfComponent {
 
 	constructor() {}
 
