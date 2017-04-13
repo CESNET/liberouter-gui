@@ -1,0 +1,40 @@
+$light-grey : #EEE;
+
+h3 {
+    span {
+        font-size: 0.5em;
+        font-weight: normal;
+        background-color: $light-grey;
+        padding: 0.25em 0.5em;
+        position: relative;
+        bottom: 0.45em;
+        &.running {
+            color: green;
+        }
+
+        &.stopped {
+            color: red;
+        }
+    }
+}
+
+.config {
+    height: 100%;
+    display: block;
+    position: relative;
+    right: 1em;
+
+    .box {
+        //height: 90vh;
+    }
+
+    textarea {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.active {
+    border: 1px solid #CCC;
+    background: #EEE;
+}

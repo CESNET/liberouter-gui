@@ -5,6 +5,45 @@
 </h2>
 
 
-<div id="content">
-    Here should be NEMEA reporter configuration
+
+
+<div id="content" class="container-fluid">
+    <div class="row">
+        <div class="reporter-list col-4">
+            <section class="box reporter" [ngClass]="{'active' : activeConfig == rep[1]['idx']}" *ngFor="let rep of reporters" (click)="selectReporter(rep[1])">
+                <h3>
+                    {{ rep[0] }}
+                    <span class="status {{ rep[1]['status'] }}" [class]="">{{ rep[1]['status'] }}</span>
+                </h3>
+                <p>Memory Usage: {{ rep[1]["MEM-vms"] / 1048576 | number : '1.3-3' }} MB</p>
+                <!--p>Parameters: {{ rep[1]["params"] }}</p-->
+                <p>Config path: {{ rep[1]["config"] }}</p>
+                <!--{{ rep | json }}-->
+            </section>
+        </div>
+
+        <div class="config col-8">
+            <section class="box">
+                <div class="alert alert-danger" role="alert" *ngIf="error != ''">
+                    {{ error }}
+                </div>
+
+                <div *ngIf="selectedConfig == '' && error == ''">
+                    <div class="alert alert-info">
+                        Please select a reporter
+                    </div>
+                </div>
+
+                <div *ngIf="selectedConfig != '' || activeConfig >= 0">
+                    <codemirror [(ngModel)]="selectedConfig"
+                        [config]="config"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()">
+                    </codemirror>
+
+                </div>
+            </section>
+            <button class="btn btn-primary" value="Save config" (click)="saveConfig()" [disabled]="activeConfig < 0">Save config</button>
+        </div>
+    </div>
 </div>

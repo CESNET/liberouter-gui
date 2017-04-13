@@ -6,6 +6,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { nemeaBase, nemeaComponent } from './nemea.component';
 import { nemeaStatusComponent } from './status/nemea_status.component';
 import { EventsComponent } from './events/events.component';
+
+import { CodemirrorModule } from 'ng2-codemirror';
+
 import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
 
 import { AuthGuard } from  'app/utils/auth.guard';
@@ -59,6 +62,14 @@ const nemeaRoutes : Routes = [
 				data : {
 					role : 10
 				}
+			},
+            {
+				path : 'reporters/:id',
+				component: nemeaReporterConfComponent,
+				canActivate : [AuthGuard],
+				data : {
+					role : 10
+				}
 			}
 		]
 	}
@@ -71,6 +82,7 @@ const nemeaRoutes : Routes = [
 		CommonModule,
 		FormsModule,
 		SafePipeModule,
+		CodemirrorModule,
 		NgbModule.forRoot(),
 		RouterModule.forChild(nemeaRoutes)
 	],
