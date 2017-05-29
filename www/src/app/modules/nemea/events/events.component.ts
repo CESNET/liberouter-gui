@@ -35,13 +35,18 @@ export class EventsComponent implements OnInit {
 	}
 	loadBtn = "LOAD";
 	error;
+	totalWhitelisted = 0;
 
 	constructor(private eventsService : EventsService, private router : Router) { }
 
 	ngOnInit() {
 		this.loadBtn = "LOADING...";
 		this.eventsService.last_events(100).subscribe(
-			(data) => { this.events = data; this.loadBtn = "LOAD" },
+			(data) => {
+			    this.events = data;
+			    this.loadBtn = "LOAD";
+		        this.countWhitelisted();
+			},
 			(error : Object) => this.processError(error)
 		);
 		this.selectToday();
@@ -52,6 +57,7 @@ export class EventsComponent implements OnInit {
 		this.events = data;
 		this.loadBtn = "LOAD";
 		this.setParams();
+		this.countWhitelisted();
 	}
 
 	private appendData(data : any) {
@@ -59,6 +65,7 @@ export class EventsComponent implements OnInit {
 		this.events = this.events.concat(data);
 		this.loadBtn = "LOAD";
 		this.setParams();
+		this.countWhitelisted();
 	}
 
 
@@ -147,5 +154,16 @@ export class EventsComponent implements OnInit {
 		console.info(time);
 		this.query['from'] = Math.floor((time)/1000);
 		this.runQuery(true);
+	}
+
+	private countWhitelisted() {
+	    for (let item of this.events) {
+	        try {
+	            if (item["_CESNET"]["Whitelisted"] == "True")
+	                this.totalWhitelisted += 1;
+            } catch(e) {
+                continue;
+            }
+	    }
 	}
 }
