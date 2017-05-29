@@ -14,9 +14,9 @@ import { UsersService } from './users.service';
 export class usersComponent {};
 
 @Component({
-	//moduleId : module.id.replace("/dist/", "/"),
 	selector : 'users-add',
 	templateUrl : './users-add.html',
+	styleUrls: ['./user-add.scss'],
 	providers : [UsersService]
 })
 export class usersAddComponent {
