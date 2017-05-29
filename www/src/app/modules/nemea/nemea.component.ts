@@ -24,6 +24,14 @@ export class nemeaBase {};
 				</a>
 			</h2>
 		</section>
+
+		<section class="box">
+			<h2>
+				<a routerLink='reporters'>
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Reporter Configuration
+				</a>
+			</h2>
+		</section>
 	</section>
 	`
 })

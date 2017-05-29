@@ -61,6 +61,8 @@
 			</div>
 		</div>
 	</form>
+
+    Hide whitelisted items ({{ totalWhitelisted }}): <input type="checkbox" [(ngModel)]="hideWhitelisted" />
 </section>
 
 <section class="box">
@@ -98,7 +100,7 @@
 					<h3 class="text-center" *ngIf="loadBtn != 'LOADING...'"><em>No events match given criteria.</em></h3>
 				</td>
 			</tr>
-			<tr nemea-event *ngFor="let event of events" [item]="event">
+            <tr nemea-event *ngFor="let event of events" [item]="event" [ngClass]="{'whitelisted' : event?._CESNET?.Whitelisted == 'True', 'hidden' : hideWhitelisted}">
 			</tr>
 		</tbody>
 		<tfoot>

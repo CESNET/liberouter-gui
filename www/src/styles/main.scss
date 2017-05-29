@@ -142,3 +142,9 @@ nemea-events .modal-dialog {
 .row-space {
 	margin: 1em;
 }
+
+
+.CodeMirror {
+  border: 1px solid #eee;
+  height: calc(90vh - 2em)!important;
+}
