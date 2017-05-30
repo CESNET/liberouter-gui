@@ -18,6 +18,7 @@ import { IdeaPipe } from './events/idea.pipe';
 import { EventItemComponent } from './events/event-item/event-item.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -58,6 +59,14 @@ const nemeaRoutes : Routes = [
 				}
 			},
 			{
+				path : 'dashboard',
+				component : DashboardComponent,
+				canActivate : [AuthGuard],
+				data : {
+					role : 255
+				}
+			},
+			{
 				path : 'reporters',
 				component: nemeaReporterConfComponent,
 				canActivate : [AuthGuard],
@@ -95,7 +104,8 @@ const nemeaRoutes : Routes = [
 		nemeaReporterConfComponent,
 		EventsComponent,
 		EventItemComponent,
-		EventDetailComponent],
+		EventDetailComponent,
+		DashboardComponent],
 	exports : [],
 	providers : [SafePipe],
 	entryComponents : [EventDetailComponent]

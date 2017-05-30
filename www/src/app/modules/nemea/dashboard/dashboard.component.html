@@ -1,0 +1,36 @@
+<p>
+  dashboard works!
+</p>
+
+<div [ngGrid]="gridConfig">
+
+	<div [(ngGridItem)]="config">
+		<div class="handle">Handle</div>
+		Box
+	</div>
+
+	<div *ngFor="let box of boxes" [(ngGridItem)]="box.config">
+		<div class="handle">
+			<div class="row">
+				<h3 class="col h4">{{ box.title}}</h3>
+
+			<div ngbDropdown>
+				<a class="" id="dMenu" ngbDropdownToggle></a>
+				<div class="dropdown-menu" aria-labelledby="dMenu">
+					<button class="dropdown-item" (click)="editBox(box)">Edit</button>
+					<a class="dropdown-item" (click)="duplicateBox(box)">Duplicate</a>
+					<a class="dropdown-item" (click)="deleteBox(box)">Delete</a>
+				</div>
+			</div>
+			</div>
+
+
+		</div>
+
+		{{ box.content }}
+
+		{{ box.config | json }}
+	</div>
+</div>
+
+<a (click)="addBox()" class="btn btn-primary">Add Box</a>
