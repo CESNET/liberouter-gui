@@ -7,6 +7,8 @@ import { nemeaBase, nemeaComponent } from './nemea.component';
 import { nemeaStatusComponent } from './status/nemea_status.component';
 import { EventsComponent } from './events/events.component';
 
+import { NgGridModule } from 'angular2-grid';
+
 import { CodemirrorModule } from 'ng2-codemirror';
 
 import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
@@ -75,14 +77,13 @@ const nemeaRoutes : Routes = [
 	}
 ];
 
-//export const dummyRouting = RouterModule.forChild(dummyRoutes);
-
 @NgModule({
 	imports : [
 		CommonModule,
 		FormsModule,
 		SafePipeModule,
 		CodemirrorModule,
+		NgGridModule,
 		NgbModule.forRoot(),
 		RouterModule.forChild(nemeaRoutes)
 	],
