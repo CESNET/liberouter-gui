@@ -1,15 +1,8 @@
-<p>
-  dashboard works!
-</p>
-
 <div [ngGrid]="gridConfig">
 
-	<div [(ngGridItem)]="config">
-		<div class="handle">Handle</div>
-		Box
-	</div>
+	<div *ngIf="boxes.length == 0">You should add box</div>
 
-	<div *ngFor="let box of boxes" [(ngGridItem)]="box.config">
+	<div *ngFor="let box of boxes ; let i = index" [(ngGridItem)]="box.config">
 		<div class="handle">
 			<div class="row">
 				<h3 class="col h4">{{ box.title}}</h3>
@@ -19,7 +12,7 @@
 				<div class="dropdown-menu" aria-labelledby="dMenu">
 					<button class="dropdown-item" (click)="editBox(box)">Edit</button>
 					<a class="dropdown-item" (click)="duplicateBox(box)">Duplicate</a>
-					<a class="dropdown-item" (click)="deleteBox(box)">Delete</a>
+					<a class="dropdown-item" (click)="deleteBox(box, i)">Delete</a>
 				</div>
 			</div>
 			</div>
@@ -27,10 +20,12 @@
 
 		</div>
 
-		{{ box.content }}
+		<dash-box [box]="box"></dash-box>
 
-		{{ box.config | json }}
 	</div>
 </div>
 
-<a (click)="addBox()" class="btn btn-primary">Add Box</a>
+<a (click)="addCleanBox()" class="btn btn-primary">Add Box</a>
+
+<template ngbModalContainer class="item-detail"></template>
+

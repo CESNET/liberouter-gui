@@ -8,6 +8,7 @@ import { nemeaStatusComponent } from './status/nemea_status.component';
 import { EventsComponent } from './events/events.component';
 
 import { NgGridModule } from 'angular2-grid';
+import { NvD3Module } from 'angular2-nvd3';
 
 import { CodemirrorModule } from 'ng2-codemirror';
 
@@ -19,6 +20,8 @@ import { EventItemComponent } from './events/event-item/event-item.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashItemComponent } from './dashboard/dash-item/dash-item.component';
+import { DashBoxComponent } from './dashboard/dash-box/dash-box.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -93,6 +96,7 @@ const nemeaRoutes : Routes = [
 		SafePipeModule,
 		CodemirrorModule,
 		NgGridModule,
+		NvD3Module,
 		NgbModule.forRoot(),
 		RouterModule.forChild(nemeaRoutes)
 	],
@@ -105,9 +109,11 @@ const nemeaRoutes : Routes = [
 		EventsComponent,
 		EventItemComponent,
 		EventDetailComponent,
-		DashboardComponent],
+		DashboardComponent,
+		DashItemComponent,
+		DashBoxComponent],
 	exports : [],
 	providers : [SafePipe],
-	entryComponents : [EventDetailComponent]
+	entryComponents : [EventDetailComponent, DashItemComponent]
 })
 export class nemeaModule {};

@@ -1,0 +1,22 @@
+{{ data | json}}
+
+<div *ngIf="box.type == 'piechart'">
+	<app-nvd3 [options]="box.options" [data]="data" #chart></app-nvd3>
+</div>
+
+<div *ngIf="box.type == 'top'">
+	Here should be TOP events
+</div>
+
+<div *ngIf="box.type == 'number'">
+	Here should be NUMBER
+</div>
+
+<div *ngIf="box.type == ''">
+	No type of box is defined
+</div>
+
+{{ box.content }}
+
+{{ box.data  | json }}
+
