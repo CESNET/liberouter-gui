@@ -15,7 +15,7 @@ const now = new Date();
 })
 export class EventsComponent implements OnInit {
 
-	events : Array<Object>;
+	events : any;
 	remaining : Object = {total : (-1)};
 	query : Object = {
         from : "12:00",
