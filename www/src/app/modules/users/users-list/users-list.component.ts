@@ -1,6 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 import { UsersService } from '../users.service';
+
+enum Roles {
+	"Administrator" = 0,
+	"User" = 10,
+	"Guest" = 255
+}
 
 @Component({
   selector: 'users-list',
@@ -12,6 +19,9 @@ export class UsersListComponent implements OnInit {
 
 	users : Array<Object> = [];
 	currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	roles = Roles;
+	user = {};
+	deleteBtn = ["Delete", "Cancel"];
 
 	constructor (private usersService : UsersService) {}
 
@@ -32,12 +42,16 @@ export class UsersListComponent implements OnInit {
 		);
 	}
 
+	public confirmDelete(user) {
+		this.user = user;
+	}
+
 	removeUser(user:Object) {
 		console.log(user['id']['$oid']);
 		this.usersService.remove(user['id']['$oid']).subscribe(
 			data => {
-			console.log(data);
-			this.listUsers();
+				console.log(data);
+				this.listUsers();
 			},
 			error => {
 				console.log(error);

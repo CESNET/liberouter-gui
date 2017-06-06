@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { FormsModule }		from '@angular/forms';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { UsersComponent } from './users.component';
 import { UsersAddComponent } from './users-add/users-add.component';
 import { UsersListComponent } from './users-list/users-list.component';
@@ -57,6 +59,7 @@ const usersRoutes : Routes = [
 	imports : [
 		CommonModule,
 		FormsModule,
+		NgbModule.forRoot(),
 		RouterModule.forChild(usersRoutes)
 	],
 	declarations : [
