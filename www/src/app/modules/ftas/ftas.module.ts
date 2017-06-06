@@ -14,7 +14,7 @@ const ftasRoutes : Routes = [{
     data : {
         role : 10,
         name : "FTAS",
-        description : "The mighty FTAS!",
+        description : "Flow-based Traffic Analysis System",
         icon : "fa-first-order"
     }
 }]

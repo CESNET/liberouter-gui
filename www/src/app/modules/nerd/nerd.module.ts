@@ -14,7 +14,7 @@ const routes : Routes = [{
     data : {
         role : 10,
         name : "NERD",
-        description : "There is nothing nerdy about NERD.",
+        description : "Network Entity Reputation Database",
         icon : "fa-user-secret"
     }
 }]
