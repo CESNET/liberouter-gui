@@ -3,25 +3,46 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { FormsModule }		from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { nemeaBase, nemeaComponent } from './nemea.component';
-import { nemeaStatusComponent } from './status/nemea_status.component';
-import { EventsComponent } from './events/events.component';
 
 import { NgGridModule } from 'angular2-grid';
-import { NvD3Module } from 'angular2-nvd3';
 
 import { CodemirrorModule } from 'ng2-codemirror';
 
-import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
+/**
+  * ngx charts
+  */
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 import { IdeaPipe } from './events/idea.pipe';
+
+import { nemeaBase, nemeaComponent } from './nemea.component';
+
+/**
+  * NEMEA Events
+  */
+import { EventsComponent } from './events/events.component';
 import { EventItemComponent } from './events/event-item/event-item.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
+
+/**
+  * NEMEA Dashboard
+  */
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DashItemComponent } from './dashboard/dash-item/dash-item.component';
 import { DashBoxComponent } from './dashboard/dash-box/dash-box.component';
+import { DashBoxModalComponent } from './dashboard/dash-box-modal/dash-box-modal.component';
+
+/**
+  * NEMEA Reporter Configuration
+  */
+import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
+
+/**
+  * NEMEA Status
+  */
+import { nemeaStatusComponent } from './status/nemea_status.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -96,7 +117,8 @@ const nemeaRoutes : Routes = [
 		SafePipeModule,
 		CodemirrorModule,
 		NgGridModule,
-		NvD3Module,
+		BrowserAnimationsModule,
+		NgxChartsModule,
 		NgbModule.forRoot(),
 		RouterModule.forChild(nemeaRoutes)
 	],
@@ -110,10 +132,10 @@ const nemeaRoutes : Routes = [
 		EventItemComponent,
 		EventDetailComponent,
 		DashboardComponent,
-		DashItemComponent,
+		DashBoxModalComponent,
 		DashBoxComponent],
 	exports : [],
 	providers : [SafePipe],
-	entryComponents : [EventDetailComponent, DashItemComponent]
+	entryComponents : [EventDetailComponent, DashBoxModalComponent]
 })
 export class nemeaModule {};
