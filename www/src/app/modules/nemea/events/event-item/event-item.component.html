@@ -16,7 +16,7 @@
 	<button [routerLink]="['.']" [queryParams]="{id : item._id.$oid }" class="btn btn-primary btn-sm">Expand</button>
 </td>
 
-<template ngbModalContainer class="item-detail"></template>
+<ng-template ngbModalContainer class="item-detail"></ng-template>
 
 <!--
 	Source: <span *ngIf="item.Source[0]">{{ item.Source[0].IP4[0] }} | {{ item.Source[0].Proto[0] }}</span>
