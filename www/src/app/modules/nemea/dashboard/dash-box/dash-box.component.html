@@ -1,22 +1,52 @@
-{{ data | json}}
+<div class="box"
+	[(ngGridItem)]="box.config"
+	(onResizeStop)="resize($event)"
+	(onDragStop)="itemChange($event)">
+	<div class="handle">
+		<div class="row">
+			<h3 class="col h4">{{ box.title}}</h3>
 
-<div *ngIf="box.type == 'piechart'">
-	<app-nvd3 [options]="box.options" [data]="data" #chart></app-nvd3>
+			<div ngbDropdown>
+				<a class="" id="dMenu" ngbDropdownToggle></a>
+				<div class="dropdown-menu" aria-labelledby="dMenu">
+					<button class="dropdown-item" (click)="edit()">Edit</button>
+					<a class="dropdown-item" (click)="duplicate()">Duplicate</a>
+					<a class="dropdown-item" (click)="remove()">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="body">
+
+		<div *ngIf="box.type == 'piechart'">
+			<ngx-charts-pie-chart #chart
+			 [results]="data"
+			 [labels]="true"
+			 [legend]="false"
+			 [doughnut]="true"
+			 (select)="onSelect($event)"></ngx-charts-pie-chart>
+		</div>
+
+		<div *ngIf="box.type == 'barchart'">
+			Here should be BARCHART graph
+		</div>
+
+		<div *ngIf="box.type == 'top'">
+			Here should be TOP events
+		</div>
+
+		<div *ngIf="box.type == 'sum'">
+			Here should be SUM
+		</div>
+
+		<div *ngIf="box.type == ''">
+			No type of box is defined
+		</div>
+
+		<p>{{ box.content }}</p>
+
+	</section>
 </div>
 
-<div *ngIf="box.type == 'top'">
-	Here should be TOP events
-</div>
-
-<div *ngIf="box.type == 'number'">
-	Here should be NUMBER
-</div>
-
-<div *ngIf="box.type == ''">
-	No type of box is defined
-</div>
-
-{{ box.content }}
-
-{{ box.data  | json }}
-
+<ng-template ngbModalContainer class="item-detail"></ng-template>
