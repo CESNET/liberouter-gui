@@ -2,30 +2,17 @@
 
 	<div *ngIf="boxes.length == 0">You should add box</div>
 
-	<div *ngFor="let box of boxes ; let i = index" [(ngGridItem)]="box.config">
-		<div class="handle">
-			<div class="row">
-				<h3 class="col h4">{{ box.title}}</h3>
+	<dash-box
+		[box]="box"
+		[index]="index"
+		(onDelete)="deleteBox($event)"
+		(onDuplicate)="duplicateBox($event)"
+		(onSave)="save($event)"
+		*ngFor="let box of boxes">
+	</dash-box>
 
-			<div ngbDropdown>
-				<a class="" id="dMenu" ngbDropdownToggle></a>
-				<div class="dropdown-menu" aria-labelledby="dMenu">
-					<button class="dropdown-item" (click)="editBox(box)">Edit</button>
-					<a class="dropdown-item" (click)="duplicateBox(box)">Duplicate</a>
-					<a class="dropdown-item" (click)="deleteBox(box, i)">Delete</a>
-				</div>
-			</div>
-			</div>
-
-
-		</div>
-
-		<dash-box [box]="box"></dash-box>
-
-	</div>
 </div>
 
 <a (click)="addCleanBox()" class="btn btn-primary">Add Box</a>
 
-<template ngbModalContainer class="item-detail"></template>
 

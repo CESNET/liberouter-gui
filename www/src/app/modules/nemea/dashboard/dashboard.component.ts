@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
 import { NgGrid, NgGridItem, NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { UsersService } from 'app/modules/users/users.service';
 
-import { DashItemComponent } from './dash-item/dash-item.component';
-
-interface Box {
+export interface Box {
 	id : number;
 	/**
 	  * Configuration of the box itself
@@ -31,10 +27,22 @@ interface Box {
 	  * Options for the graph
 	  */
 	options : Object;
-	data : any;
+	/**
+	  * time from which to analyze events
+	  */
 	beginTime : number;
+	/**
+	  * ending time for analyzing events, usually now
+	  * TODO: add time offset for history views
+	  */
 	endTime : number;
+	/**
+	  * Time window size in hours
+	  */
 	period : number;
+	/**
+	  * metric for analysis
+	  */
 	metric : string;
 }
 
@@ -46,63 +54,11 @@ interface Box {
 })
 export class DashboardComponent implements OnInit {
 
-	private piechart = {
-		refreshDataOnly : true,
-        chart: {
-            type: 'pieChart',
-            //height: 375,
-            x: function(d) {
-            	return d.key;
-            },
-            y: function(d) {
-	            return d.x;
-            },
-            //showLabels: false,
-            //donut : true,
-            //padAngle : 0.00,
-            //cornerRadius : 1,
-            //transitionDuration: 500,
-            //labelThreshold: 0,
-            //useInteractiveGuideline: true,
-            //legend: {
-            //    margin: {
-            //        top: 5,
-            //        right: 0,
-            //        bottom: -15,
-            //        left: 0
-            //    }
-            //},
-            //legendPosition : "top",
-            /*tooltipContent : function(key, x, y, e, graph) {
-                                console.log(key);
-                                console.log(y);
-                                console.log(e);
-                                console.log(graph);
-                                return 'Hello';
-                             },*/
-            /*pie : {
-                dispatch: {
-                    elementClick: function(e) {
-                        var date = new Date();
-                        console.log(e)
-                        date.setTime(date.getTime() - 1000*60*60*24);
-                        date.setHours(0);
-                        date.setMinutes(0);
-                        window.location.href = '#/events?filter&date=' + date.getTime() + '&from=' + new Date().getHours() + ':' + new Date().getMinutes() + '&category=' + e.data.key[0]
-                    },
-                },
-                labelType : "percent",
-                labelsOutside : false,
-			},*/
-			callback : () => {
-				console.log("hello");
-			}
-        }
-	}
-
-
 	private boxes : Array<Box> = [];
 
+	/**
+	  * Grid configuration taken from: https://github.com/BTMorton/angular2-grid/blob/master/demo-dashboard/app/app.component.ts
+	  */
 	private gridConfig: NgGridConfig = <NgGridConfig>{
 		'margins': [5],
 		'draggable': true,
@@ -113,11 +69,11 @@ export class DashboardComponent implements OnInit {
 		'visible_rows': 0,
 		'min_cols': 1,
 		'min_rows': 1,
-		'col_width': 200,
-		'row_height': 200,
+		'col_width': 20,
+		'row_height': 20,
 		'cascade': 'left',
-		'min_width': 100,
-		'min_height': 100,
+		'min_width': 5,
+		'min_height': 5,
 		'fix_to_grid': false,
 		'auto_style': true,
 		'auto_resize': false,
@@ -127,14 +83,16 @@ export class DashboardComponent implements OnInit {
 		'limit_to_screen': true
 	};
 
+	// LocalStorage currentUser
 	private user : Object;
-	private modalRef : any;
 
-	config = { 'dragHandle': '.handle', 'col': 1, 'row': 1, 'sizex': 2, 'sizey': 2 };
+	constructor(private usersService : UsersService) {}
 
-	constructor(private usersService : UsersService,
-			   private modalService: NgbModal) {}
-
+	/**
+	  * Get dashboard config from local storage
+	  *
+	  * If no box is there add a clean box (empty dashboard is a sad dashboard)
+	  */
 	ngOnInit() {
 		this.user = JSON.parse(localStorage["currentUser"]);
 
@@ -158,14 +116,13 @@ export class DashboardComponent implements OnInit {
 			id : 0,
 			config : {
 				'dragHandle': '.handle',
-				'sizex': 2,
-				'sizey': 2
+				'sizex': 10,
+				'sizey': 10
 			},
 			title : "New Box",
 			content : "",
-			options : this.piechart,
+			options : null,
 			type : "piechart",
-			data : [],
 			beginTime : -1,
 			endTime : -1,
 			period : 240,
@@ -175,7 +132,7 @@ export class DashboardComponent implements OnInit {
 		this.boxes.push(box);
 
 		// Save the new box to local storage
-		this.save();
+		this.save({});
 
 	}
 
@@ -183,7 +140,14 @@ export class DashboardComponent implements OnInit {
 		this.boxes.push(box);
 	}
 
-	save() : void {
+	/**
+	  * Save settings of the dashboard to localStorage
+	  *
+	  * TODO: store the settings in DB
+	  *
+	  * This looks really bad but we can't be sure what is inside localStorage
+	  */
+	save($event) : void {
 		let user = JSON.parse(localStorage.getItem("currentUser"));
 
 		console.log(user);
@@ -206,37 +170,28 @@ export class DashboardComponent implements OnInit {
 	}
 
 	/**
-	  * Trigger a modal window which can edit the given box
+	  * Remove a box from boxes array and save it
 	  */
-	editBox(box : Object) {
-		console.debug("Should edit box");
-		this.modalRef = this.modalService.open(DashItemComponent);
-		this.modalRef.componentInstance.data = box;
-	}
+	deleteBox(box) {
+		console.log("should delete: ", box.box, box.index);
 
-	deleteBox(box, i) {
-		console.log("should delete: ", box, i);
-
-		let index = this.boxes.indexOf(box, 0);
+		let index = this.boxes.indexOf(box.box, 0);
 
 		if (index > -1) {
 			this.boxes.splice(index, 1);
-			this.save();
+			this.save({});
 		}
 	}
 
 	/**
 	  * Duplicates given box and adds it to boxes array
 	  *
-	  * TODO: this causes an exception when not in production mode
+	  * TODO: this causes the browser to freeze, don't know why
 	  */
 	duplicateBox(box : Box) {
+		console.log("duplicating")
 		let newbox = Object.assign({}, box);
 		newbox["title"] = "Duplicate of " + box["title"];
-		this.addBox(newbox);
-	}
-
-	loadData(box : Box) {
-		console.log(box);
+		this.boxes.push(box);
 	}
 }
