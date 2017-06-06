@@ -148,3 +148,8 @@ nemea-events .modal-dialog {
   border: 1px solid #eee;
   height: calc(90vh - 2em)!important;
 }
+
+.grid-placeholder {
+	border: 2px dashed $gray;
+	background: rgba(0,0,0,0.05)
+}
