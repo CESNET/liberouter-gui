@@ -2,20 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { FormsModule }		from '@angular/forms';
-//import { HttpService } from '../../services/http.service';
-import {
-	usersComponent,
-	usersAddComponent,
-	usersListComponent,
-	usersEditComponent
-	} from './users.component';
+
+import { UsersComponent } from './users.component';
+import { UsersAddComponent } from './users-add/users-add.component';
+import { UsersListComponent } from './users-list/users-list.component';
+import { UsersEditComponent } from './users-edit/users-edit.component';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 
 const usersRoutes : Routes = [
 	{
 		path : 'users',
-		component : usersComponent,
+		component : UsersComponent,
 		canActivate : [AuthGuard],
 		data : {
 			basepath : true,
@@ -27,7 +25,7 @@ const usersRoutes : Routes = [
 		children : [
 			{
 				path : '',
-				component: usersListComponent,
+				component: UsersListComponent,
 				canActivate : [AuthGuard],
 				data : {
 					role : 0
@@ -35,7 +33,7 @@ const usersRoutes : Routes = [
 			},
 			{
 				path : 'add',
-				component : usersAddComponent,
+				component : UsersAddComponent,
 				canActivate : [AuthGuard],
 				data : {
 					role : 0,
@@ -44,7 +42,7 @@ const usersRoutes : Routes = [
 			},
 			{
 				path : ':id',
-				component : usersEditComponent,
+				component : UsersEditComponent,
 				canActivate : [AuthGuard],
 				data : {
 					role : 0,
@@ -55,16 +53,21 @@ const usersRoutes : Routes = [
 	}
 ];
 
-//export const dummyRouting = RouterModule.forChild(dummyRoutes);
-
 @NgModule({
 	imports : [
 		CommonModule,
 		FormsModule,
 		RouterModule.forChild(usersRoutes)
 	],
-	declarations : [usersComponent, usersAddComponent, usersListComponent, usersEditComponent],
-	exports : [usersComponent, usersAddComponent, usersEditComponent, RouterModule],
-	//	providers : [HttpService]
+	declarations : [
+		UsersComponent,
+		UsersListComponent,
+		UsersAddComponent,
+		UsersEditComponent
+	],
+	exports : [
+		UsersComponent,
+		RouterModule
+	]
 })
 export class usersModule {};
