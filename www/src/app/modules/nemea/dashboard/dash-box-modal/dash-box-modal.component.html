@@ -1,0 +1,63 @@
+<div class="modal-header">
+	<h4 class="modal-title">Editing "{{ data.title }}"</h4>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body form-control">
+	<form novalidate class="form">
+		<div class="input-group">
+			<div class="input-group-addon">Title</div>
+			<input type="text"
+				class="form-control"
+				name="title"
+				placeholder="Box title"
+				[(ngModel)]="data.title" />
+		</div>
+
+		<div class="input-group">
+			<div class="input-group-addon">Content</div>
+			<input type="text"
+				class="form-control"
+				name="content"
+				placeholder="Box content"
+				[(ngModel)]="data.content" />
+		</div>
+
+		<div class="input-group">
+			<div class="input-group-addon">Period [hours]</div>
+			<input type="text"
+				class="form-control"
+				name="period"
+				placeholder="Period in hours"
+				[(ngModel)]="data.period" />
+		</div>
+
+		<div class="input-group">
+			<div class="input-group-addon">Metric</div>
+			<input type="text"
+				class="form-control"
+				name="metric"
+				placeholder="Metric"
+				[(ngModel)]="data.metric"
+				[ngbTypeahead]="searchMetric" />
+		</div>
+
+		<div class="input-group">
+			<div class="input-group-addon">Type</div>
+			<select class="custom-select form-control" [(ngModel)]="data.type" name="type">
+				<option *ngFor="let type of types" [value]="type.value">{{ type.name }}</option>
+			</select>
+		</div>
+	</form>
+
+	{{ data | json }}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	{{ backup | json }}
+
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" (click)="close($event)">
+		Close
+	</button>
+</div>
