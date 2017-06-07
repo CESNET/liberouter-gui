@@ -150,6 +150,6 @@ nemea-events .modal-dialog {
 }
 
 .grid-placeholder {
-	border: 2px dashed $gray;
-	background: rgba(0,0,0,0.05)
+	border: 2px dashed $gray!important;
+	background: rgba(0,0,0,0.05)!important;
 }
