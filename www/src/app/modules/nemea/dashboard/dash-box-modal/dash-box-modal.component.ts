@@ -63,6 +63,7 @@ export class DashBoxModalComponent implements OnInit {
 	  */
 	close(result : any) : void {
 		console.log(result);
+		this.data = Object.assign(this.data,this.backup);
 		this.activeModal.close(result);
 	}
 
