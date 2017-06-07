@@ -53,7 +53,9 @@
 	</form>
 </div>
 <div class="modal-footer">
-	<button type="button" class="btn btn-secondary" (click)="close($event)">
-		Close
+	<button class="btn btn-outline-primary" (click)="activeModal.dismiss()">Cancel</button>
+	<button class="btn btn-primary" (click)="close($event)">
+		Save
 	</button>
+
 </div>
