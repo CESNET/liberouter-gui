@@ -8,7 +8,7 @@
 
 			<div ngbDropdown>
 				<a class="" id="dMenu" ngbDropdownToggle></a>
-				<div class="dropdown-menu" aria-labelledby="dMenu">
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dMenu">
 					<button class="dropdown-item" (click)="edit()">Edit</button>
 					<a class="dropdown-item" (click)="duplicate()">Duplicate</a>
 					<a class="dropdown-item" (click)="remove()">Delete</a>
@@ -17,36 +17,62 @@
 		</div>
 	</div>
 
-	<section class="body">
+	<section class="body" [ngSwitch]="box.type" *ngIf="data.length; else nodata">
 
-		<div *ngIf="box.type == 'piechart'">
+		<div *ngSwitchCase="'piechart'">
 			<ngx-charts-pie-chart #chart
 			 [results]="data"
 			 [labels]="true"
-			 [legend]="false"
+			 [legend]="true"
 			 [doughnut]="true"
-			 (select)="onSelect($event)"></ngx-charts-pie-chart>
+			 (select)="onSelect($event)">
+			</ngx-charts-pie-chart>
 		</div>
 
-		<div *ngIf="box.type == 'barchart'">
+		<div *ngSwitchCase="'barchart'">
 			Here should be BARCHART graph
 		</div>
 
-		<div *ngIf="box.type == 'top'">
-			Here should be TOP events
+		<div *ngSwitchCase="'top'">
+			<ul class="list-group top-events">
+				<a [routerLink]="['../events', { 'id' : event.id.$oid}]"
+					*ngFor="let event of data"
+					class="list-group-item d-flex flex-row justify-content-center">
+					<span>
+						<i class="fa fa-tag" aria-hidden="true"></i>
+						{{ event._id }}
+					</span>
+					<span>
+						<i class="fa fa-bar-chart" aria-hidden="true"></i>
+						{{ event.FlowCount }}
+					</span>
+					<span>
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						{{ event.DetectTime.$date | date: 'dd/mm/yy hh:mm:ss' }}
+					</span>
+				</a>
+			</ul>
 		</div>
 
-		<div *ngIf="box.type == 'sum'">
-			Here should be SUM
+		<div *ngSwitchCase="'count'" class="d-flex justify-content-center flex-column">
+			<h2 class="align-self-center">{{ data }}</h2>
 		</div>
 
-		<div *ngIf="box.type == ''">
+		<div *ngSwitchDefault>
 			No type of box is defined
 		</div>
 
-		<p>{{ box.content }}</p>
+		<p class="text-center">{{ box.content }}</p>
 
 	</section>
+
+	<ng-template #nodata>
+		<section class="body d-flex justify-content-center flex-column">
+				<h5 class="align-self-center" *ngIf="box.type != 'count'">No data to display</h5>
+				<h2 class="align-self-center" *ngIf="box.type == 'count'">{{ data }}</h2>
+			<span class="text-center">{{ box.content }}</span>
+		</section>
+	</ng-template>
 </div>
 
 <ng-template ngbModalContainer class="item-detail"></ng-template>

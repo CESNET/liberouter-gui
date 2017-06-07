@@ -32,8 +32,8 @@ export class DashBoxModalComponent implements OnInit {
 			name : 'Top N'
 		},
 		{
-			value : 'sum',
-			name : 'Sum'
+			value : 'count',
+			name : 'Count'
 		}
 	]
 

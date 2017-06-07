@@ -61,15 +61,34 @@ export class DashBoxComponent {
 		// Shift time for fetching correct data
 		this.timeShift();
 
-		// Fetch data
-		this.boxService.aggregate(this.box).subscribe(
-			(data) => {
-				this.data = data;
-			},
-			(err) => {
-				console.error(err);
-			}
-		);
+		switch (this.box.type) {
+			case "piechart":
+			case "barchart":
+				// Fetch data
+				this.boxService.aggregate(this.box).subscribe(
+					(data) => { this.data = data },
+					(err) => { console.error(err) }
+				);
+				break;
+
+			case "count":
+				this.boxService.count(this.box).subscribe(
+					(data) => { this.data = data },
+					(err) => { console.error(err) }
+				);
+				break;
+
+			case "top":
+				this.boxService.top(this.box).subscribe(
+					(data) => { this.data = data },
+					(err) => { console.error(err) }
+				);
+				break;
+
+			default:
+				console.warn("unknown type '%s'", this.box.type);
+				break;
+		}
 	}
 
 	/**
@@ -112,24 +131,13 @@ export class DashBoxComponent {
 				  * Also would be nice to reload data
 				  */
 
-				// Shift the time
-				this.timeShift();
 				this.save();
 
-				this.boxService.aggregate(this.box).subscribe(
-					(data) => {
-						this.data = data;
-					},
-					(err) => {
-						console.error(err);
-					}
-				);
-
+				this.ngOnInit();
 			},
 			(reason) => {
-				// Dismissal of the modal, revert backup
+				// Dismissal of the modal, do nothing
 				console.debug("Modal dismissed");
-				this.box = Object.assign({}, this.backup);
 			}
 		);
 	}
@@ -154,8 +162,8 @@ export class DashBoxComponent {
 	}
 
 	resize(event) {
-		console.log(event);
 		this.update();
+		this.save();
 	}
 
 	/**
@@ -168,4 +176,7 @@ export class DashBoxComponent {
 		setTimeout(_ => { this.save() }, 100);
 	}
 
+	onSelect(event) {
+		console.log(event);
+	}
 }
