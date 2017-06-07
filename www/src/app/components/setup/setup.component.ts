@@ -16,6 +16,8 @@ export class SetupComponent implements OnInit {
 		password2 : ""
 	};
 
+	error = "";
+
 	constructor( private authService : AuthService
                , private router : Router
                ) { }
@@ -27,6 +29,9 @@ export class SetupComponent implements OnInit {
 		this.authService.admin(this.admin).subscribe(
 		    data => {
 		        this.router.navigate(["/login"]);
+		    },
+		    err => {
+				this.error = err;
 		    }
 		)
 	}
