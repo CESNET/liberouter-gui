@@ -43,6 +43,7 @@ import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
   * NEMEA Status
   */
 import { nemeaStatusComponent } from './status/nemea_status.component';
+import { DashboardViewComponent } from './dashboard/dashboard-view/dashboard-view.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -133,7 +134,9 @@ const nemeaRoutes : Routes = [
 		EventDetailComponent,
 		DashboardComponent,
 		DashBoxModalComponent,
-		DashBoxComponent],
+		DashBoxComponent,
+		DashboardViewComponent
+		],
 	exports : [],
 	providers : [SafePipe],
 	entryComponents : [EventDetailComponent, DashBoxModalComponent]
