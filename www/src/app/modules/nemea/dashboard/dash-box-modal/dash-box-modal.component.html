@@ -5,48 +5,59 @@
 	</button>
 </div>
 <div class="modal-body form-control">
-	<form novalidate class="form">
-		<div class="input-group">
-			<div class="input-group-addon">Title</div>
+	<form novalidate class="container">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">Title</label>
 			<input type="text"
-				class="form-control"
+				class="form-control col"
 				name="title"
 				placeholder="Box title"
 				[(ngModel)]="backup.title" />
 		</div>
 
-		<div class="input-group">
-			<div class="input-group-addon">Content</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">Content</label>
 			<input type="text"
-				class="form-control"
+				class="form-control col"
 				name="content"
 				placeholder="Box content"
 				[(ngModel)]="backup.content" />
 		</div>
 
-		<div class="input-group">
-			<div class="input-group-addon">Period [hours]</div>
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">Period [hours]</label>
 			<input type="text"
-				class="form-control"
+				class="form-control col"
 				name="period"
 				placeholder="Period in hours"
 				[(ngModel)]="backup.period" />
 		</div>
 
-		<div class="input-group"
-			*ngIf="backup.type != 'sum'">
-			<div class="input-group-addon">Metric</div>
+		<div class="form-group row"
+			*ngIf="backup.type == 'barchart'">
+			<label class="col-form-label col-sm-2">Window [minutes]</label>
 			<input type="text"
-				class="form-control"
+				class="form-control col"
+				name="window"
+				placeholder="60"
+				[(ngModel)]="backup.window"/>
+		</div>
+
+
+		<div class="form-group row"
+			*ngIf="backup.type == 'piechart' || backup.type == 'barchart'">
+			<label class="col-form-label col-sm-2">Metric</label>
+			<input type="text"
+				class="form-control col"
 				name="metric"
 				placeholder="Metric"
 				[(ngModel)]="backup.metric"
 				[ngbTypeahead]="searchMetric" />
 		</div>
 
-		<div class="input-group">
-			<div class="input-group-addon">Type</div>
-			<select class="custom-select form-control" [(ngModel)]="backup.type" name="type">
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2">Type</label>
+			<select class="custom-select form-control col" [(ngModel)]="backup.type" name="type">
 				<option *ngFor="let type of types" [value]="type.value">{{ type.name }}</option>
 			</select>
 		</div>

@@ -10,7 +10,7 @@
 				<a class="" id="dMenu" ngbDropdownToggle></a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dMenu">
 					<button class="dropdown-item" (click)="edit()">Edit</button>
-					<a class="dropdown-item" (click)="duplicate()">Duplicate</a>
+					<!--a class="dropdown-item" (click)="duplicate()">Duplicate</a-->
 					<a class="dropdown-item" (click)="remove()">Delete</a>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 	<section class="body" [ngSwitch]="box.type" *ngIf="data.length; else nodata">
 
 		<div *ngSwitchCase="'piechart'">
-			<ngx-charts-pie-chart #chart
+			<ngx-charts-pie-chart #piechart
 			 [results]="data"
 			 [labels]="true"
 			 [legend]="true"
@@ -30,7 +30,41 @@
 		</div>
 
 		<div *ngSwitchCase="'barchart'">
-			Here should be BARCHART graph
+			<ngx-charts-area-chart-stacked
+				#areachart
+				[results]="data"
+				[xAxis]="true"
+				[yAxis]="true"
+				[timeline]="true"
+				[xAxisTickFormatting]="xAxis"
+				(select)="onSelect($event)">
+
+					<!--
+						This one shows when hovering above the whole chart
+						and represents the whole column with all values
+						in given tick.
+					-->
+					<ng-template #seriesTooltipTemplate let-model="model">
+						{{ model[0].name }}
+						<div class="tooltip-item" *ngFor="let item of model">
+							<span class="tooltip-item-color"
+								[style.background-color]="item.color">
+							</span> {{ item.series }}: {{ item.value }}
+						</div>
+						<!--pre style="color: #fff">{{ model | json }}</pre-->
+					</ng-template>
+
+					<!--
+						Tooltip for one specific point in chart
+					-->
+					<ng-template #tooltipTemplate let-model="model">
+						<div class="tooltip-item">
+							<p>{{ model.series }} | {{ model.name | date: 'dd/MM HH:MM:ss' }}</p>
+							<h5 class="text-center">{{ model.value }}</h5>
+						</div>
+					</ng-template>
+				</ngx-charts-area-chart-stacked>
+
 		</div>
 
 		<div *ngSwitchCase="'top'">
@@ -63,6 +97,8 @@
 		</div>
 
 		<p class="text-center">{{ box.content }}</p>
+
+	<pre>{{ box | json }}</pre>
 
 	</section>
 

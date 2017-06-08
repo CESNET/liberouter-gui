@@ -1,11 +1,10 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
-import { PieChartComponent } from '@swimlane/ngx-charts';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DashBoxModalComponent } from '../dash-box-modal/dash-box-modal.component';
-import { Box } from '../dashboard.component';
 
 
 import { BoxService } from '../box.service';
+import { Box } from '../box';
 
 /**
   * Dashboard Box component
@@ -44,8 +43,11 @@ export class DashBoxComponent {
 	@Output() onDuplicate = new EventEmitter<Object>();
 	@Output() onSave = new EventEmitter<Object>();
 
-	@ViewChild(PieChartComponent)
+	@ViewChild("piechart")
 	private piechart;
+
+	@ViewChild("areachart")
+	private areachart;
 
 	private data = [];
 	private modalRef : any;
@@ -63,10 +65,16 @@ export class DashBoxComponent {
 
 		switch (this.box.type) {
 			case "piechart":
+				// Fetch data
+				this.boxService.piechart(this.box).subscribe(
+					(data) => { this.data = data },
+					(err) => { console.error(err) }
+				);
+				break;
 			case "barchart":
 				// Fetch data
-				this.boxService.aggregate(this.box).subscribe(
-					(data) => { this.data = data },
+				this.boxService.barchart(this.box).subscribe(
+					(data) => { this.data = data; this.processDates(); },
 					(err) => { console.error(err) }
 				);
 				break;
@@ -105,13 +113,46 @@ export class DashBoxComponent {
     }
 
 	/**
+	  * Convert dates to Date class so ngx charts can detect it is a date
+	  * and create the timeline below a chart
+	  */
+    processDates() {
+		this.data = this.data.map(category => {
+			category.series = category.series.map(item => {
+				item.date = item.name;
+				item.name = new Date(item.name*1000);
+				return item;
+			})
+
+			return category;
+		})
+    }
+
+	/**
+	  * Custom format of X axis ticks
+	  * unfortunately it cannot display hours/minutes becuase ngx sends just date
+	  */
+    xAxis = function(d) {
+    	let day = d.getDate();
+    	let month = d.getMonth();
+    	let hours = d.getHours();
+    	let minutes = d.getMinutes();
+		return day + '/' + month;
+	};
+
+	/**
 	  * Update the chart
 	  * Calls child method update()
 	  * More info here: https://github.com/swimlane/ngx-charts/blob/master/src/pie-chart/pie-chart.component.ts
 	  */
     update() {
+    	console.log(this.piechart);
+    	console.log(this.areachart);
+
     	if (this.piechart != undefined)
 			this.piechart.update();
+		else if(this.areachart != undefined)
+			this.areachart.update();
     }
 
 	/**
