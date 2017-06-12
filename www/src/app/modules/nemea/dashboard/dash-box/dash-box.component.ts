@@ -33,6 +33,9 @@ export class DashBoxComponent {
 
 	@Input() index;
 
+	// Time offset
+	@Input() offset = 0;
+
 	/**
 	  * We use event emitter for parent interaction which holds the boxes array
 	  *
@@ -108,8 +111,8 @@ export class DashBoxComponent {
 	timeShift() {
 		let now = new Date();
 
-        this.box.beginTime = Math.floor((now.getTime() - (this.box["period"]*60*60*1000))/1000);
-        this.box.endTime = Math.floor(Number(now)/1000);
+        this.box.beginTime = Math.floor((now.getTime() - (this.box["period"]*60*60*1000) - this.offset * 60 * 60 x* 1000)/1000);
+        this.box.endTime = Math.floor((Number(now) - this.offset * 60 * 60 * 1000)/1000);
     }
 
 	/**
