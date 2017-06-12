@@ -1,10 +1,10 @@
 <div [ngGrid]="gridConfig">
-
 	<div *ngIf="boxes == []">You should add box</div>
 
 	<dash-box
 		[box]="box"
 		[index]="index"
+		[offset]="dashboard.offset"
 		(onDelete)="deleteBox($event)"
 		(onDuplicate)="duplicateBox($event)"
 		(onSave)="save()"
