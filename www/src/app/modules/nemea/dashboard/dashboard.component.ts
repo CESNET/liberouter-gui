@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DashModalComponent } from './dash-modal/dash-modal.component';
 
 import { UsersService } from 'app/modules/users/users.service';
 
@@ -15,11 +16,13 @@ export class DashboardComponent implements OnInit {
 
 	// LocalStorage currentUser
 	private user : Object;
+	private modalRef;
 
 	@ViewChild('tabs')
 	private tabs;
 
-	constructor(private usersService : UsersService) {}
+	constructor(private usersService : UsersService,
+			   private modalService: NgbModal) {}
 
 	/**
 	  * Get dashboard config from local storage
@@ -68,14 +71,13 @@ export class DashboardComponent implements OnInit {
 	/**
 	  * Save settings of the dashboard to localStorage
 	  *
-	  * TODO: store the settings in DB
+	  * Reload the component in case of offset change
 	  *
 	  * This looks really bad but we can't be sure what is inside localStorage
 	  */
-	save($event = {}) : void {
-		let user = JSON.parse(localStorage.getItem("currentUser"));
+	save($event = {}, reload = false) : void {
 
-		console.log(user);
+		let user = JSON.parse(localStorage.getItem("currentUser"));
 
 		if (user['user']['settings'] == null)
 			user['user']["settings"] = { "nemea" : { "dashboard" : this.dashboards } };
@@ -91,7 +93,52 @@ export class DashboardComponent implements OnInit {
 			}
 		}
 
-		localStorage.setItem("currentUser", JSON.stringify(user));
+		this.usersService.update(user['user']['_id']['$oid'], user['user']).subscribe(
+			data => {
+				user['user'] = data;
+				localStorage.setItem("currentUser", JSON.stringify(user));
+				if (reload) {
+					this.ngOnInit();
+				}
+			},
+			error => {
+				console.log(error);
+				// Save local copy anyway
+				localStorage.setItem("currentUser", JSON.stringify(user));
+
+				if (reload) {
+					this.ngOnInit();
+				}
+
+			}
+		)
+	}
+
+	editDashboard(dashboard) {
+		console.debug("should edit", dashboard);
+
+		const offset = dashboard["offset"]
+
+		this.modalRef = this.modalService.open(DashModalComponent);
+		this.modalRef.componentInstance.data = dashboard;
+
+		this.modalRef.result.then(
+			(result) => {
+				/**
+				  * Closed with a button, replace current model with the new one
+				  * Also would be nice to reload data
+				  */
+
+				this.save({}, dashboard['offset'] != offset);
+				console.log(result);
+				console.log(dashboard);
+
+			},
+			(reason) => {
+				// Dismissal of the modal, do nothing
+				console.debug("Modal dismissed");
+			}
+		);
 	}
 
 	/**

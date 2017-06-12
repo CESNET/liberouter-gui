@@ -44,6 +44,7 @@ import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
   */
 import { nemeaStatusComponent } from './status/nemea_status.component';
 import { DashboardViewComponent } from './dashboard/dashboard-view/dashboard-view.component';
+import { DashModalComponent } from './dashboard/dash-modal/dash-modal.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -135,10 +136,15 @@ const nemeaRoutes : Routes = [
 		DashboardComponent,
 		DashBoxModalComponent,
 		DashBoxComponent,
-		DashboardViewComponent
+		DashboardViewComponent,
+		DashModalComponent
 		],
 	exports : [],
 	providers : [SafePipe],
-	entryComponents : [EventDetailComponent, DashBoxModalComponent]
+	entryComponents : [
+		EventDetailComponent,
+		DashBoxModalComponent,
+		DashModalComponent
+	]
 })
 export class nemeaModule {};

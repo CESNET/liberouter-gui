@@ -6,7 +6,7 @@
 				<span ngbDropdownToggle></span>
 
 				 <div class="dropdown-menu">
-					<a class="dropdown-item">Edit</a>
+					<a class="dropdown-item" (click)="editDashboard(dashboard)">Edit</a>
 					<a class="dropdown-item" (click)="deleteDashboard(dashboard, $event)">Delete</a>
 				</div>
 
@@ -43,3 +43,5 @@
 		</ng-template>
 	</ngb-tab>
 </ngb-tabset>
+
+<ng-template ngbModalContainer class="dash-modal"></ng-template>
