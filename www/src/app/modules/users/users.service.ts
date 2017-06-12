@@ -15,7 +15,6 @@ export class UsersService {
 				// Extract data from response
 				let body : Object = response.json();
 
-				console.log(body)
 				return body;
 			})
 			.catch(this.handleError);
@@ -28,7 +27,6 @@ export class UsersService {
 				// Extract data from response
 				let body : Object = response.json();
 
-				console.log(body)
 				return body;
 			})
 			.catch(this.handleError);
@@ -47,7 +45,6 @@ export class UsersService {
 				// Extract data from response
 				let body : Object = response.json();
 
-				console.log(body)
 				return body;
 			})
 			.catch(this.handleError);
@@ -60,7 +57,6 @@ export class UsersService {
 				// Extract data from response
 				let body : Object = response.json();
 
-				console.log(body)
 				return body;
 			})
 			.catch(this.handleError);
