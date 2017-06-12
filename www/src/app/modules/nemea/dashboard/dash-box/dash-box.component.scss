@@ -5,7 +5,7 @@
 		width: 100%;
 		height: calc(100% - 50px);	// Height of handle element must be subtracted
 		background: #FFF;
-		overflow: scroll;
+		overflow-x: hidden;
 
 		div {
 			width: calc(100% - 1em);
