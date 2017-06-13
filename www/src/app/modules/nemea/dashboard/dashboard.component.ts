@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { DashModalComponent } from './dash-modal/dash-modal.component';
 
 import { UsersService } from 'app/modules/users/users.service';
@@ -34,7 +35,6 @@ export class DashboardComponent implements OnInit {
 
 		// Load settings for dashboard (boxes configuration)
 		try {
-			console.log(this.user["user"]["settings"]["nemea"]["dashboard"]);
 			this.dashboards = this.user["user"]["settings"]["nemea"]["dashboard"];
 		} catch (e) {
 			console.log(e);
@@ -53,9 +53,6 @@ export class DashboardComponent implements OnInit {
 	}
 
 	addDashboard(title : string, offset = 0) {
-
-		console.log(title, offset);
-
 		if (title.length) {
 			let dash = {
 				"title" : title,
@@ -115,8 +112,6 @@ export class DashboardComponent implements OnInit {
 	}
 
 	editDashboard(dashboard) {
-		console.debug("should edit", dashboard);
-
 		const offset = dashboard["offset"]
 
 		this.modalRef = this.modalService.open(DashModalComponent);
@@ -130,8 +125,6 @@ export class DashboardComponent implements OnInit {
 				  */
 
 				this.save({}, dashboard['offset'] != offset);
-				console.log(result);
-				console.log(dashboard);
 
 			},
 			(reason) => {
@@ -148,7 +141,6 @@ export class DashboardComponent implements OnInit {
 
 		$event.preventDefault();
 
-		console.log(this.tabs);
 		this.tabs.select('ngb-tab-1');
 
 		let index = this.dashboards.indexOf(dashboard, 0);

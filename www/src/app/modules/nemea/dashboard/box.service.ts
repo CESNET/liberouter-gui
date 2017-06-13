@@ -6,13 +6,6 @@ export class BoxService {
 
 	constructor(private http : Http) {}
 
-	get(box) {
-		console.log(box);
-
-		console.warn("No box type is set.")
-
-	}
-
 	piechart(box) {
 		let requestOptions = new RequestOptions();
 
@@ -75,7 +68,6 @@ export class BoxService {
 
 		return this.http.get('/nemea/events/count', requestOptions).map(
 			(response : Response) => {
-				console.log("response", response)
 				let body = response.json()
 				return body;
 			})
@@ -93,7 +85,6 @@ export class BoxService {
 
 		return this.http.get('/nemea/events/top', requestOptions).map(
 			(response : Response) => {
-				console.log("response", response)
 				let body = response.json()
 				return body;
 			})
