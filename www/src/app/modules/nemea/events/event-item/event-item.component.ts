@@ -23,16 +23,25 @@ export class EventItemComponent implements OnInit {
 			params => {
 	            this.params = params;
 
-	            if (this.params['id'] && this.params['id'] == this.item['_id']['$oid']) {
-	            	if (!this.modalRef) {
-						this.modalRef = this.modalService.open(EventDetailComponent);
-						this.modalRef.componentInstance.data = this.item;
-					}
-
-					// We can ditch the parameter since it is always null
-					this.modalRef.result
-						.then(p => {this.unsetId(this.router, this.params)})
-						.catch(p => {this.unsetId(this.router, this.params)});
+	            if (this.params['id'] &&
+						this.params['id'] == this.item['_id']['$oid'] &&
+						!this.modalRef) {
+					this.modalRef = this.modalService.open(EventDetailComponent);
+					this.modalRef.componentInstance.data = this.item;
+					this.modalRef.result.then(
+						(result) => {
+							// The modal was closed and we shall redirect
+							if (result != undefined) {
+								console.log('should redirect', result);
+								this.router.navigate(result);
+							} else {
+								this.unsetId(this.router, this.params)
+							}
+						},
+						(reason) => {
+							//dismissal
+							this.unsetId(this.router, this.params)
+						});
 				}
 		});
 	}
@@ -45,6 +54,4 @@ export class EventItemComponent implements OnInit {
 		p['id'] = undefined;
 		r.navigate(['nemea/events'], {queryParams : p});
 	}
-
-	//@HostListener('click')
 }
