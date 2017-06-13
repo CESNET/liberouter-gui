@@ -1,78 +1,166 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DashModalComponent } from './dash-modal/dash-modal.component';
 
-import {NgGrid, NgGridItem, NgGridConfig, NgGridItemConfig, NgGridItemEvent} from 'angular2-grid';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';  
-
-interface Box {
-	id : number;
-	config : any;
-	title : string;
-	content : string;
-}
+import { UsersService } from 'app/modules/users/users.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  providers : [ UsersService ]
 })
 export class DashboardComponent implements OnInit {
 
-	private boxes : Array<Box> = [];
+	private dashboards : Array<any>;
 
-	private gridConfig: NgGridConfig = <NgGridConfig>{
-		'margins': [5],
-		'draggable': true,
-		'resizable': true,
-		'max_cols': 0,
-		'max_rows': 0,
-		'visible_cols': 0,
-		'visible_rows': 0,
-		'min_cols': 1,
-		'min_rows': 1,
-		'col_width': 200,
-		'row_height': 200,
-		'cascade': 'up',
-		'min_width': 100,
-		'min_height': 100,
-		'fix_to_grid': false,
-		'auto_style': true,
-		'auto_resize': false,
-		'maintain_ratio': false,
-		'prefer_new': false,
-		'zoom_on_drag': false,
-		'limit_to_screen': true
-	};
+	// LocalStorage currentUser
+	private user : Object;
+	private modalRef;
 
-	config = { 'dragHandle': '.handle', 'col': 1, 'row': 1, 'sizex': 2, 'sizey': 2 };
+	@ViewChild('tabs')
+	private tabs;
 
-	constructor() {}
+	constructor(private usersService : UsersService,
+			   private modalService: NgbModal) {}
 
+	/**
+	  * Get dashboard config from local storage
+	  *
+	  * If no box is there add a clean box (empty dashboard is a sad dashboard)
+	  */
 	ngOnInit() {
-		this.boxes.push({
-			id : 0,
-			config : {
-				'dragHandle': '.handle',
-				'sizex': 2,
-				'sizey': 2
-			},
-			title : "New Box",
-			content : "Newly new box"
-		});
+		this.user = JSON.parse(localStorage["currentUser"]);
+
+		// Load settings for dashboard (boxes configuration)
+		try {
+			console.log(this.user["user"]["settings"]["nemea"]["dashboard"]);
+			this.dashboards = this.user["user"]["settings"]["nemea"]["dashboard"];
+		} catch (e) {
+			console.log(e);
+			this.addCleanDashboard();
+		}
 	}
 
-	addBox() {
-		console.log("should add box");
+	addCleanDashboard() {
+		this.dashboards = [{
+			title : "Untitled Dashboard",
+			offset : 0,
+			boxes : []
+		}]
 
-		this.boxes.push({
-			id : 0,
-			config : {
-				'dragHandle': '.handle',
-				'sizex': 2,
-				'sizey': 2
+		this.save();
+	}
+
+	addDashboard(title : string, offset = 0) {
+
+		console.log(title, offset);
+
+		if (title.length) {
+			let dash = {
+				"title" : title,
+				"boxes" : [],
+				"offset" : Number(offset)
+			}
+
+			this.dashboards.push(dash)
+			this.save();
+		}
+	}
+
+	/**
+	  * Save settings of the dashboard to localStorage
+	  *
+	  * Reload the component in case of offset change
+	  *
+	  * This looks really bad but we can't be sure what is inside localStorage
+	  */
+	save($event = {}, reload = false) : void {
+
+		let user = JSON.parse(localStorage.getItem("currentUser"));
+
+		if (user['user']['settings'] == null)
+			user['user']["settings"] = { "nemea" : { "dashboard" : this.dashboards } };
+		else {
+			if ('nemea' in user['user']['settings']) {
+				if ('dashboard' in user['user']['settings']['nemea']) {
+					user['user']["settings"]["nemea"]["dashboard"] = this.dashboards;
+				} else {
+					user['user']["settings"]["nemea"] = { "dashboard" : this.dashboards };
+				}
+			} else {
+				user['user']["settings"] = { "nemea" : { "dashboard" : this.dashboards } };
+			}
+		}
+
+		this.usersService.update(user['user']['_id']['$oid'], user['user']).subscribe(
+			data => {
+				user['user'] = data;
+				localStorage.setItem("currentUser", JSON.stringify(user));
+				if (reload) {
+					this.ngOnInit();
+				}
 			},
-			title : "New Box",
-			content : "Newly new box"
-		});
+			error => {
+				console.log(error);
+				// Save local copy anyway
+				localStorage.setItem("currentUser", JSON.stringify(user));
+
+				if (reload) {
+					this.ngOnInit();
+				}
+
+			}
+		)
+	}
+
+	editDashboard(dashboard) {
+		console.debug("should edit", dashboard);
+
+		const offset = dashboard["offset"]
+
+		this.modalRef = this.modalService.open(DashModalComponent);
+		this.modalRef.componentInstance.data = dashboard;
+
+		this.modalRef.result.then(
+			(result) => {
+				/**
+				  * Closed with a button, replace current model with the new one
+				  * Also would be nice to reload data
+				  */
+
+				this.save({}, dashboard['offset'] != offset);
+				console.log(result);
+				console.log(dashboard);
+
+			},
+			(reason) => {
+				// Dismissal of the modal, do nothing
+				console.debug("Modal dismissed");
+			}
+		);
+	}
+
+	/**
+	  * Remove a dashboard from dashboard array and save it
+	  */
+	deleteDashboard(dashboard, $event) {
+
+		$event.preventDefault();
+
+		console.log(this.tabs);
+		this.tabs.select('ngb-tab-1');
+
+		let index = this.dashboards.indexOf(dashboard, 0);
+
+		if (index > -1) {
+			this.dashboards.splice(index, 1);
+			this.save();
+		}
+	}
+
+	change($event) {
+		console.log($event);
 	}
 
 }

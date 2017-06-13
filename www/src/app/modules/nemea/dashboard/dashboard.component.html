@@ -1,36 +1,47 @@
-<p>
-  dashboard works!
-</p>
+<ngb-tabset type="pills" [destroyOnHide]="false" #tabs="ngbTabset" (tabChange)="change($event)">
+	<ngb-tab *ngFor="let dashboard of dashboards">
+		<ng-template ngbTabTitle>
+			{{ dashboard.title }}
+			<div ngbDropdown class="d-inline-block">
+				<span ngbDropdownToggle></span>
 
-<div [ngGrid]="gridConfig">
-
-	<div [(ngGridItem)]="config">
-		<div class="handle">Handle</div>
-		Box
-	</div>
-
-	<div *ngFor="let box of boxes" [(ngGridItem)]="box.config">
-		<div class="handle">
-			<div class="row">
-				<h3 class="col h4">{{ box.title}}</h3>
-
-			<div ngbDropdown>
-				<a class="" id="dMenu" ngbDropdownToggle></a>
-				<div class="dropdown-menu" aria-labelledby="dMenu">
-					<button class="dropdown-item" (click)="editBox(box)">Edit</button>
-					<a class="dropdown-item" (click)="duplicateBox(box)">Duplicate</a>
-					<a class="dropdown-item" (click)="deleteBox(box)">Delete</a>
+				 <div class="dropdown-menu">
+					<a class="dropdown-item" (click)="editDashboard(dashboard)">Edit</a>
+					<a class="dropdown-item" (click)="deleteDashboard(dashboard, $event)">Delete</a>
 				</div>
+
 			</div>
-			</div>
 
+		</ng-template>
+		<ng-template ngbTabContent>
 
-		</div>
+			<dashboard-view
+				[dashboard]="dashboard"
+				(onSave)="save($event)">
+			</dashboard-view>
+		</ng-template>
+	</ngb-tab>
+	<ngb-tab>
+		<ng-template ngbTabTitle #title>+ Add new</ng-template>
+		<ng-template ngbTabContent #content>
+			<form novalidate
+				(ngSubmit)="addDashboard(dashTitle.value, offset.value)"
+				#dashform="ngForm"
+				class="form">
+				<div class="form-group">
+					<label>Dashboard Title</label>
+					<input type="text" #dashTitle name="title" placeholder="Dashboard title" required class="form-control">
+				</div>
 
-		{{ box.content }}
+				<div class="form-group">
+					<label>Offset Time [hours]</label>
+					<input type="number" #offset name="offset" placeholder="0" class="form-control">
+				</div>
 
-		{{ box.config | json }}
-	</div>
-</div>
+				<button class="btn btn-primary" type="submit">Add</button>
+			</form>
+		</ng-template>
+	</ngb-tab>
+</ngb-tabset>
 
-<a (click)="addBox()" class="btn btn-primary">Add Box</a>
+<ng-template ngbModalContainer class="dash-modal"></ng-template>
