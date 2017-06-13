@@ -8,50 +8,119 @@
 	<form (ngSubmit)="runQuery()" name="query_form" class="query box">
 		<div class="d-flex flex-row">
 			<div class="row-space">
-				<ngb-datepicker [(ngModel)]="query.date" (navigate)="date = $event.next" name="datepicker"></ngb-datepicker>
+				<div class="form-group">
+					<label for="timeFrom">Time from</label>
+						<ngb-timepicker [(ngModel)]="query.from"
+							name="timeFrom"
+							[spinners]="false">
+						</ngb-timepicker>
+
+					<div class="input-group">
+						<input class="form-control"
+							placeholder="{{ query.date.year}}-{{query.date.month}}-{{query.date.day}}"
+							name="dp"
+							ngbDatepicker
+							[(ngModel)]="query.date"
+							#d="ngbDatepicker"
+							name="datepicker">
+						<div class="input-group-addon" (click)="d.toggle()">
+							<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Time To</label>
+					<ngb-timepicker [(ngModel)]="query.to"
+						name="timeTo"
+						[spinners]="false">
+					</ngb-timepicker>
+
+					<div class="input-group">
+						<input class="form-control"
+							placeholder="{{ query.date.year}}-{{query.date.month}}-{{query.date.day}}"
+							name="dp"
+							ngbDatepicker
+							[(ngModel)]="query.date"
+							#d="ngbDatepicker"
+							name="datepicker">
+						<div class="input-group-addon" (click)="d.toggle()">
+							<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						</div>
+					</div>
+
+				</div>
 			</div>
 
 			<div class="d-flex flex-column row-space">
 
-				<label for="timeFrom">Time from</label>
-				<input [(ngModel)]="query.from" type="text" placeholder="12:00" [ngModelOptions]="{ debounce: 100 }" validate-format name="timeTo">
-				<p *ngIf="False">Bad time format</p>
+				<div class="form-group">
+					<label>Category</label>
+					<input [(ngModel)]="query.category" name="Category" class="form-control">
+				</div>
 
-				<label>To</label>
-				<input [(ngModel)]="query.to" type="text" placeholder="13:00" validate-format validate-hours [ngModelOptions]="{ debounce: 100 }" name="timeFrom">
-				<p *ngIf="False">Bad time format or "TO" time sooner than "FROM" time</p>
-
-				<label>Category</label>
-				<input [(ngModel)]="query.category" name="Category">
-
-				<label>Description</label>
-				<input [(ngModel)]="query.description" name="Description">
-
-				<label>Limit</label>
-				<input [(ngModel)]="query.limit" name="Limit">
+				<div class="form-group">
+					<label>Description</label>
+					<input [(ngModel)]="query.description" name="Description" class="form-control">
+				</div>
 			</div>
 
 			<div class="d-flex flex-column row-space">
-				<label>Order by</label>
-				<input type="text" [(ngModel)]="query.orderby" name="OrderBy">
+				<div class="form-group">
+					<label>Limit</label>
+					<input [(ngModel)]="query.limit" name="Limit" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label>Order by</label>
+					<input type="text" [(ngModel)]="query.orderby" name="OrderBy" class="form-control">
+				</div>
 
 				<label>Direction</label>
 				<div class="btn-group" data-toggle="buttons">
-					<label class="btn btn-primary" [ngClass]="{'active' : query.dir == 1}">
-						<input type="radio" name="options" id="option1"
-							autocomplete="off" [value]="1" [(ngModel)]="query.dir"> Ascending
+					<label class="btn btn-primary"
+						[ngClass]="{'active' : query.dir == 1}"
+						title="Earliest first">
+						<input type="radio" data-toggle="tooltip"
+							name="options"
+							id="option1"
+							autocomplete="off"
+							[value]="1"
+							[(ngModel)]="query.dir">
+						Ascending
 					</label>
-					<label class="btn btn-primary" [ngClass]="{'active' : query.dir == -1}">
-						<input type="radio" name="options" id="option1" 
-							autocomplete="off" [value]="-1" [(ngModel)]="query.dir"> Descending
+					<label class="btn btn-primary"
+						[ngClass]="{'active' : query.dir == -1}"
+						title="Latest first">
+						<input type="radio"
+							name="options"
+							id="option1"
+							autocomplete="off"
+							[value]="-1"
+							[(ngModel)]="query.dir">
+						Descending
 					</label>
 				</div>
+			</div>
+			<div class="d-flex flex-column row-space">
+				<div class="form-group">
+					<label>Source IP</label>
+					<input type="text" [(ngModel)]="query.srcip" name="srcip" class="form-control">
+				</div>
 
-				<label>Source IP</label>
-				<input type="text" [(ngModel)]="query.srcip" name="srcip">
+				<div class="form-group">
+					<label>Destination IP</label>
+					<input type="text" [(ngModel)]="query.dstip" name="dstip" class="form-control">
+				</div>
 
-				<label>Destination IP</label>
-				<input type="text" [(ngModel)]="query.dstip" name="dstip">
+				<div class="form-group">
+
+					<label class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" [(ngModel)]="hideWhitelisted" name="whitelisted">
+						<span class="custom-control-indicator"></span>
+						<span class="custom-control-description">Hide whitelisted items ({{ totalWhitelisted }})</span>
+					</label>
+				</div>
 			</div>
 
 			<div class="d-flex flex-column row-space">
@@ -61,8 +130,6 @@
 			</div>
 		</div>
 	</form>
-
-    Hide whitelisted items ({{ totalWhitelisted }}): <input type="checkbox" [(ngModel)]="hideWhitelisted" />
 </section>
 
 <section class="box">
@@ -113,7 +180,7 @@
 						Load next <span *ngIf="remaining?.total > 0">
 							{{ query.limit < remaining?.total ? query.limit : remaining?.total }}</span>
 							<span *ngIf="remaining?.total == -1">{{ query.limit }}</span> items<br/>
-							<small *ngIf="remaining?.total > 0">{{ remaining.total }}<span *ngIf="remaining.total == 10000">+</span> remaining</small>
+							<small *ngIf="remaining?.total > 0">{{ remaining.total - 1}}<span *ngIf="remaining.total > query.limit">+</span> remaining</small>
 					</button>
 				</td>
 			</tr>
