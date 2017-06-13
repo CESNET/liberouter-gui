@@ -18,6 +18,7 @@ export class FtasComponent implements OnInit {
     filter : string;                // Advanced filter field for FTAS
     iframeInit : Boolean = false;   // Flag for iframe initialization routine
     ftasMsg : string = "";          // The loading message
+    params : Object;
 
     /**
       * Construct the FTAS URL from environment variables
@@ -40,13 +41,16 @@ export class FtasComponent implements OnInit {
       */
     ngOnInit() {
         this.route.params.subscribe(params => {
+        	this.params = params;
             for (var key in params) {
-                if (this.filter == undefined) {
-                    this.filter = key + "=" + params[key];
-                }
-                else {
-                    this.filter += "and " + key + '=' + params[key];
-                }
+            	if (key != 'first' && key != 'last') {
+					if (this.filter == undefined) {
+						this.filter = key + "=" + params[key];
+					}
+					else {
+						this.filter += " and " + key + '=' + params[key];
+					}
+				}
             }
 
             /**
@@ -93,8 +97,8 @@ export class FtasComponent implements OnInit {
         queryBase.set("select_output-use", "yes");
         queryBase.set("query_style", "advanced");
         //this.query.set("advanced_query", "dst_ip%3D193.170.227.139");
-        queryBase.set("first", "today 8:00");
-        queryBase.set("last", "today 10:00");
+        queryBase.set("first", this.params["first"]);
+        queryBase.set("last", this.params["last"]);
         queryBase.set("use_all_fields", "1");
         queryBase.set("query", "yes");
         queryBase.set("run_query", "yes");
