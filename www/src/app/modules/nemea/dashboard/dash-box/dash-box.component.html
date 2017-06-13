@@ -74,15 +74,15 @@
 					class="list-group-item d-flex flex-row justify-content-center">
 					<span>
 						<i class="fa fa-tag" aria-hidden="true"></i>
-						{{ event._id }}
+						{{ event?._id }}
 					</span>
 					<span>
 						<i class="fa fa-bar-chart" aria-hidden="true"></i>
-						{{ event.FlowCount }}
+						{{ event?.FlowCount }}
 					</span>
 					<span>
 						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						{{ event.DetectTime.$date | date: 'dd/mm/yy hh:mm:ss' }}
+						{{ event?.DetectTime.$date | date: 'dd/MM/yy hh:mm:ss' }}
 					</span>
 				</a>
 			</ul>
