@@ -1,6 +1,8 @@
 import sys
 import pkgutil
 from getpass import getpass
+from flask import request
+from bson import json_util
 
 from liberouterapi import app, config
 from .modules.module import Module
@@ -102,6 +104,13 @@ def setup():
 		raise ApiException("API is already setup")
 	settings = request.get_json()
 	db = dbConnector()
+
+	if len(settings['username']) == 0:
+		raise ApiException("Missing username")
+
+	if len(settings['password']) == 0:
+		raise ApiException("Missing password")
+
 	try:
 		# Insert user to database via user module
 		from .modules.users import unprotected_add_user
@@ -111,7 +120,8 @@ def setup():
 				"role" : 0
 			}
 		res = unprotected_add_user(user_data)
+
 		config.setup = False
-		return(res)
+		return(json_util.dumps({ "user_id" : res}))
 	except Exception as e:
 		raise ApiException({"error" : str(e)})

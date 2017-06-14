@@ -8,15 +8,16 @@
 	<div [outerHTML]="data | idea" style="width: 50%"></div>
 </div>
 <div class="modal-footer">
-    <a [routerLink]="[scUrl, scUrlParams]" class="btn btn-primary">SecurityCloud</a>
-    <a [routerLink]="[ftasUrl, ftasUrlParams]" class="btn btn-primary">FTAS</a>
-	<button type="button" class="btn btn-primary" (click)="activeModal.close()" disabled>
+    <button class="btn btn-primary" (click)="nerd()">NERD</button>
+    <button class="btn btn-primary" (click)="scgui()">SecurityCloud</button>
+	<button class="btn btn-primary" (click)="ftas()">FTAS</button>
+	<!--button type="button" class="btn btn-primary" (click)="activeModal.close()" disabled>
 		Source IP
 	</button>
 
 	<button type="button" class="btn btn-secondary" (click)="activeModal.close()" disabled>
 		Target IP
-	</button>
+	</button-->
 	<button type="button" class="btn btn-secondary" (click)="activeModal.close()">
 		Close
 	</button>

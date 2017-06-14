@@ -83,8 +83,8 @@ section.main {
 				width: 100%;
 
 				li {
-					padding: 1em 0;
-					text-align: center;
+					padding: 1em 0 1em 1em;
+					text-align: left;
 
 					&:hover {
 						background: $dark-menu-active;
@@ -141,4 +141,15 @@ nemea-events .modal-dialog {
 
 .row-space {
 	margin: 1em;
+}
+
+
+.CodeMirror {
+  border: 1px solid #eee;
+  height: calc(90vh - 2em)!important;
+}
+
+.grid-placeholder {
+	border: 2px dashed $gray!important;
+	background: rgba(0,0,0,0.05)!important;
 }

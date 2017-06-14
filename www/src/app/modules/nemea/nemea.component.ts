@@ -13,14 +13,29 @@ export class nemeaBase {};
 		<section class="box">
 			<h2>
 				<a routerLink='status'>
-					<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Status
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> NEMEA Status
 				</a>
 			</h2>
 		</section>
 		<section class="box">
 			<h2>
 				<a routerLink='events'>
-					<i class="fa fa-chevron-right" aria-hidden="true"></i> Nemea Events
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> NEMEA Events
+				</a>
+			</h2>
+		</section>
+
+		<section class="box">
+			<h2>
+				<a routerLink='dashboard'>
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> NEMEA Dashboard
+				</a>
+			</h2>
+		</section>
+		<section class="box">
+			<h2>
+				<a routerLink='reporters'>
+					<i class="fa fa-chevron-right" aria-hidden="true"></i> NEMEA Reporter Configuration
 				</a>
 			</h2>
 		</section>

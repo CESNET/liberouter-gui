@@ -9,7 +9,6 @@ export class EventsService {
 	last_events(items : number) {
 		return this.http.get('/nemea/events/' + String(items)).map(
 			(response : Response) => {
-				console.log(response);
 				let body : Object = response.json();
 				return body;
 			})
@@ -23,7 +22,6 @@ export class EventsService {
 		}
 		return this.http.get('/nemea/events/query', {search : params}).map(
 			(response : Response) => {
-				console.log(response);
 				let body = response.json();
 				return body;
 			})

@@ -1,0 +1,112 @@
+<div class="box"
+	[(ngGridItem)]="box.config"
+	(onResizeStop)="resize($event)"
+	(onDragStop)="itemChange($event)">
+	<div class="handle">
+		<div class="row">
+			<h3 class="col h4">{{ box.title}}</h3>
+
+			<div ngbDropdown>
+				<a class="" id="dMenu" ngbDropdownToggle></a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dMenu">
+					<button class="dropdown-item" (click)="edit()">Edit</button>
+					<!--a class="dropdown-item" (click)="duplicate()">Duplicate</a-->
+					<a class="dropdown-item" (click)="remove()">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="body" [ngSwitch]="box.type" *ngIf="data.length; else nodata">
+
+		<div *ngSwitchCase="'piechart'">
+			<ngx-charts-pie-chart #piechart
+			 [results]="data"
+			 [labels]="true"
+			 [legend]="true"
+			 [doughnut]="true"
+			 (select)="onSelect($event)">
+			</ngx-charts-pie-chart>
+		</div>
+
+		<div *ngSwitchCase="'barchart'">
+			<ngx-charts-area-chart-stacked
+				#areachart
+				[results]="data"
+				[xAxis]="true"
+				[yAxis]="true"
+				[timeline]="true"
+				[xAxisTickFormatting]="xAxis"
+				(select)="onSelect($event)">
+
+					<!--
+						This one shows when hovering above the whole chart
+						and represents the whole column with all values
+						in given tick.
+					-->
+					<ng-template #seriesTooltipTemplate let-model="model">
+						{{ model[0].name }}
+						<div class="tooltip-item" *ngFor="let item of model">
+							<span class="tooltip-item-color"
+								[style.background-color]="item.color">
+							</span> {{ item.series }}: {{ item.value }}
+						</div>
+						<!--pre style="color: #fff">{{ model | json }}</pre-->
+					</ng-template>
+
+					<!--
+						Tooltip for one specific point in chart
+					-->
+					<ng-template #tooltipTemplate let-model="model">
+						<div class="tooltip-item">
+							<p>{{ model.series }} | {{ model.name | date: 'dd/MM HH:MM:ss' }}</p>
+							<h5 class="text-center">{{ model.value }}</h5>
+						</div>
+					</ng-template>
+				</ngx-charts-area-chart-stacked>
+
+		</div>
+
+		<div *ngSwitchCase="'top'">
+			<ul class="list-group top-events">
+				<a [routerLink]="['../events', { 'id' : event.id.$oid}]"
+					*ngFor="let event of data"
+					class="list-group-item d-flex flex-row justify-content-center">
+					<span>
+						<i class="fa fa-tag" aria-hidden="true"></i>
+						{{ event?._id }}
+					</span>
+					<span>
+						<i class="fa fa-bar-chart" aria-hidden="true"></i>
+						{{ event?.FlowCount }}
+					</span>
+					<span>
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						{{ event?.DetectTime.$date | date: 'dd/MM/yy hh:mm:ss' }}
+					</span>
+				</a>
+			</ul>
+		</div>
+
+		<div *ngSwitchCase="'count'" class="d-flex justify-content-center flex-column">
+			<h2 class="align-self-center">{{ data }}</h2>
+		</div>
+
+		<div *ngSwitchDefault>
+			No type of box is defined
+		</div>
+
+		<p class="text-center box-text">{{ box.content }}</p>
+
+	</section>
+
+	<ng-template #nodata>
+		<section class="body d-flex justify-content-center flex-column">
+				<h5 class="align-self-center" *ngIf="box.type != 'count'">No data to display</h5>
+				<h2 class="align-self-center" *ngIf="box.type == 'count'">{{ data }}</h2>
+			<span class="text-center">{{ box.content }}</span>
+		</section>
+	</ng-template>
+</div>
+
+<ng-template ngbModalContainer class="item-detail"></ng-template>

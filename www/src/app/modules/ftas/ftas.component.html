@@ -1,6 +1,11 @@
 <section class="box">
     <h4 *ngIf="ftasMsg.length > 0">{{ ftasMsg }}</h4>
-    <iframe [src]="url | safe" class="frame" (load)="iframeLoaded()"></iframe>
+    <base target="_blank">
+    <iframe [src]="url | safe" class="frame" (onload)="iframeLoaded()">
+		<div class="alert alert-danger">
+			Your browser doesn't support iframes
+		</div>
+	</iframe>
 </section>
 
 <section class="box">

@@ -14,7 +14,7 @@ const routes : Routes = [{
     data : {
         role : 10,
         name : "Security Cloud",
-        description : "Let's be secure, in cloud!",
+        description : "Distributed, highly available IP flow record collector.",
         icon : "fa-cloud"
     }
 }]
