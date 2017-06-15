@@ -1,5 +1,12 @@
 export const environment = {
   production: false,
+  /**
+  	* Path to configuration file
+  	*/
+  configPath : "assets/config.json",
+  /**
+  	* Used only when fetching config.json failed
+  	*/
   apiUrl : "/libapi",
   ftas : {
     /**

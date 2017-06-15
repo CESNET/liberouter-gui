@@ -5,6 +5,13 @@
 
 export const environment = {
   production: false,
+  /**
+  	* Path to configuration file
+  	*/
+  configPath : "assets/config.json",
+  /**
+  	* Used only when fetching config.json failed
+  	*/
   apiUrl : "/libapi",
   ftas : {
     /**
@@ -22,7 +29,7 @@ export const environment = {
       * Specify which output machines will be used
       * Can be a list (as string): "1,2,5,10"
       */
-    output : "1402"
+    output : "0"
   },
   nerd : {
     /**

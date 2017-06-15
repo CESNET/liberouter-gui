@@ -1,10 +1,35 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 import { environment } from './environments/environment';
-import { AppModule } from './app/app.module';
+
+import { initApp } from './app/app.module';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+/**
+  * Retrieve config.json from a path specified in environment
+  *
+  * This cannot use the Angular HTTP module, therefore uses good old XMLHttpRequest
+  */
+function getConfig() {
+	return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", environment.configPath);
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject(xhr.statusText);
+            }
+        };
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send();
+    });
+}
+
+// Fetch the config before bootstraping the app
+getConfig().then((data : string) => {
+	platformBrowserDynamic().bootstrapModule(initApp(JSON.parse(data)));
+});
