@@ -1,0 +1,12 @@
+{
+	"api" : {
+		"path" : "/libapi"
+	},
+	"ftas" : {
+			"url" : "ftas.cesnet.cz",
+			"output" : "1402"
+	},
+	"nerd" : {
+		"url" : "nerd.cesnet.cz/nerd"
+	}
+}
