@@ -50,6 +50,7 @@ const appRoutes: Routes = [
   * Initialization function for the whole application
   *
   * Used because we need the config before HttpInterceptor is created
+  * Inspired by: https://stackoverflow.com/questions/40909822/how-to-use-httpinterceptor-and-configservice-both-at-the-same-time-in-angular2
   */
 export function initApp(config : any) {
 	@NgModule({
