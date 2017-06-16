@@ -1,14 +1,19 @@
 <section class="box">
     <h4 *ngIf="ftasMsg.length > 0">{{ ftasMsg }}</h4>
     <base target="_blank">
-    <iframe [src]="url | safe" class="frame" (onload)="iframeLoaded()">
+    <iframe [src]="url | safe" class="frame" (onload)="iframeLoaded()" *ngIf="url">
 		<div class="alert alert-danger">
 			Your browser doesn't support iframes
 		</div>
 	</iframe>
 </section>
 
-<section class="box">
+<section class="box" *ngIf="config?.showUrl == 1">
     <em> Generated URL:</em> <input type="text" [(value)] ="url">
     <small>If an error occurs, you can use this URL to access ftas directly</small>
 </section>
+
+<button class="btn btn-primary" (click)="openSettings()">Settings</button>
+
+{{ config | json }}
+
