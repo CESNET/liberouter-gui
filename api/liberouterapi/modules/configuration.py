@@ -73,7 +73,10 @@ def update_conf(module):
 		raise ConfError("Nothing to update")
 
 	if "name" in data:
-		raise ConfError("Changing name is not allowed", status_code=403)
+		del data["name"]
+
+	if "_id" in data:
+		del data["_id"]
 
 	res = conf_db.find_one_and_update({
 		"name" : str(module).lower()
