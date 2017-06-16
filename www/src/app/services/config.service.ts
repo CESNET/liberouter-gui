@@ -7,19 +7,9 @@ import { environment } from 'environments/environment';
 export class ConfigService {
 
     private config: Object = null;
+    private baseUrl : string = "/configuration";
 
     constructor(private http: Http) {}
-
-    /**
-     * Use to get the data found in the second file (config file)
-     */
-    public get(key: any = null) {
-    	console.log(this.config);
-    	if (key != null)
-			return this.config[key];
-		else
-			return this.config;
-    }
 
     /**
      * Load configuration of modules from the database.
@@ -30,7 +20,7 @@ export class ConfigService {
      */
     public load() {
         return new Promise((resolve, reject) => {
-            this.http.get("/configuration")
+            this.http.get(this.baseUrl)
 				.map( res => res.json() )
             	.catch((error: any):any => {
 					console.log(`Configuration could not be read`);
@@ -44,4 +34,39 @@ export class ConfigService {
 				});
         });
     }
+
+    public getModule(name : string) {
+		return this.http.get(this.baseUrl + '/' + name)
+			.map( res => res.json())
+			.catch(this.handleError);
+    }
+
+    public get() {
+		return this.http.get(this.baseUrl)
+			.map( res => res.json())
+			.catch(this.handleError);
+    }
+
+    public update(name : string, data : Object) {
+    	console.log(data);
+		return this.http.put(this.baseUrl + '/' + name, data)
+			.map( res => res.json())
+			.catch(this.handleError);
+    }
+
+    public add(data : Object) {
+		return this.http.post(this.baseUrl, data)
+			.map( res => res.json())
+			.catch(this.handleError);
+    }
+
+    public remove(name : string) {
+		return this.http.delete(this.baseUrl + '/' + name)
+			.map( res => res.json())
+			.catch(this.handleError);
+    }
+
+    private handleError(err : Response | any) {
+		return Promise.reject(err);
+	}
 }
