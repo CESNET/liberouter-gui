@@ -10,7 +10,8 @@
 			"outDir": "dist",
 			"assets": [
 				"assets",
-				"favicon.ico"
+				"favicon.ico",
+				"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
 			],
 			"index": "index.html",
 			"main": "main.ts",
