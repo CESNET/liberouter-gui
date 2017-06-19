@@ -69,7 +69,14 @@ export class FtasComponent implements OnInit {
     			this.config = config;
     			this.fetchParams();
     		},
-			error => { console.log(error)});
+			error => {
+				// Config for module doesn't exist
+				if (error.status == 404) {
+					console.log(error);
+					this.openSettings(false);
+				}
+			}
+		);
     }
 
 	/**
@@ -152,18 +159,36 @@ export class FtasComponent implements OnInit {
 	  * on close, save settings and regenerate URL
 	  * on dismissal do nothing
 	  */
-    openSettings() {
+    openSettings(update : boolean = true) {
 		this.modalRef = this.modalService.open(FtasModalComponent);
 		this.modalRef.componentInstance.data = this.config;
 		this.modalRef.result.then(
 			(result) => {
-				// The modal was closed, save settings
-				this.configService.update('ftas', this.config).subscribe(
-					(data) => {
-						this.config = data;
-						this.setUrl();
-					},
-					(error) => { console.error(error) });
+				if (update) {
+					// The modal was closed, save settings
+					this.configService.update('ftas', this.config).subscribe(
+						(data) => {
+							this.config = data;
+							this.setUrl();
+						},
+						(error) => {
+							console.error(error);
+							if (error.status == 404) {
+								this.openSettings(false);
+							}
+						});
+				} else {
+					let newconfig = Object.assign({}, this.config);
+					newconfig["name"] = "ftas";
+					this.configService.add(newconfig).subscribe(
+						(data) => {
+							this.config = data;
+							this.setUrl();
+						},
+						(error) => {
+							console.error(error);
+						});
+				}
 			},
 			(reason) => {
 				// dismissal, do nothing
