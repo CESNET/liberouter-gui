@@ -106,7 +106,7 @@ export class NerdComponent implements OnInit {
 			this.openSettings();
         }
 
-		if (!this.params["ip"])
+		if (!this.params || !this.params["ip"])
 			this.url = this.baseUrl;
 		else {
 			this.url = this.baseUrl + "/ip/" + this.params["ip"];

@@ -5,6 +5,9 @@ import argparse
 import sys
 import os
 from liberouterapi import app
+import logging
+
+log = logging.getLogger(__name__)
 
 import unittest
 class Config(object):
@@ -28,6 +31,10 @@ class Config(object):
 		self.config = configparser.ConfigParser()
 
 		self.config.read(args['config'])
+
+		# Check if config was loaded successfully, api section must be there
+		if "api" not in self.config:
+			log.error("Missing config file")
 
 		self.DEBUG = self.config["api"].getboolean("debug", True)
 		self.HOST = self.config["api"].get("host", "localhost")

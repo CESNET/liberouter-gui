@@ -47,7 +47,7 @@ export class FtasComponent implements OnInit {
     params : Object;
 
     // Configuration fetched froms backend
-    config : Object;
+    config : Object = {};
 
     // Output ID
     output : number;
@@ -116,9 +116,11 @@ export class FtasComponent implements OnInit {
             this.baseUrl += this.config['url'] + "/ftas/stat.pl";
         }
 
-        this.output = +this.config['output'] || -1;
+        this.output = +this.config['output'];
 
-        if (this.output == -1 || this.baseUrl == "https://") {
+        console.log(this.baseUrl, this.output)
+
+        if (isNaN(this.output) || this.baseUrl == "https://") {
             console.warn("FTAS output or URL isn't set.");
 
 			// Open modal window
