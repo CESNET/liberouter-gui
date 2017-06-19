@@ -24,7 +24,14 @@ from .configurator import Config
 """
 Load user config specified by an argument or in default path.
 """
-config = Config()
+
+
+try:
+	config = Config()
+except KeyError as e:
+	import sys
+	print("Missing item in config %s" % e)
+	sys.exit()
 
 from .dbConnector import dbConnector
 from .session import SessionManager
