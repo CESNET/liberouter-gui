@@ -11,6 +11,7 @@
 			"assets": [
 				"assets",
 				"favicon.ico",
+				".htaccess",
 				"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
 			],
 			"index": "index.html",
@@ -22,7 +23,6 @@
 			"prefix": "app",
 			"styles": [
 				"styles/main.scss",
-				"../node_modules/font-awesome/css/font-awesome.css",
 				"../node_modules/bootstrap/dist/css/bootstrap.min.css",
 				"../node_modules/codemirror/lib/codemirror.css"
 			],
@@ -33,9 +33,6 @@
 				"prod": "environments/environment.prod.ts"
 			}
 		}
-	],
-	"addons" : [
-		"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
 	],
 	"sassCompiler" : {
 		"includePaths": ["src/styles"]
