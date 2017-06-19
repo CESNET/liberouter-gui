@@ -8,7 +8,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class FtasModalComponent implements OnInit {
 
+	// Model data
 	data;
+
+	// Backup of model data detached from ngModel
 	private backup;
 
 	constructor(public activeModal: NgbActiveModal) { }
@@ -21,7 +24,6 @@ export class FtasModalComponent implements OnInit {
 	  * Closing a modal with a button => save the state
 	  */
 	close(result : any) : void {
-		console.log(result);
 		this.data = Object.assign(this.data,this.backup);
 		this.activeModal.close(result);
 	}
@@ -30,7 +32,6 @@ export class FtasModalComponent implements OnInit {
 	  * Dismissal of a modal window => don't save the state
 	  */
 	dismiss(result : any) : void {
-		console.log(result);
 		this.activeModal.dismiss(result);
 	}
 }

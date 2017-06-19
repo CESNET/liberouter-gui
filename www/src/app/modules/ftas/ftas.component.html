@@ -1,6 +1,5 @@
 <section class="box">
     <h4 *ngIf="ftasMsg.length > 0">{{ ftasMsg }}</h4>
-    <base target="_blank">
     <iframe [src]="url | safe" class="frame" (onload)="iframeLoaded()" *ngIf="url">
 		<div class="alert alert-danger">
 			Your browser doesn't support iframes
@@ -14,6 +13,3 @@
 </section>
 
 <button class="btn btn-primary" (click)="openSettings()">Settings</button>
-
-{{ config | json }}
-
