@@ -90,8 +90,6 @@ class dbConnector(object):
 			# Small trick to catch exception for unavailable database
 			except pymongo.errors.ServerSelectionTimeoutError as err:
 				app.logger.error("Failed to connect to database: " + str(err))
-				print(err)
-				exit(1)
 
 		def sqlite(self):
 			from flask_sqlalchemy import SQLAlchemy
