@@ -1,6 +1,6 @@
 {
   "name": "liberouter-gui",
-  "version": "0.2.0-beta",
+  "version": "0.3.0",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
