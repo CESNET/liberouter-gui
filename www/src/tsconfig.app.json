@@ -18,5 +18,8 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
-  ]
+  ],
+	"angularCompilerOptions" : {
+		"entryModule" : "./app/app.module#AppModule"
+	}
 }

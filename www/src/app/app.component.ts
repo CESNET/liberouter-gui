@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { AuthService } from './services';
+import { AuthService, ConfigService } from './services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers : [AuthService]
+  providers : [AuthService, ConfigService]
 })
 export class AppComponent {
 	isLoginPage : boolean = false;
@@ -14,9 +14,13 @@ export class AppComponent {
 	modules : Array<Object> = [];
 	children : Array<Object>= [];
 
-	constructor(private router : Router, private route:ActivatedRoute, private auth : AuthService) {}
+	constructor(private router : Router,
+				private route:ActivatedRoute,
+				private auth : AuthService,
+				private config : ConfigService) {}
 
 	ngOnInit() {
+		this.config.load();
 		this.router.events.subscribe(val => {
 			/* the router will fire multiple events */
 			/* we only want to react if it's the final active route */
