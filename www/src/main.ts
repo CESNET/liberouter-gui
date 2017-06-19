@@ -13,7 +13,7 @@ if (environment.production) {
   *
   * This cannot use the Angular HTTP module, therefore uses good old XMLHttpRequest
   */
-function getConfig() {
+export function main() {
 	return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", environment.configPath);
@@ -30,6 +30,8 @@ function getConfig() {
 }
 
 // Fetch the config before bootstraping the app
-getConfig().then((data : string) => {
+main().then((data : string) => {
 	platformBrowserDynamic().bootstrapModule(initApp(JSON.parse(data)));
 });
+
+
