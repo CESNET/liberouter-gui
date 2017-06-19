@@ -1,0 +1,47 @@
+<ngb-tabset type="pills" [destroyOnHide]="false" #tabs="ngbTabset" (tabChange)="change($event)">
+	<ngb-tab *ngFor="let dashboard of dashboards">
+		<ng-template ngbTabTitle>
+			{{ dashboard.title }}
+			<div ngbDropdown class="d-inline-block">
+				<span ngbDropdownToggle></span>
+
+				 <div class="dropdown-menu">
+					<a class="dropdown-item" (click)="editDashboard(dashboard)">Edit</a>
+					<a class="dropdown-item" (click)="deleteDashboard(dashboard, $event)">Delete</a>
+				</div>
+
+			</div>
+
+		</ng-template>
+		<ng-template ngbTabContent>
+
+			<dashboard-view
+				[dashboard]="dashboard"
+				(onSave)="save($event)">
+			</dashboard-view>
+		</ng-template>
+	</ngb-tab>
+	<ngb-tab>
+		<ng-template ngbTabTitle #title>+ Add new</ng-template>
+		<ng-template ngbTabContent #content>
+			<form novalidate
+				(ngSubmit)="addDashboard(dashTitle.value, offset.value)"
+				#dashform="ngForm"
+				class="form">
+				<div class="form-group">
+					<label>Dashboard Title</label>
+					<input type="text" #dashTitle name="title" placeholder="Dashboard title" required class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label>Offset Time [hours]</label>
+					<input type="number" #offset name="offset" placeholder="0" class="form-control">
+				</div>
+
+				<button class="btn btn-primary" type="submit">Add</button>
+			</form>
+		</ng-template>
+	</ngb-tab>
+</ngb-tabset>
+
+<ng-template ngbModalContainer class="dash-modal"></ng-template>

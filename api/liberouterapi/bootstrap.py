@@ -104,6 +104,13 @@ def setup():
 		raise ApiException("API is already setup")
 	settings = request.get_json()
 	db = dbConnector()
+
+	if len(settings['username']) == 0:
+		raise ApiException("Missing username")
+
+	if len(settings['password']) == 0:
+		raise ApiException("Missing password")
+
 	try:
 		# Insert user to database via user module
 		from .modules.users import unprotected_add_user

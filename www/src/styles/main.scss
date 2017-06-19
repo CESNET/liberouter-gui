@@ -1,3 +1,6 @@
+$fa-font-path: "../../node_modules/font-awesome/fonts";
+@import "../../node_modules/font-awesome/scss/font-awesome.scss";
+
 @import "variables";
 @import "typography";
 //@import "mixins";
@@ -141,4 +144,15 @@ nemea-events .modal-dialog {
 
 .row-space {
 	margin: 1em;
+}
+
+
+.CodeMirror {
+  border: 1px solid #eee;
+  height: calc(90vh - 2em)!important;
+}
+
+.grid-placeholder {
+	border: 2px dashed $gray!important;
+	background: rgba(0,0,0,0.05)!important;
 }

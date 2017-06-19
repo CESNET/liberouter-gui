@@ -1,8 +1,19 @@
+/**
+  * HTTP Interceptor class for liberouterapi backend communication
+  *
+  * The interceptor adds to every request the Authorization header with session
+  * ID (if present) and prefixes each request with API URL (if set)
+  *
+  * Author: Petr Stehlik <stehlik@cesnet.cz>
+  * Date: 15/06/2017
+  */
+
 import { Injectable } from '@angular/core';
 import { Request,
 	XHRBackend,
 	RequestOptions,
 	RequestOptionsArgs,
+	RequestMethod,
 	URLSearchParams,
 	Response,
 	Http,
@@ -15,26 +26,32 @@ import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class HttpInterceptor extends Http {
-	currentUser : Object;
-	headers : Headers = new Headers({ 'Content-Type': 'application/json' });
-	prefixUrl : string = environment.apiUrl;
+	private currentUser : Object;
+	private headers : Headers = new Headers({ 'Content-Type': 'application/json' });
+    private configPath : string = environment.configPath;
+	private prefixUrl : string;
+	private api : Object = {};
+	private promise;
 
 	constructor(backend: XHRBackend,
 		defaultOptions: RequestOptions,
-		private router: Router
-		//private authService: AuthService
-		)
+		private router: Router,
+		private config : Object)
 	{
 		super(backend, defaultOptions);
-		this.prefixUrl = environment.apiUrl;
+		this.api = this.config["api"];
 	}
 
-	// During each request append Authorization header if session is present
+	/**
+	  * For each request add:
+	  *		- Authorization header if session is present
+	  *		- API URL prefix
+	  */
 	request(url: Request,
 		options?: RequestOptionsArgs): Observable<Response>
 	{
-		// Prefix the URL with environment prefix
-		url.url = this.prefixUrl + url.url;
+		// Prefix the URL with environment prefix if set
+		url.url = this.buildUrl(url.url);
 		this.currentUser = this.getCurrentUser();
 
 		if (this.currentUser != undefined) {
@@ -51,6 +68,16 @@ export class HttpInterceptor extends Http {
 		// Call the original Http
 		return super.request(url, options).catch(this.catchErrors());
 	}
+
+	/**
+	  * Original GET method caller
+	  * Use only if you know you don't need:
+	  *		- Authorization header added automatically
+	  *		- API URL prefix
+	  */
+	public get(url: string, options?: RequestOptionsArgs): Observable<Response> {
+        return super.get(url, options);
+    }
 
 	private catchErrors() {
 		return (res : Response) => {
@@ -72,5 +99,18 @@ export class HttpInterceptor extends Http {
 
 	private getCurrentUser() : Object {
 		return JSON.parse(localStorage.getItem('currentUser'));
+	}
+
+	/**
+	  * Create URL string for the request based on local configuration
+	  */
+	private buildUrl(url : string) {
+		let urlString = "";
+
+		urlString += this.api["proto"] || "";
+		urlString += this.api["host"] || "";
+		urlString += this.api["port"] ? ":" + this.api["port"] : "";
+		urlString += this.api["url"] || environment.apiUrl || "";
+		return urlString + url;
 	}
 }

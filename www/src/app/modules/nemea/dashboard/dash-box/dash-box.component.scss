@@ -1,0 +1,79 @@
+.grid-item {
+	border: solid 1px #ccc;
+
+	.body {
+		width: 100%;
+		height: calc(100% - 50px);	// Height of handle element must be subtracted
+		background: #FFF;
+		overflow-x: hidden;
+
+		div {
+			width: calc(100% - 1em);
+			height: 100%;
+			margin: 0 0.5em;
+			display: block;
+		}
+
+		.box-text {
+			position: absolute;
+			bottom: -0.5em;
+			width: 100%;
+			padding: 0 0.5em;
+			background: #FFF;
+		}
+
+	}
+
+	&.moving {
+		box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2),
+			0px 7px 10px 1px rgba(0, 0, 0, 0.14),
+			0px 2px 16px 1px rgba(0, 0, 0, 0.12);
+		z-index: 999;
+
+		.body div {
+			opacity: 0.25;
+		}
+	}
+
+	.handle {
+		width: 100%;
+		height: 50px;
+		background: #eee;
+		color: black;
+		font-weight: 500;
+		padding: 15px;
+		box-sizing: border-box;
+
+		.dropdown {
+			cursor: pointer;
+			margin-right: 1em;
+			font-size: 1.25em;
+			top: -0.25em;
+
+			&.show {
+				color: #999;
+			}
+
+			.dropdown-menu {
+				box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.25);
+			}
+		}
+	}
+
+	.top-events {
+		padding-top: 0.5em;
+		a {
+			color: #000;
+
+			&:hover {
+				background-color: #f0f0f0;
+			}
+
+			span {
+				margin-right: 1em;
+			}
+
+		}
+	}
+}
+

@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
+import { FormsModule }		from '@angular/forms';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
-import { NerdComponent } from './nerd.component'
+import { NerdComponent } from './nerd.component';
+import { NerdModalComponent } from './nerd-modal/nerd-modal.component'
 
 const routes : Routes = [{
     path : 'nerd',
@@ -14,7 +18,7 @@ const routes : Routes = [{
     data : {
         role : 10,
         name : "NERD",
-        description : "There is nothing nerdy about NERD.",
+        description : "Network Entity Reputation Database",
         icon : "fa-user-secret"
     }
 }]
@@ -22,14 +26,20 @@ const routes : Routes = [{
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     SafePipeModule,
+    NgbModule.forRoot(),
     RouterModule.forChild(routes)
   ],
   declarations: [
-    NerdComponent
+    NerdComponent,
+    NerdModalComponent
   ],
   providers : [
     SafePipe
+  ],
+  entryComponents : [
+	NerdModalComponent
   ]
 })
 export class NerdModule { }

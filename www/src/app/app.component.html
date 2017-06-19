@@ -2,13 +2,13 @@
 	<div class="sidebar" *ngIf="!isLoginPage">
 
 		<h1 class="user-area">
-			<img src="assets/logo.png" alt="Liberouter GUI">
+			<img src="assets/img/logo.png" alt="Liberouter GUI">
 		</h1>
 
 		<div class="user-area ">
 			<div ngbDropdown class="d-flex flex-column align-content-center">
 				<a class="user" id="dropdownMenu1" ngbDropdownToggle>
-					{{ user.user.username }}
+					{{ user?.user?.username }}
 				</a>
 				<div class="dropdown-menu" aria-labelledby="userActions">
 					<button class="dropdown-item">Action - 1</button>
