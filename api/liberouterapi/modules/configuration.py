@@ -12,6 +12,7 @@ from flask import request
 
 from liberouterapi import auth, dbConnector
 from liberouterapi.error import ApiException
+from liberouterapi.role import Role
 from .module import Module
 from bson import json_util as json
 from pymongo import ReturnDocument
@@ -26,7 +27,7 @@ conf_db = connector.db["configuration"]
 conf = Module('configuration', __name__, url_prefix='/configuration', no_version = True)
 
 @conf.route('', methods=['GET'])
-#@auth.required()
+@auth.required()
 def get_conf():
 	res = list(conf_db.find())
 	return (json.dumps(res))
@@ -53,6 +54,7 @@ def unprotected_get_module_conf(module):
 
 
 @conf.route('/<string:module>', methods=['GET'])
+@auth.required()
 def get_module_conf(module):
 	"""
 	Get module by its name using the unprotected function
@@ -60,6 +62,7 @@ def get_module_conf(module):
 	return (json.dumps(unprotected_get_module_conf(module)))
 
 @conf.route('/<string:module>', methods=['PUT'])
+@auth.required(Role.admin)
 def update_conf(module):
 	"""
 	Update a module's configuration specified by its name
@@ -92,6 +95,7 @@ def update_conf(module):
 	return(json.dumps(res))
 
 @conf.route('', methods=['POST'])
+@auth.required(Role.admin)
 def insert_conf():
 	"""
 	Insert module's configuration, the configuration name mustn't be present in
@@ -127,6 +131,7 @@ def insert_conf():
 	return(json.dumps(res))
 
 @conf.route('/<string:module>', methods=['DELETE'])
+@auth.required(Role.admin)
 def remove_conf(module):
 	"""
 	Remove specified module from db
