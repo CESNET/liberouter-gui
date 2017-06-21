@@ -24,4 +24,4 @@ scgui_bp.add_url_rule('/query/fields', view_func = getQueryFields, methods = ['G
 
 
 # scgui/graph/
-scgui_bp.add_url_rule('/query/fields', view_func = getGraph, methods = ['GET'])
+scgui_bp.add_url_rule('/graph', view_func = getGraph, methods = ['GET'])

@@ -55,7 +55,7 @@ class Graphs():
 
 		size = len(self.channels)
 		for i in range(0, size):
-			defs += "DEF:" + fooname + str(i + 1) + "=" + self.channels[i] + ".rrd:" + self.var + ":MAX "
+			defs += "DEF:" + fooname + str(i + 1) + "=" + self.channels[i]["name"] + ".rrd:" + self.var + ":MAX "
 
 		if fooname is "bar":
 			for i in range(0, size):
@@ -75,10 +75,10 @@ class Graphs():
 		# no brighter than rgb(192, 192, 192)
 		colorStep = int(192 / len(self.channels))
 
-		rules = "AREA:foo1" + grayscale(color) + ':"' + self.channels[0] + '" '
+		rules = "AREA:foo1" + grayscale(color) + ':"' + self.channels[0]["name"] + '" '
 		for i in range(1, len(self.channels)):
 			color += colorStep
-			rules += "AREA:foo" + str(i + 1) + grayscale(color) + ':"' + self.channels[i] + '":STACK '
+			rules += "AREA:foo" + str(i + 1) + grayscale(color) + ':"' + self.channels[i]["name"] + '":STACK '
 		return rules
 
 	def __getRrdtoolData(self, args, path):
@@ -105,7 +105,7 @@ class Graphs():
 		the graph. Hopefully this will force rrdtool to make data aggregation
 		for me when requesting 
 		"""
-		cmd = RRDTOOL + " graph - -a JSONTIME -Z --width " + str(pxw) + " --start " + str(self.bgn) + " --end " + str(self.end) + " " + self.__buildCdefs() + " " + self.__buildRenderRules()
+		cmd = RRDTOOL + " graph - -a JSONTIME -Z --width " + str(self.pxw) + " --start " + str(self.bgn) + " --end " + str(self.end) + " " + self.__buildCdefs() + " " + self.__buildRenderRules()
 		args = shlex.split(cmd)
 
 		if SINGLE_MACHINE:

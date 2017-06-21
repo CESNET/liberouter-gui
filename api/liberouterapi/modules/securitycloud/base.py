@@ -96,11 +96,11 @@ def getGraph():
 	req = request.args.to_dict()
 
 	try:
-		g = Graph(req["profile"], req["bgn"], req["end"], req["var"], req["points"])
+		g = Graphs(req["profile"], req["bgn"], req["end"], req["var"], req["points"])
 		return g.getJSON()
 	except KeyError as e:
 		raise SCGUIException(str(e))
-	except GraphError as e:
+	except GraphsError as e:
 		raise SCGUIException(str(e))
 	except ProfilesError as e:
 		raise SCGUIException(str(e))
