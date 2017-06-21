@@ -1,9 +1,62 @@
-<section class="box">
-    <h4 *ngIf="msg.length > 0">{{ msg }}</h4>
-    <iframe [src]="url | safe" class="frame"></iframe>
+<section class="container-fluid">
+	<div class="card">
+		<div class="card-block">
+			<h2>SecurityCloud</h2>
+		</div>
+	</div>
 </section>
 
-<section class="box">
-    <em> Generated URL:</em> <input type="text" [(value)] ="url">
-    <small>If an error occurs, you can use this URL to access ftas directly</small>
+<br>
+
+<section class="container-fluid">
+	<div class="row">
+		<div class="col-lg-10">
+			<!-- Graphs -->
+			<sc-graph [profiles]="profiles"
+			[selectedProfile]="selectedProfile"
+			[(time)]="time"
+			[(timeUpdated)]="timeUpdated">
+			</sc-graph>
+		</div>
+		<div class="col-lg-2">
+			<!-- other actions -->
+			<div class="card">
+				<div class="card-header card-primary card-inverse text-center">
+					Other Action
+				</div>
+				
+				<div class="card-block">
+					<div *ngFor="let x of linkList">
+						{{ x.name }}
+					</div>
+				</div>
+				
+				<div class="card-block">
+					<button class="btn btn-secondary">
+						Create parallel instance
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<br>
+	
+	<!-- Statistics -->
+	<sc-stats [profiles]="profiles"
+		[selectedProfile]="selectedProfile"
+		[sel]="time.sel"
+		[timeUpdated]="timeUpdated">
+		</sc-stats>
+	
+	<br>
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<sc-dbqry [profiles]="profiles"
+			[selectedProfile]="selectedProfile"
+			[sel]="time.sel">
+			</sc-dbqry>
+		</div>
+	</div>
 </section>

@@ -1,0 +1,98 @@
+<div class="card">
+	<div class="card-header card-primary card-inverse text-center">
+		<!-- Proklik na modal s dalšími vars -->
+		{{ getRRDConstant().name }} on {{ profiles.getProfile(selectedProfile).name }}
+	</div>
+	
+	<div class="card-block">
+		<!-- active graph area -->
+		<sc-graph-render
+		[selectedProfile]="selectedProfile"
+		[(time)]="time"
+		[(timeUpdated)]="timeUpdated"
+		[selectedVar]="selectedVar"
+		[renderSettings]="renderSettings"
+		[channels]="channels"></sc-graph-render>
+	</div>
+	
+	<div class="card-block">
+		<div class="form-check form-check-inline" *ngFor="let channel of channels">
+			<label class="form-check-label">
+				<input class="form-check-input" value="channel.name" type="checkbox" [(ngModel)]="channel.checked"> {{channel.name}}
+			</label>
+		</div>
+	</div>
+	
+	<div class="card-footer">
+		<div class="row">
+			<div class="col-md-3">
+				<form class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<input class="form-control" placeholder="yyyy-mm-dd"
+							name="dp" [(ngModel)]="pickerDate"
+							ngbDatepicker #d="ngbDatepicker"
+							(ngModelChange)="pickerChanged($event)">
+							<div class="input-group-addon" (click)="d.toggle()">
+								<i class="fa fa-calendar" aria-hidden="true"
+								style="cursor: pointer;"></i>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			<!-- Render settings -->
+			<div class="col-md-2">
+				<!--div class="form-check form-check-inline"
+				*ngFor="let x of RenderSettingsLabel">
+					<label class="form-check-label">
+						<input class="form-check-input"
+						type="radio" name="renderSettings"
+						value="x.value" [(ngModel)]="selectedRenderSetting">
+						{{x.name}}
+					</label>
+				</div-->
+				<div class="form-check form-check-inline">
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio"
+						name="renderSettings" value="line"
+						[(ngModel)]="renderSettings"> Line
+					</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio"
+						name="renderSettings" value="stacked"
+						[(ngModel)]="renderSettings"> Stacked
+					</label>
+				</div>
+			</div>
+			
+			<div class="col-md-4">
+				<!-- Selected time box -->
+				<input class="form-control text-center" type="text" [ngModel]="readableTime" readonly>
+			</div>
+			
+			<div class="col-md-3">
+				<div class="btn-group btn-group-justified">
+					<button class="btn btn-secondary" type="submit">
+						<i class="fa fa-backward" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-secondary" type="submit">
+						<i class="fa fa-search-minus" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-secondary" type="submit">
+						<i class="fa fa-search-plus" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-secondary" type="submit">
+						<i class="fa fa-forward" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-secondary" type="submit">
+						<i class="fa fa-step-forward" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

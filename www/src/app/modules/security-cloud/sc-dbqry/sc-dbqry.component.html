@@ -1,0 +1,172 @@
+<div class="card">
+	<div class="card-header card-primary card-inverse text-center">
+		Database Query
+	</div>
+	
+	<div class="card-block">
+		<div class="row">
+			<div class="col-lg-1">
+				<!-- Channel picker -->
+				<div class="card card-outline-secondary">
+					<div class="card-header text-center">
+						Channels
+					</div>
+					
+					<div class="card-block" id="DB_Channels">
+						<div class="form-check" 
+						*ngFor="let channel of 
+						profiles.getProfile(selectedProfile).channels">
+							<label class="form-check-label">
+								<input class="form-check-input" type="checkbox"
+									checked>
+								{{ channel.name }}
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-4">
+				<!-- Filter textarea -->
+				<div class="card card-outline-secondary">
+					<div class="card-header text-center">
+						Filter
+					</div>
+					
+					<div class="card-block">
+						<textarea class="form-control" rows="5"
+							id="DB_Filter"></textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-7">
+				<div class="card card-outline-secondary">
+				<!-- Options -->
+					<ngb-tabset justify="center">
+						<ngb-tab title="Fast Options">
+							<ng-template ngbTabContent>
+								<div class="card" style="border-color: white">
+									<div class="card-block">
+										<div class="row" style="vertical-align: middle;">
+											<div class="col-lg-6">
+												<div class="row">
+													<div class="col-sm-4">
+														<b>Limit to:</b>
+													</div>
+													<div class="col-sm-8">
+														<select id="DB_LimitSelect"
+														[(ngModel)]="selectedLimit"
+														class="form-control">
+															<option
+															*ngFor="let limit of limitto"
+															[value]="limit.value">
+																{{ limit.desc }}
+															</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="row">
+													<div class="col-sm-4">
+														<b>Aggregate:</b>
+													</div>
+													<div class="col-sm-8">
+														<select id="DB_AggregateList"
+														
+														class="form-control">
+														<!--multiple="multiple"-->
+															<option>
+																TODO: /query/fields
+															</option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row" style="vertical-align: middle;">
+											<div class="col-sm-2">
+												<b>Order by:</b>
+											</div>
+											<div class="col-sm-4">
+												<select id="DB_OrderBy"
+												class="form-control">
+													<option>
+														TODO: /query/fields
+													</option>
+												</select>
+											</div>
+											<div class="col-sm-2">
+												<b>Direction:</b>
+											</div>
+											<div class="col-sm-4">
+												<select id="DB_OrderDir"
+												class="form-control">
+													<option value="" selected>
+														Default
+													</option>
+													<option value="#asc">
+														Ascending
+													</option>
+													<option value="#desc">
+														Descending
+													</option>
+												</select>
+											</div>
+										</div>
+										<div class="row" style="vertical-align: middle;">
+											<div class="col-sm-2">
+												<b>Output:</b>
+											</div>
+											<div class="col-sm-4">
+												<select id="DB_OutputFormat"
+												class="form-control">
+													<option value="pretty" selected>
+														Pretty
+													</option>
+													<option value="csv">
+														Csv
+													</option>
+													<option value="long">
+														Long
+													</option>
+												</select>
+											</div>
+											<div class="col-sm-2">
+												&nbsp;
+											</div>
+											<div class="col-sm-4">
+												<label>
+													<input type="checkbox"
+													id="DB_NoSummary">
+													No summary
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</ng-template>
+						</ngb-tab>
+						
+						<ngb-tab title="Custom Options">
+							<ng-template ngbTabContent>
+								<div class="card">
+									<div class="card-block">
+										<sc-dbqry-fdisthelp></sc-dbqry-fdisthelp>
+										<textarea class="form-control" rows="5"
+										id="DB_CustomOptions"></textarea>
+									</div>
+								</div>
+							</ng-template>
+						</ngb-tab>
+					</ngb-tabset>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="card-footer">
+		Results here
+	</div>
+</div>
