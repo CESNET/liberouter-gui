@@ -24,9 +24,13 @@
 			"styles": [
 				"styles/main.scss",
 				"../node_modules/bootstrap/dist/css/bootstrap.min.css",
-				"../node_modules/codemirror/lib/codemirror.css"
+				"../node_modules/codemirror/lib/codemirror.css",
+				"../node_modules/dygraphs/dist/dygraph.css"
 			],
-			"scripts": [],
+			"scripts": [
+				"../node_modules/dygraphs/dist/dygraph.js",
+				"../node_modules/ng-dygraphs/lib/index.js"
+			],
 			"environmentSource": "environments/environment.ts",
 			"environments": {
 				"dev": "environments/environment.ts",

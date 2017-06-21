@@ -29,7 +29,9 @@
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "^2.4.1",
     "d3": "^4.9.1",
+    "dygraphs": "^2.0.0",
     "font-awesome": "^4.7.0",
+    "ng-dygraphs": "^0.3.3",
     "ng2-codemirror": "^1.1.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
