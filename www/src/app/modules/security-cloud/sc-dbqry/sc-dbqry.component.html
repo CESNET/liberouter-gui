@@ -2,7 +2,7 @@
 	<div class="card-header card-primary card-inverse text-center">
 		Database Query
 	</div>
-	
+
 	<div class="card-block">
 		<div class="row">
 			<div class="col-lg-1">
@@ -11,10 +11,10 @@
 					<div class="card-header text-center">
 						Channels
 					</div>
-					
+
 					<div class="card-block" id="DB_Channels">
-						<div class="form-check" 
-						*ngFor="let channel of 
+						<div class="form-check"
+						*ngFor="let channel of
 						profiles.getProfile(selectedProfile).channels">
 							<label class="form-check-label">
 								<input class="form-check-input" type="checkbox"
@@ -25,21 +25,21 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="col-lg-4">
 				<!-- Filter textarea -->
 				<div class="card card-outline-secondary">
 					<div class="card-header text-center">
 						Filter
 					</div>
-					
+
 					<div class="card-block">
 						<textarea class="form-control" rows="5"
 							id="DB_Filter"></textarea>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="col-lg-7">
 				<div class="card card-outline-secondary">
 				<!-- Options -->
@@ -74,7 +74,7 @@
 													</div>
 													<div class="col-sm-8">
 														<select id="DB_AggregateList"
-														
+
 														class="form-control">
 														<!--multiple="multiple"-->
 															<option>
@@ -148,7 +148,7 @@
 								</div>
 							</ng-template>
 						</ngb-tab>
-						
+
 						<ngb-tab title="Custom Options">
 							<ng-template ngbTabContent>
 								<div class="card">
@@ -165,7 +165,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="card-footer">
 		Results here
 	</div>

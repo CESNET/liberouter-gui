@@ -7,9 +7,5 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 	styleUrls: ['./sc-dbqry-fdisthelp.component.scss']
 })
 export class ScDbqryFdisthelpComponent {
-	constructor(private modalService: NgbModal) {}
-
-	open(content) {
-		this.modalService.open(content);
-	}
+	constructor(public modalService: NgbModal) {}
 }

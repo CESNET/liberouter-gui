@@ -3,7 +3,7 @@
 		<h4 class="modal-title">
 			fdistdump options overview
 		</h4>
-		
+
 		<button type="button" class="close" aria-label="Close" (click)="d('reason')">
 			<span aria-hidden="true">&times;</span>
 		</button>
@@ -100,4 +100,4 @@
 	</div>
 </ng-template>
 
-<button class="btn btn-link" (click)="open(FdistHelpModal)">fdistdump options overview</button>
+<button class="btn btn-link" (click)="modalService.open(FdistHelpModal, {size: 'lg'})">fdistdump options overview</button>
