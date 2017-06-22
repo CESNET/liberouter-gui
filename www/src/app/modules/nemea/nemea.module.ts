@@ -45,6 +45,12 @@ import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
 import { nemeaStatusComponent } from './status/nemea_status.component';
 import { DashboardViewComponent } from './dashboard/dashboard-view/dashboard-view.component';
 import { DashModalComponent } from './dashboard/dash-modal/dash-modal.component';
+import { MarkActionComponent } from './reporter/actions/mark-action/mark-action.component';
+import { FileActionComponent } from './reporter/actions/file-action/file-action.component';
+import { MongoActionComponent } from './reporter/actions/mongo-action/mongo-action.component';
+import { EmailActionComponent } from './reporter/actions/email-action/email-action.component';
+import { TrapActionComponent } from './reporter/actions/trap-action/trap-action.component';
+import { WardenActionComponent } from './reporter/actions/warden-action/warden-action.component';
 
 const nemeaRoutes : Routes = [
 	{
@@ -137,7 +143,13 @@ const nemeaRoutes : Routes = [
 		DashBoxModalComponent,
 		DashBoxComponent,
 		DashboardViewComponent,
-		DashModalComponent
+		DashModalComponent,
+		MarkActionComponent,
+		FileActionComponent,
+		MongoActionComponent,
+		EmailActionComponent,
+		TrapActionComponent,
+		WardenActionComponent
 		],
 	exports : [],
 	providers : [SafePipe],

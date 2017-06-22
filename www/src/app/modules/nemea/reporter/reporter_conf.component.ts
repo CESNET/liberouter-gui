@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 
 import { ReporterService } from './reporter.service';
 
-//import { nConfService } from './exporter_configuration.service';
-
 @Component({
 	selector : 'nemea-reporter-conf',
 	templateUrl : './reporter_conf.html',
@@ -13,86 +11,116 @@ import { ReporterService } from './reporter.service';
 })
 export class nemeaReporterConfComponent {
 
-    reporters = [];
-    error : string = '';
-    selectedConfig : string = '';
-    activeConfig = -1;
+    error : Object;
+	success = {
+		message : "Configuration saved. You should restart reporters now.",
+		success : false
+	};
+    config : Object = {};
 
-    config = {
-        lineNumbers: true,
-        mode : "x-yaml",
-        gutter : true
-    };
-
-	constructor(private router : Router, private reporterService : ReporterService) {}
+	constructor(private router : Router,
+				private reporterService : ReporterService) {}
 
 	ngOnInit() {
-	    /*this.reporterService.reporters().subscribe(
-			(data) => { this.reporters = data; },
+		this.getConfig();
+	}
+
+	getConfig() {
+	    this.reporterService.get().subscribe(
+			(data) => {
+				this.error = {};
+				this.config = data;
+			},
 			(error : Object) => this.processError(error)
-		);*/
-
-	   this.reporters = this.reporterService.reporters_dummy();
+		);
 	}
 
-	ngOnDestroy() {
+	saveConfig() {
+		this.success.success = false;
+		this.reporterService.update(this.config).subscribe(
+			(data) => {
+				this.config = data;
+				this.success.success = true;
+			},
+			(error : Object) => this.processError(error)
+		);
 	}
 
-	selectReporter(reporter : number) {
-	    console.log(reporter);
-	    this.activeConfig = reporter['idx'];
-	    try {
-    	    this.getConfig(reporter["config"])
-        } catch (err) {
-            this.error = err;
-        }
-
-	    this.router.navigate(["nemea/reporters", reporter['idx']])
+	addAddrGroup(list : boolean = false) {
+		let newaddr = list ? {"id" : "", "list" : ["1.1.1.1"]} : {id : "", file : "path/to/file"}
+		this.config["addressgroups"].push(newaddr)
 	}
 
-	getConfig(path : string) {
-	    if (path == undefined) {
-	        this.error = "Config file for this reporter doesn't exist";
-	        this.selectedConfig = '';
-	        return;
-	    }
-	    this.error = '';
-	    console.log("should get " + path)
+	addAddrGroupIP(list : Object) {
+		this.config["addressgroups"]["list"].push("");
+	}
 
-	    this.selectedConfig = this.reporterService.config_dummy(this.activeConfig);
+	remove(section : string, index : number) {
+		console.log("deleting", index)
+		this.config[section].splice(index, 1);
+	}
+
+	getActionType(item : Object) : String {
+		if ("mongo" in item)
+			return "mongo"
+		else if ("file" in item)
+			return "file"
+		else if ("mark" in item)
+			return "mark"
+		else if ("email" in item)
+			return "email"
+		else if ("trap" in item)
+			return "trap"
+		else if ("warden" in item)
+			return "warden"
+	}
+
+	trackActions(id : number, data : string) {
+		return id;
+	}
+
+	addAction(item_type : string) {
+		let item = {
+			"id" : ""
+		}
+		console.log(item_type)
+		switch(item_type) {
+			case "mongo" : {
+				item["mongo"] = {
+					"db" : "",
+					"collection" : ""
+				}
+
+				break;
+			}
+
+			case "mark" : {
+				item["mark"] = {
+					"path" : "",
+					"value" : ""
+				}
+
+				break;
+			}
+
+			case "file" : {
+				item["file"] = {}
+				break;
+			}
+
+			default : {
+				item[item_type] = {}
+				break;
+			}
+
+		}
+
+		this.config["custom_actions"].push(item);
 	}
 
 	private processError(error : Object) {
 		console.log(error);
-		this.error = "Something went wrong";
+		this.success.success = false;
+		this.error = JSON.parse(error["_body"]);
 	}
-
-	saveConfig() {
-	    try {
-	        this.reporterService.save(this.activeConfig, this.selectedConfig);
-        } catch (err) {
-            console.log(err)
-            this.error = err;
-
-        }
-	    /*
-	    for (let rep of this.reporters) {
-	        if (rep[1]['idx'] == this.activeConfig) {
-	            console.log(rep)
-	            return;
-            }
-	    }
-
-        console.error("Couldnt find the exporter")
-        */
-	}
-
-	onBlur() {
-	    console.log("onblur");
-	}
-
-	onFocus() {
-	    console.log("onfocus");
-	}
-
 }

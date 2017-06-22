@@ -1,0 +1,57 @@
+<div class="row form-group">
+	<div class="input-group col">
+		<span class="input-group-addon">Database*</span>
+		<input type="text"
+			name="db"
+			class="form-control"
+			[(ngModel)]="data.db"
+			required>
+	</div>
+
+	<div class="input-group col">
+		<span class="input-group-addon">Host</span>
+		<input type="text"
+			name="host"
+			class="form-control"
+			[(ngModel)]="data.host"
+			placeholder="localhost (optional)">
+	</div>
+
+	<div class="input-group col">
+		<span class="input-group-addon">Username</span>
+		<input type="text"
+			name="username"
+			class="form-control"
+			[(ngModel)]="data.username"
+			placeholder="(optional)">
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="input-group col">
+		<span class="input-group-addon">Collection*</span>
+		<input type="text"
+			name="collection"
+			class="form-control"
+			[(ngModel)]="data.collection"
+			required>
+	</div>
+
+	<div class="input-group col">
+		<span class="input-group-addon">Port</span>
+		<input type="number"
+			name="port"
+			class="form-control"
+			[(ngModel)]="data.port"
+			placeholder="27017 (optional)">
+	</div>
+
+	<div class="input-group col">
+		<span class="input-group-addon">Password</span>
+		<input type="password"
+			name="password"
+			class="form-control"
+			[(ngModel)]="data.password"
+			placeholder="(optional)">
+	</div>
+</div>
