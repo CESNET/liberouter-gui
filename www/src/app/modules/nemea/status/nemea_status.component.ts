@@ -2,137 +2,137 @@ import { Component, Pipe, PipeTransform } from '@angular/core';
 import { nStatService } from './nemea_status.service';
 
 @Component({
-	//moduleId : module.id.replace("/dist/", "/"),
-	selector : 'nemea-status',
-	templateUrl : './nemea_status.html',
-	styleUrls : ['./nemea_status.css'],
-	providers : [nStatService]
+    //moduleId : module.id.replace("/dist/", "/"),
+    selector : 'nemea-status',
+    templateUrl : './nemea_status.html',
+    styleUrls : ['./nemea_status.css'],
+    providers : [nStatService]
 })
 export class nemeaStatusComponent {
-	error: Object;
-	refreshing: Boolean = false;
-	last_refresh_time: Date = new Date();
-	img_path: any;
-	data: Object;
-	id: any;
+    error: Object;
+    refreshing: Boolean = false;
+    last_refresh_time: Date = new Date();
+    img_path: any;
+    data: Object;
+    id: any;
 
-	intervals = [
-		{value: 1, viewValue: '1 s'},
-		{value: 2, viewValue: '2 s'},
-		{value: 5, viewValue: '5 s'},
-		{value: 10, viewValue: '10 s'},
-		{value: 30, viewValue: '30 s'},
-		{value: 60, viewValue: '60 s'},
-		{value: -1, viewValue: 'Paused'},
-	];
+    intervals = [
+        {value: 1, viewValue: '1 s'},
+        {value: 2, viewValue: '2 s'},
+        {value: 5, viewValue: '5 s'},
+        {value: 10, viewValue: '10 s'},
+        {value: 30, viewValue: '30 s'},
+        {value: 60, viewValue: '60 s'},
+        {value: -1, viewValue: 'Paused'},
+    ];
 
-	// Refresh interval in seconds
-	refresh_interval = 5;
+    // Refresh interval in seconds
+    refresh_interval = 5;
 
-	constructor(private api: nStatService) {}
+    constructor(private api: nStatService) {}
 
-	ngOnInit() {
-		this.api.topology().subscribe(
-			(data: Object) => this.processTopology(data),
-			(error: Object) => this.processError(error));
+    ngOnInit() {
+        this.api.topology().subscribe(
+            (data: Object) => this.processTopology(data),
+            (error: Object) => this.processError(error));
 
-		this.refresh();
-		this.id = setInterval(() => { this.refresh(); }, (this.refresh_interval * 1000));
-	}
+        this.refresh();
+        this.id = setInterval(() => { this.refresh(); }, (this.refresh_interval * 1000));
+    }
 
-	ngOnDestroy() {
-		if (this.id) {
-			clearInterval(this.id);
-		}
-	}
+    ngOnDestroy() {
+        if (this.id) {
+            clearInterval(this.id);
+        }
+    }
 
-	refresh() {
-		if (this.refreshing) {
-			console.info('Still refreshing')
-			return;
-		}
+    refresh() {
+        if (this.refreshing) {
+            console.info('Still refreshing')
+            return;
+        }
 
-		this.refreshing = true;
+        this.refreshing = true;
 
-		this.api.stats().subscribe(
-			(data) => this.processData(data),
-			(error: Object) => this.processError(error)
-		)
-	}
+        this.api.stats().subscribe(
+            (data) => this.processData(data),
+            (error: Object) => this.processError(error)
+        )
+    }
 
-	changeInterval() {
-		if (this.refresh_interval < 0 && this.id) {
-			clearInterval(this.id);
-			this.refreshing = false;
-			return;
-		}
+    changeInterval() {
+        if (this.refresh_interval < 0 && this.id) {
+            clearInterval(this.id);
+            this.refreshing = false;
+            return;
+        }
 
-		if (this.id) {
-			clearInterval(this.id)
-		}
+        if (this.id) {
+            clearInterval(this.id)
+        }
 
-		this.id = setInterval(() => { this.refresh() }, this.refresh_interval*1000);
-	}
+        this.id = setInterval(() => { this.refresh() }, this.refresh_interval*1000);
+    }
 
-	processTopology(data: any) {
-		console.log(data);
-		this.data = data;
+    processTopology(data: any) {
+        console.log(data);
+        this.data = data;
 
-		for (const idx in this.data) {
-			this.data[idx][1]['outputs-avg'] = Array();
-			for (const idx2 in this.data[idx][1]['outputs']) {
-			this.data[idx][1]['outputs-avg'] = this.data[idx][1]['outputs-avg'].concat(Object.assign(this.data[idx][1]['outputs'][idx2]))
-			}
-		}
-	}
+        for (const idx in this.data) {
+            this.data[idx][1]['outputs-avg'] = Array();
+            for (const idx2 in this.data[idx][1]['outputs']) {
+            this.data[idx][1]['outputs-avg'] = this.data[idx][1]['outputs-avg'].concat(Object.assign(this.data[idx][1]['outputs'][idx2]))
+            }
+        }
+    }
 
-	processData(data: any) {
-		console.log(data);
-		//this.data = data;
-		const time_diff: Number = Date.now() - this.last_refresh_time.getTime();
-		this.last_refresh_time = new Date();
+    processData(data: any) {
+        console.log(data);
+        //this.data = data;
+        const time_diff: Number = Date.now() - this.last_refresh_time.getTime();
+        this.last_refresh_time = new Date();
 
-		const counters: Object = data['stats'];
+        const counters: Object = data['stats'];
 
-		for (const key in data) {
-			for (const module_idx in this.data) {
-				if (this.data[module_idx][0] == key) {
+        for (const key in data) {
+            for (const module_idx in this.data) {
+                if (this.data[module_idx][0] == key) {
 
-					const module_item = this.data[module_idx][1];
+                    const module_item = this.data[module_idx][1];
 
-					if (module_item['in_counter'] != undefined) {
-						module_item['in_counter'] = (data[key]['INIFC0'] - module_item['INIFC0']) / (Number(time_diff)/1000);
-					} else {
-						module_item['in_counter'] = 0;
-						}
+                    if (module_item['in_counter'] != undefined) {
+                        module_item['in_counter'] = (data[key]['INIFC0'] - module_item['INIFC0']) / (Number(time_diff)/1000);
+                    } else {
+                        module_item['in_counter'] = 0;
+                        }
 
-					//console.log(module_item)
-					for (const output_idx in module_item['outputs']) {
-						module_item['outputs-avg'][output_idx]['sent-msg-avg'] = (data[key]['outputs'][output_idx]['sent-msg'] - module_item['outputs'][output_idx]['sent-msg']) / (Number(time_diff)/1000);
-						module_item['outputs-avg'][output_idx]['drop-msg-avg'] = (data[key]['outputs'][output_idx]['drop-msg'] - module_item['outputs'][output_idx]['drop-msg']) / (Number(time_diff)/1000);
+                    //console.log(module_item)
+                    for (const output_idx in module_item['outputs']) {
+                        module_item['outputs-avg'][output_idx]['sent-msg-avg'] = (data[key]['outputs'][output_idx]['sent-msg'] - module_item['outputs'][output_idx]['sent-msg']) / (Number(time_diff)/1000);
+                        module_item['outputs-avg'][output_idx]['drop-msg-avg'] = (data[key]['outputs'][output_idx]['drop-msg'] - module_item['outputs'][output_idx]['drop-msg']) / (Number(time_diff)/1000);
 
-					}
-					this.data[module_idx][1] = Object.assign(module_item, data[key]);
-				}
-			}
-		}
-		this.refreshing = false;
-	}
+                    }
+                    this.data[module_idx][1] = Object.assign(module_item, data[key]);
+                }
+            }
+        }
+        this.refreshing = false;
+    }
 
-	processError(error: Object) {
-		if (error['status'] >= 404) {
-			this.error = error;
-		}
-		console.log(error);
-	}
+    processError(error: Object) {
+        if (error['status'] >= 404) {
+            this.error = error;
+        }
+        console.log(error);
+    }
 
-	setDropClass(ifc: Object): string {
-		if (ifc['drop-msg-avg'] == 0) {
-			return('drop-rate-ok');
-		} else if ((ifc['drop-msg-avg']/ifc['send-msg-avg']) < 0.001) {
-			return('drop-rate-low');
-		} else {
-			return('drop-rate-high');
-		}
-	}
+    setDropClass(ifc: Object): string {
+        if (ifc['drop-msg-avg'] == 0) {
+            return('drop-rate-ok');
+        } else if ((ifc['drop-msg-avg']/ifc['send-msg-avg']) < 0.001) {
+            return('drop-rate-low');
+        } else {
+            return('drop-rate-high');
+        }
+    }
 }

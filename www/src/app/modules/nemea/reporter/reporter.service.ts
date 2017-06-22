@@ -16,11 +16,11 @@ export class ReporterService {
     }
 
     update(data: Object) {
-		return this.http.put('/nemea/reporters/config', data).map(
-			(response: Response) => {
-				return response.json();
-			})
-			.catch(this.handleError)
+        return this.http.put('/nemea/reporters/config', data).map(
+            (response: Response) => {
+                return response.json();
+            })
+            .catch(this.handleError)
     }
 
 

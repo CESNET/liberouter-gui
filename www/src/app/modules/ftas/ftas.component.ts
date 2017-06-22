@@ -5,8 +5,8 @@
   * 'url' : simple URL (without protocol) to FTAS instance
   * 'fullUrl' : Full URL to filtering script (usually "example.com/ftas/stat.pl")
   * Specify URL without URL (https is forced)
-  *		If this option is not set, url must be.
-  *		If both are set, fullUrl is used.
+  *     If this option is not set, url must be.
+  *     If both are set, fullUrl is used.
   * 'output' : Specify which output machines will be used
   * Can be a list (as string): "1,2,5,10"
   */
@@ -29,7 +29,7 @@ import { FtasModalComponent } from './ftas-modal/ftas-modal.component'
   styleUrls : ['./ftas.component.scss']
 })
 export class FtasComponent implements OnInit {
-	// FTAS URL for iframe
+    // FTAS URL for iframe
     baseUrl: string;
 
     // Sanitizied URL for iframe
@@ -56,63 +56,63 @@ export class FtasComponent implements OnInit {
     modalRef;
 
     constructor(private route: ActivatedRoute,
-    		   private configService: ConfigService,
-    		   private modalService: NgbModal) {}
+               private configService: ConfigService,
+               private modalService: NgbModal) {}
 
     /**
       * Get configruation and URL params and prepare the advanced query field
       * for FTAS iframe
       */
     ngOnInit() {
-    	this.configService.getModule('ftas').subscribe(
-    		config => {
-    			this.config = config;
-    			this.fetchParams();
-    		},
-			error => {
-				// Config for module doesn't exist
-				if (error.status == 404) {
-					console.log(error);
-					this.openSettings(false);
-				}
-			}
-		);
+        this.configService.getModule('ftas').subscribe(
+            config => {
+                this.config = config;
+                this.fetchParams();
+            },
+            error => {
+                // Config for module doesn't exist
+                if (error.status == 404) {
+                    console.log(error);
+                    this.openSettings(false);
+                }
+            }
+        );
     }
 
-	/**
-	  * Fetch parameters from the route and create filter from them
-	  *
-	  * Then set URL for iframe
-	  */
+    /**
+      * Fetch parameters from the route and create filter from them
+      *
+      * Then set URL for iframe
+      */
     private fetchParams() {
-		this.route.params.subscribe(params => {
-        	this.params = params;
+        this.route.params.subscribe(params => {
+            this.params = params;
             for (const key in params) {
-            	if (key != 'first' && key != 'last') {
-					if (this.filter == undefined) {
-						this.filter = key + '=' + params[key];
-					}
-					else {
-						this.filter += ' and ' + key + '=' + params[key];
-					}
-				}
+                if (key != 'first' && key != 'last') {
+                    if (this.filter == undefined) {
+                        this.filter = key + '=' + params[key];
+                    }
+                    else {
+                        this.filter += ' and ' + key + '=' + params[key];
+                    }
+                }
             }
-			this.setUrl();
+            this.setUrl();
         });
     }
 
-	/**
-	  * Set FTAS URL
-	  * If params are set we can do some filtering
-	  *
-	  * Fall-through model for setting the baseUrl where preferred method
-	  * is fullUrl -> url -> show modal with settings
-	  */
+    /**
+      * Set FTAS URL
+      * If params are set we can do some filtering
+      *
+      * Fall-through model for setting the baseUrl where preferred method
+      * is fullUrl -> url -> show modal with settings
+      */
     private setUrl() {
-    	this.baseUrl = 'https://';
-    	if (this.config['fullUrl']) {
-			this.baseUrl = this.config['fullUrl']
-		} else if (this.config['url']) {
+        this.baseUrl = 'https://';
+        if (this.config['fullUrl']) {
+            this.baseUrl = this.config['fullUrl']
+        } else if (this.config['url']) {
             this.baseUrl += this.config['url'] + '/ftas/stat.pl';
         }
 
@@ -123,19 +123,19 @@ export class FtasComponent implements OnInit {
         if (isNaN(this.output) || this.baseUrl == 'https://') {
             console.warn('FTAS output or URL isn\'t set.');
 
-			// Open modal window
+            // Open modal window
             this.openSettings();
         } else {
-        	// Set URL params
-			if (this.filter == undefined)
-				this.url = this.baseUrl;
-			else {
-				this.url = this.baseUrl + '?'
-					+ this.generateQueryBase()
-					+ '&advanced_query='
-					+ encodeURIComponent(this.filter);
-			}
-		}
+            // Set URL params
+            if (this.filter == undefined)
+                this.url = this.baseUrl;
+            else {
+                this.url = this.baseUrl + '?'
+                    + this.generateQueryBase()
+                    + '&advanced_query='
+                    + encodeURIComponent(this.filter);
+            }
+        }
     }
 
     /**
@@ -155,46 +155,46 @@ export class FtasComponent implements OnInit {
         this.iframeInit = !this.iframeInit;
     }
 
-	/**
-	  * open modal window with settings
-	  *
-	  * on close, save settings and regenerate URL
-	  * on dismissal do nothing
-	  */
+    /**
+      * open modal window with settings
+      *
+      * on close, save settings and regenerate URL
+      * on dismissal do nothing
+      */
     openSettings(update: boolean = true) {
-		this.modalRef = this.modalService.open(FtasModalComponent);
-		this.modalRef.componentInstance.data = this.config;
-		this.modalRef.result.then(
-			(result) => {
-				if (update) {
-					// The modal was closed, save settings
-					this.configService.update('ftas', this.config).subscribe(
-						(data) => {
-							this.config = data;
-							this.setUrl();
-						},
-						(error) => {
-							console.error(error);
-							if (error.status == 404) {
-								this.openSettings(false);
-							}
-						});
-				} else {
-					const newconfig = Object.assign({}, this.config);
-					newconfig['name'] = 'ftas';
-					this.configService.add(newconfig).subscribe(
-						(data) => {
-							this.config = data;
-							this.setUrl();
-						},
-						(error) => {
-							console.error(error);
-						});
-				}
-			},
-			(reason) => {
-				// dismissal, do nothing
-			});
+        this.modalRef = this.modalService.open(FtasModalComponent);
+        this.modalRef.componentInstance.data = this.config;
+        this.modalRef.result.then(
+            (result) => {
+                if (update) {
+                    // The modal was closed, save settings
+                    this.configService.update('ftas', this.config).subscribe(
+                        (data) => {
+                            this.config = data;
+                            this.setUrl();
+                        },
+                        (error) => {
+                            console.error(error);
+                            if (error.status == 404) {
+                                this.openSettings(false);
+                            }
+                        });
+                } else {
+                    const newconfig = Object.assign({}, this.config);
+                    newconfig['name'] = 'ftas';
+                    this.configService.add(newconfig).subscribe(
+                        (data) => {
+                            this.config = data;
+                            this.setUrl();
+                        },
+                        (error) => {
+                            console.error(error);
+                        });
+                }
+            },
+            (reason) => {
+                // dismissal, do nothing
+            });
     }
 
     /**

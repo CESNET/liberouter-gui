@@ -15,64 +15,64 @@ const metrics = ['Category', 'Node.Name', 'Node.SW', 'Target.IP4', 'Source.IP4']
 })
 export class DashBoxModalComponent implements OnInit {
 
-	@Input() data: Object;
+    @Input() data: Object;
 
-	// Array of options for type selector
-	private types = [
-		{
-			value : 'piechart',
-			name : 'Piechart'
-		},
-		{
-			value : 'barchart',
-			name : 'Barchart'
-		},
-		{
-			value : 'top',
-			name : 'Top N'
-		},
-		{
-			value : 'count',
-			name : 'Count'
-		}
-	]
+    // Array of options for type selector
+    private types = [
+        {
+            value : 'piechart',
+            name : 'Piechart'
+        },
+        {
+            value : 'barchart',
+            name : 'Barchart'
+        },
+        {
+            value : 'top',
+            name : 'Top N'
+        },
+        {
+            value : 'count',
+            name : 'Count'
+        }
+    ]
 
-	private backup;
-	private modal;
+    private backup;
+    private modal;
 
-	constructor(public activeModal: NgbActiveModal) { }
+    constructor(public activeModal: NgbActiveModal) { }
 
-	ngOnInit() {
-		// Save current model as backup
-		this.backup = Object.assign({}, this.data);
-	}
+    ngOnInit() {
+        // Save current model as backup
+        this.backup = Object.assign({}, this.data);
+    }
 
-	/**
-	  * Typeahead lookup
-	  */
-	searchMetric = (term: Observable<string>) => {
-		return term
-			.debounceTime(200)
-			.distinctUntilChanged()
-			.map(term => term.length < 2 ? []
-				: metrics.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0,10));
-	}
+    /**
+      * Typeahead lookup
+      */
+    searchMetric = (term: Observable<string>) => {
+        return term
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .map(term => term.length < 2 ? []
+                : metrics.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0,10));
+    }
 
-	/**
-	  * Closing a modal with a button => save the state
-	  */
-	close(result: any): void {
-		console.log(result);
-		this.data = Object.assign(this.data,this.backup);
-		this.activeModal.close(result);
-	}
+    /**
+      * Closing a modal with a button => save the state
+      */
+    close(result: any): void {
+        console.log(result);
+        this.data = Object.assign(this.data,this.backup);
+        this.activeModal.close(result);
+    }
 
-	/**
-	  * Dismissal of a modal window => don't save the state
-	  */
-	dismiss(result: any): void {
-		console.log(result);
-		this.activeModal.dismiss(result);
-	}
+    /**
+      * Dismissal of a modal window => don't save the state
+      */
+    dismiss(result: any): void {
+        console.log(result);
+        this.activeModal.dismiss(result);
+    }
 
 }

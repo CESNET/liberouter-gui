@@ -7,19 +7,19 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class MarkActionComponent implements OnInit {
 
-	@Input() data: Object;
+    @Input() data: Object;
 
-	constructor() { }
+    constructor() { }
 
-	ngOnInit() { }
+    ngOnInit() { }
 
-	isBool(value) {
-		if (value.value.toLowerCase() == 'true')
-			value.value = true;
+    isBool(value) {
+        if (value.value.toLowerCase() == 'true')
+            value.value = true;
 
-		else if (value.value.toLowerCase() == 'false')
-			value.value = false;
+        else if (value.value.toLowerCase() == 'false')
+            value.value = false;
 
-		return value;
-	}
+        return value;
+    }
 }

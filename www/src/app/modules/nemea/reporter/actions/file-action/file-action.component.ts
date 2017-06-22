@@ -7,15 +7,15 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class FileActionComponent implements OnInit {
 
-	@Input() data;
+    @Input() data;
 
-	constructor() { }
+    constructor() { }
 
-	ngOnInit() {
-		if (!('dir' in this.data))
-			this.data['dir'] = false;
-	}
+    ngOnInit() {
+        if (!('dir' in this.data))
+            this.data['dir'] = false;
+    }
 
-	isBool(item) {}
+    isBool(item) {}
 
 }

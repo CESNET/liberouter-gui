@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
-import { FormsModule }		from '@angular/forms';
+import { FormsModule }      from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgGridModule } from 'angular2-grid';
@@ -53,110 +53,110 @@ import { TrapActionComponent } from './reporter/actions/trap-action/trap-action.
 import { WardenActionComponent } from './reporter/actions/warden-action/warden-action.component';
 
 const nemeaRoutes: Routes = [
-	{
-		path : 'nemea',
-		component : nemeaBase,
-		canActivate : [AuthGuard],
-		data : {
-			basepath : true,
-			name : 'NEMEA',
-			description : 'System for network traffic analysis and anomaly detection.',
-			icon : 'fa-grav',
-			img : 'path/to/img',
-			role : 10
-		},
-		children : [
-			{
-				path : '',
-				component: nemeaComponent,
-				canActivate : [AuthGuard],
-				data : {
-					role : 10
-				}
-			},
-			{
-				path : 'status',
-				component: nemeaStatusComponent,
-				canActivate : [AuthGuard],
-				data : {
-					role : 10
-				}
-			},
-			{
-				path : 'events',
-				component: EventsComponent,
-				canActivate : [AuthGuard],
-				data : {
-					role : 10
-				}
-			},
-			{
-				path : 'dashboard',
-				component : DashboardComponent,
-				canActivate : [AuthGuard],
-				data : {
-					role : 255
-				}
-			},
-			{
-				path : 'reporters',
-				component: nemeaReporterConfComponent,
-				canActivate : [AuthGuard],
-				data : {
-					role : 10
-				}
-			},
+    {
+        path : 'nemea',
+        component : nemeaBase,
+        canActivate : [AuthGuard],
+        data : {
+            basepath : true,
+            name : 'NEMEA',
+            description : 'System for network traffic analysis and anomaly detection.',
+            icon : 'fa-grav',
+            img : 'path/to/img',
+            role : 10
+        },
+        children : [
             {
-				path : 'reporters/:id',
-				component: nemeaReporterConfComponent,
-				canActivate : [AuthGuard],
-				data : {
-					role : 10
-				}
-			}
-		]
-	}
+                path : '',
+                component: nemeaComponent,
+                canActivate : [AuthGuard],
+                data : {
+                    role : 10
+                }
+            },
+            {
+                path : 'status',
+                component: nemeaStatusComponent,
+                canActivate : [AuthGuard],
+                data : {
+                    role : 10
+                }
+            },
+            {
+                path : 'events',
+                component: EventsComponent,
+                canActivate : [AuthGuard],
+                data : {
+                    role : 10
+                }
+            },
+            {
+                path : 'dashboard',
+                component : DashboardComponent,
+                canActivate : [AuthGuard],
+                data : {
+                    role : 255
+                }
+            },
+            {
+                path : 'reporters',
+                component: nemeaReporterConfComponent,
+                canActivate : [AuthGuard],
+                data : {
+                    role : 10
+                }
+            },
+            {
+                path : 'reporters/:id',
+                component: nemeaReporterConfComponent,
+                canActivate : [AuthGuard],
+                data : {
+                    role : 10
+                }
+            }
+        ]
+    }
 ];
 
 @NgModule({
-	imports : [
-		CommonModule,
-		FormsModule,
-		SafePipeModule,
-		CodemirrorModule,
-		NgGridModule,
-		BrowserAnimationsModule,
-		NgxChartsModule,
-		NgbModule.forRoot(),
-		RouterModule.forChild(nemeaRoutes)
-	],
-	declarations : [
-		IdeaPipe,
-		nemeaBase,
-		nemeaComponent,
-		nemeaStatusComponent,
-		nemeaReporterConfComponent,
-		EventsComponent,
-		EventItemComponent,
-		EventDetailComponent,
-		DashboardComponent,
-		DashBoxModalComponent,
-		DashBoxComponent,
-		DashboardViewComponent,
-		DashModalComponent,
-		MarkActionComponent,
-		FileActionComponent,
-		MongoActionComponent,
-		EmailActionComponent,
-		TrapActionComponent,
-		WardenActionComponent
-		],
-	exports : [],
-	providers : [SafePipe],
-	entryComponents : [
-		EventDetailComponent,
-		DashBoxModalComponent,
-		DashModalComponent
-	]
+    imports : [
+        CommonModule,
+        FormsModule,
+        SafePipeModule,
+        CodemirrorModule,
+        NgGridModule,
+        BrowserAnimationsModule,
+        NgxChartsModule,
+        NgbModule.forRoot(),
+        RouterModule.forChild(nemeaRoutes)
+    ],
+    declarations : [
+        IdeaPipe,
+        nemeaBase,
+        nemeaComponent,
+        nemeaStatusComponent,
+        nemeaReporterConfComponent,
+        EventsComponent,
+        EventItemComponent,
+        EventDetailComponent,
+        DashboardComponent,
+        DashBoxModalComponent,
+        DashBoxComponent,
+        DashboardViewComponent,
+        DashModalComponent,
+        MarkActionComponent,
+        FileActionComponent,
+        MongoActionComponent,
+        EmailActionComponent,
+        TrapActionComponent,
+        WardenActionComponent
+        ],
+    exports : [],
+    providers : [SafePipe],
+    entryComponents : [
+        EventDetailComponent,
+        DashBoxModalComponent,
+        DashModalComponent
+    ]
 })
 export class nemeaModule {};

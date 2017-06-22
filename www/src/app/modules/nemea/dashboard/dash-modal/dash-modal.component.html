@@ -1,34 +1,34 @@
 <div class="modal-header">
-	<h4 class="modal-title">Editing "{{ backup.title }}"</h4>
-	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-		<span aria-hidden="true">&times;</span>
-	</button>
+    <h4 class="modal-title">Editing "{{ backup.title }}"</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body form-control">
-	<form novalidate class="container">
-		<div class="form-group row">
-			<label class="col-form-label col-sm-2">Title</label>
-			<input type="text"
-				class="form-control col"
-				name="title"
-				placeholder="Dashboard title"
-				[(ngModel)]="backup.title" />
-		</div>
+    <form novalidate class="container">
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Title</label>
+            <input type="text"
+                class="form-control col"
+                name="title"
+                placeholder="Dashboard title"
+                [(ngModel)]="backup.title" />
+        </div>
 
-		<div class="form-group row">
-			<label class="col-form-label col-sm-2">Offset [hours]</label>
-			<input type="text"
-				class="form-control col"
-				name="period"
-				placeholder="Offset in hours"
-				[(ngModel)]="backup.offset" />
-		</div>
-	</form>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2">Offset [hours]</label>
+            <input type="text"
+                class="form-control col"
+                name="period"
+                placeholder="Offset in hours"
+                [(ngModel)]="backup.offset" />
+        </div>
+    </form>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-outline-primary" (click)="activeModal.dismiss()">Cancel</button>
-	<button class="btn btn-primary" (click)="close($event)">
-		Save
-	</button>
+    <button class="btn btn-outline-primary" (click)="activeModal.dismiss()">Cancel</button>
+    <button class="btn btn-primary" (click)="close($event)">
+        Save
+    </button>
 
 </div>

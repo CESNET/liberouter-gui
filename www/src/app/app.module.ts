@@ -22,28 +22,28 @@ import { modules } from './modules';
   * Basic routes of the application
   */
 const appRoutes: Routes = [
-	{
-		path : 'login',
-		component : LoginComponent
-	},
-	{
-		path : 'logout',
-		component : LogoutComponent,
-		canActivate : [AuthGuard]
-	},
-	{
-		path : 'setup',
-		component : SetupComponent
-	},
-	{
-		path: '',
-		component: HomeComponent,
-		canActivate : [AuthGuard]
-	},
-	{
-		path: '**',
-		component: NullComponent
-	}
+    {
+        path : 'login',
+        component : LoginComponent
+    },
+    {
+        path : 'logout',
+        component : LogoutComponent,
+        canActivate : [AuthGuard]
+    },
+    {
+        path : 'setup',
+        component : SetupComponent
+    },
+    {
+        path: '',
+        component: HomeComponent,
+        canActivate : [AuthGuard]
+    },
+    {
+        path: '**',
+        component: NullComponent
+    }
 ];
 
 /**
@@ -53,43 +53,43 @@ const appRoutes: Routes = [
   * Inspired by: https://stackoverflow.com/questions/40909822/how-to-use-httpinterceptor-and-configservice-both-at-the-same-time-in-angular2
   */
 export function initApp(config: any) {
-	@NgModule({
-	  declarations: [
-		AppComponent,
-		HomeComponent,
-		LoginComponent,
-		LogoutComponent,
-		SetupComponent,
-		NullComponent
-	  ],
-	  imports: [
-		modules,
-		SafePipeModule,
-		BrowserModule,
-		FormsModule,
-		HttpModule,
-		NgbModule.forRoot(),
-		RouterModule.forRoot(appRoutes)
-	  ],
-	  providers: [
-		AuthGuard,
-		SafePipe,
-		{
-			provide : config,
-			useValue : config
-		},
-		{
-			provide : Http,
-			useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-				router: Router, config: string) => {
-					return new HttpInterceptor(xhrBackend, requestOptions, router, config);
-				},
-			deps: [XHRBackend, RequestOptions, Router, config]
-		}
-	  ],
-	  bootstrap: [AppComponent]
-	})
-	class AppModule { }
+    @NgModule({
+      declarations: [
+        AppComponent,
+        HomeComponent,
+        LoginComponent,
+        LogoutComponent,
+        SetupComponent,
+        NullComponent
+      ],
+      imports: [
+        modules,
+        SafePipeModule,
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        NgbModule.forRoot(),
+        RouterModule.forRoot(appRoutes)
+      ],
+      providers: [
+        AuthGuard,
+        SafePipe,
+        {
+            provide : config,
+            useValue : config
+        },
+        {
+            provide : Http,
+            useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
+                router: Router, config: string) => {
+                    return new HttpInterceptor(xhrBackend, requestOptions, router, config);
+                },
+            deps: [XHRBackend, RequestOptions, Router, config]
+        }
+      ],
+      bootstrap: [AppComponent]
+    })
+    class AppModule { }
 
-	return AppModule;
+    return AppModule;
 }

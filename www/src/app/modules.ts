@@ -6,10 +6,10 @@ import { SecurityCloudModule } from './modules/security-cloud/sc.module';
 import { NerdModule } from './modules/nerd/nerd.module';
 
 export const modules: Array<Object> = [
-	//		dummyModule,
-	nemeaModule,
-	FtasModule,
-	SecurityCloudModule,
-	NerdModule,
-	usersModule
+    //      dummyModule,
+    nemeaModule,
+    FtasModule,
+    SecurityCloudModule,
+    NerdModule,
+    usersModule
 ]
