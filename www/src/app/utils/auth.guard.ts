@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate, CanLoad {
 
 	constructor(private router: Router) { }
 
-	isLoggedIn() : boolean {
+	isLoggedIn(): boolean {
 	    if (localStorage.getItem('currentUser')) {
             // logged in so return true
             return true;
@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate, CanLoad {
         if (this.isLoggedIn()) {
 		// logged in so return true
 		//console.log(route.data)
-			let user = JSON.parse(localStorage.getItem('currentUser'));
+			const user = JSON.parse(localStorage.getItem('currentUser'));
 			if (route.data['role'] == undefined) {
 				console.warn('No role is set for route \'' + route.data['path'] + '\'');
 				return true;
@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate, CanLoad {
         return false;
 	}
 
-	canLoad(route : Route) : boolean {
+	canLoad(route: Route): boolean {
 		if (this.isLoggedIn()) {
 			return true;
 		}

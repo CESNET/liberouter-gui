@@ -12,16 +12,16 @@ import { UsersEditComponent } from './users-edit/users-edit.component';
 
 import { AuthGuard } from  'app/utils/auth.guard';
 
-const usersRoutes : Routes = [
+const usersRoutes: Routes = [
 	{
 		path : 'users',
 		component : UsersComponent,
 		canActivate : [AuthGuard],
 		data : {
 			basepath : true,
-			name : "Users",
-			description : "Manage users, update profiles and passwords.",
-			icon : "fa-user-circle",
+			name : 'Users',
+			description : 'Manage users, update profiles and passwords.',
+			icon : 'fa-user-circle',
 			role : 0
 		},
 		children : [

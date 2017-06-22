@@ -8,11 +8,11 @@ export const environment = {
   /**
   	* Path to configuration file
   	*/
-  configPath : "assets/config.json",
+  configPath : 'assets/config.json',
   /**
   	* Used only when fetching config.json failed
   	*/
-  apiUrl : "/libapi",
+  apiUrl : '/libapi',
   securityCloud : {
     /**
       * simple URL (without protocol) to FTAS instance
@@ -24,7 +24,7 @@ export const environment = {
       * If this option is not set, url must be.
       * If both are set, fullUrl is used.
       */
-    fullUrl : "/scgui",
+    fullUrl : '/scgui',
     /**
       * Set resolution of the graph output
       * Default: 2

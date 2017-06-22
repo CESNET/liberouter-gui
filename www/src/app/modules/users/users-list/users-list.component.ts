@@ -4,9 +4,9 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { UsersService } from '../users.service';
 
 enum Roles {
-	"Administrator" = 0,
-	"User" = 10,
-	"Guest" = 255
+	'Administrator' = 0,
+	'User' = 10,
+	'Guest' = 255
 }
 
 @Component({
@@ -17,16 +17,16 @@ enum Roles {
 })
 export class UsersListComponent implements OnInit {
 
-	users : Array<Object> = [];
+	users: Array<Object> = [];
 	currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	roles = Roles;
 	user = {};
-	deleteBtn = ["Delete", "Cancel"];
+	deleteBtn = ['Delete', 'Cancel'];
 
-	constructor (private usersService : UsersService) {}
+	constructor (private usersService: UsersService) {}
 
 	ngOnInit() {
-		console.log("trying to list users")
+		console.log('trying to list users')
 		this.listUsers();
 	}
 

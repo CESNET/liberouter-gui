@@ -10,12 +10,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class EventItemComponent implements OnInit {
 	enableSub = false;
-	modalRef : any;
-	params : any;
+	modalRef: any;
+	params: any;
 
-	@Input() item : Object;
+	@Input() item: Object;
 
-	constructor(private modalService: NgbModal, private router : Router, private route : ActivatedRoute) { }
+	constructor(private modalService: NgbModal, private router: Router, private route: ActivatedRoute) { }
 
 	ngOnInit() {
 
@@ -49,8 +49,8 @@ export class EventItemComponent implements OnInit {
 	/*
 	 * Unset queryParams from URL
 	 */
-	unsetId(r : Router, params : any) {
-		let p = JSON.parse(JSON.stringify(params));
+	unsetId(r: Router, params: any) {
+		const p = JSON.parse(JSON.stringify(params));
 		p['id'] = undefined;
 		r.navigate(['nemea/events'], {queryParams : p});
 	}

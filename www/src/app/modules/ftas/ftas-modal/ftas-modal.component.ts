@@ -23,7 +23,7 @@ export class FtasModalComponent implements OnInit {
 	/**
 	  * Closing a modal with a button => save the state
 	  */
-	close(result : any) : void {
+	close(result: any): void {
 		this.data = Object.assign(this.data,this.backup);
 		this.activeModal.close(result);
 	}
@@ -31,7 +31,7 @@ export class FtasModalComponent implements OnInit {
 	/**
 	  * Dismissal of a modal window => don't save the state
 	  */
-	dismiss(result : any) : void {
+	dismiss(result: any): void {
 		this.activeModal.dismiss(result);
 	}
 }

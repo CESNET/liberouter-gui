@@ -11,15 +11,15 @@ import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 import { FtasComponent } from './ftas.component';
 import { FtasModalComponent } from './ftas-modal/ftas-modal.component'
 
-const ftasRoutes : Routes = [{
+const ftasRoutes: Routes = [{
     path : 'ftas',
     component : FtasComponent,
     canActivate : [AuthGuard],
     data : {
         role : 10,
-        name : "FTAS",
-        description : "Flow-based Traffic Analysis System",
-        icon : "fa-first-order"
+        name : 'FTAS',
+        description : 'Flow-based Traffic Analysis System',
+        icon : 'fa-first-order'
     }
 }]
 

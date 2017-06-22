@@ -11,15 +11,15 @@ import { UsersService } from '../users.service';
 })
 export class UsersAddComponent implements OnInit {
 
-	returnUrl = "/users";
+	returnUrl = '/users';
 
 	// Default user model
 	user = {
-		first_name : "",
-		last_name : "",
-		username : "",
-		email : "",
-		password : "",
+		first_name : '',
+		last_name : '',
+		username : '',
+		email : '',
+		password : '',
 		role : 10
 	}
 
@@ -30,12 +30,12 @@ export class UsersAddComponent implements OnInit {
 		{value: 255, viewValue: 'Guest'}
 	];
 
-	error = "";
+	error = '';
 	// Store password from validation
-	passwordValidation : string = "";
+	passwordValidation = '';
 
 	constructor(private usersService: UsersService,
-				 private router : Router) {}
+				 private router: Router) {}
 
 	ngOnInit() {
 	}
@@ -43,12 +43,12 @@ export class UsersAddComponent implements OnInit {
 	addUser() {
 		// Check if all required fields are set
 		// Check password verification
-		if ((this.user.username == "" ||
-			this.user.email == ""	||
-			this.user.password == "" ||
-			this.passwordValidation == "") &&
+		if ((this.user.username == '' ||
+			this.user.email == ''	||
+			this.user.password == '' ||
+			this.passwordValidation == '') &&
 			this.passwordValidation == this.user.password) {
-			this.error = "Required fields are missing.";
+			this.error = 'Required fields are missing.';
 			return;
 		} else {
 			this.usersService.add(this.user).subscribe(
@@ -58,7 +58,7 @@ export class UsersAddComponent implements OnInit {
 			},
 			error => {
 				// Handle error response and display it as error
-				let response = JSON.parse(error['_body']);
+				const response = JSON.parse(error['_body']);
 				this.error = response['message'];
 			})
 		}

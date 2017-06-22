@@ -12,29 +12,29 @@ import { environment } from 'environments/environment';
 })
 export class SecurityCloudComponent implements OnInit {
 
-    baseUrl : string = "https://";  // FTAS URL for iframe
+    baseUrl = 'https://';  // FTAS URL for iframe
     url: SafeResourceUrl;           // Sanitizied URL for iframe
-    filter : string;                // Advanced filter field for FTAS
-    iframeInit : Boolean = false;   // Flag for iframe initialization routine
-    msg : string = "";              // The loading message
-    eventTime : Date = new Date();
-    beginTime : Date;
-    endTime : Date;
+    filter: string;                // Advanced filter field for FTAS
+    iframeInit: Boolean = false;   // Flag for iframe initialization routine
+    msg = '';              // The loading message
+    eventTime: Date = new Date();
+    beginTime: Date;
+    endTime: Date;
 
 
     /**
       * Construct the FTAS URL from environment variables
       */
-    constructor( private route : ActivatedRoute ) {
+    constructor( private route: ActivatedRoute ) {
         /**
           * Environment can set full url of the FTAS instance
           */
         if (environment.securityCloud.fullUrl) {
             this.baseUrl = environment.securityCloud.fullUrl
         } else if (environment.securityCloud.url) {
-            this.baseUrl += environment.securityCloud.url + "index.php";
+            this.baseUrl += environment.securityCloud.url + 'index.php';
         } else {
-            console.warn("Security Cloud URL isn't set.");
+            console.warn('Security Cloud URL isn\'t set.');
         }
     }
 
@@ -47,22 +47,22 @@ export class SecurityCloudComponent implements OnInit {
               * Setup FTAS URL
               * If params are set we can do some filtering
               */
-            if (params["eventtime"] == undefined)
+            if (params['eventtime'] == undefined)
                 this.url = this.baseUrl;
             else {
                 /**
                   * Get time of event
                   */
-                console.log(+params["eventtime"] * 1000)
-                this.eventTime = new Date(+params["eventtime"] * 1000);
+                console.log(+params['eventtime'] * 1000)
+                this.eventTime = new Date(+params['eventtime'] * 1000);
                 this.beginTime = new Date(+this.eventTime.getTime() - 12 * 60 * 60 * 1000);
                 this.endTime = new Date(+this.eventTime.getTime() + 12 * 60 * 60 * 1000);
 
                 this.url = this.baseUrl + '?'
                     + this.generateQueryBase()
-                    + "&tbgn=" + Math.floor(this.beginTime.getTime() / 1000)
-                    + "&tend=" + Math.floor(this.endTime.getTime() / 1000)
-                    + "&start=" + Math.floor(this.eventTime.getTime() / 1000);
+                    + '&tbgn=' + Math.floor(this.beginTime.getTime() / 1000)
+                    + '&tend=' + Math.floor(this.endTime.getTime() / 1000)
+                    + '&start=' + Math.floor(this.eventTime.getTime() / 1000);
             }
 
         });
@@ -75,9 +75,9 @@ export class SecurityCloudComponent implements OnInit {
       */
     iframeLoaded() {
         if (!this.iframeInit) {
-            this.msg = "Security Cloud is loading...";
+            this.msg = 'Security Cloud is loading...';
         } else {
-            this.msg = "";
+            this.msg = '';
         }
 
         this.iframeInit = !this.iframeInit;
@@ -89,10 +89,10 @@ export class SecurityCloudComponent implements OnInit {
       *
       * TODO: Reflect correctly time in "first" and "last" fields
       */
-    private generateQueryBase() : URLSearchParams {
-        let queryBase = new URLSearchParams();
+    private generateQueryBase(): URLSearchParams {
+        const queryBase = new URLSearchParams();
 
-        queryBase.set("tres", String(environment.securityCloud.resolution));
+        queryBase.set('tres', String(environment.securityCloud.resolution));
 
         return queryBase;
 

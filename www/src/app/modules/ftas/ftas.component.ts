@@ -30,34 +30,34 @@ import { FtasModalComponent } from './ftas-modal/ftas-modal.component'
 })
 export class FtasComponent implements OnInit {
 	// FTAS URL for iframe
-    baseUrl : string;
+    baseUrl: string;
 
     // Sanitizied URL for iframe
     url: SafeResourceUrl;
 
     // Advanced filter field for FTAS
-    filter : string;
+    filter: string;
 
     // Flag for iframe initialization routine
-    iframeInit : Boolean = false;
+    iframeInit: Boolean = false;
     // The loading message
-    ftasMsg : string = "";
+    ftasMsg = '';
 
     // URL parameters
-    params : Object;
+    params: Object;
 
     // Configuration fetched froms backend
-    config : Object = {};
+    config: Object = {};
 
     // Output ID
-    output : number;
+    output: number;
 
     // Reference to modal window
     modalRef;
 
-    constructor(private route : ActivatedRoute,
-    		   private configService : ConfigService,
-    		   private modalService : NgbModal) {}
+    constructor(private route: ActivatedRoute,
+    		   private configService: ConfigService,
+    		   private modalService: NgbModal) {}
 
     /**
       * Get configruation and URL params and prepare the advanced query field
@@ -87,13 +87,13 @@ export class FtasComponent implements OnInit {
     private fetchParams() {
 		this.route.params.subscribe(params => {
         	this.params = params;
-            for (var key in params) {
+            for (const key in params) {
             	if (key != 'first' && key != 'last') {
 					if (this.filter == undefined) {
-						this.filter = key + "=" + params[key];
+						this.filter = key + '=' + params[key];
 					}
 					else {
-						this.filter += " and " + key + '=' + params[key];
+						this.filter += ' and ' + key + '=' + params[key];
 					}
 				}
             }
@@ -109,19 +109,19 @@ export class FtasComponent implements OnInit {
 	  * is fullUrl -> url -> show modal with settings
 	  */
     private setUrl() {
-    	this.baseUrl = "https://";
+    	this.baseUrl = 'https://';
     	if (this.config['fullUrl']) {
 			this.baseUrl = this.config['fullUrl']
 		} else if (this.config['url']) {
-            this.baseUrl += this.config['url'] + "/ftas/stat.pl";
+            this.baseUrl += this.config['url'] + '/ftas/stat.pl';
         }
 
         this.output = +this.config['output'];
 
         console.log(this.baseUrl, this.output)
 
-        if (isNaN(this.output) || this.baseUrl == "https://") {
-            console.warn("FTAS output or URL isn't set.");
+        if (isNaN(this.output) || this.baseUrl == 'https://') {
+            console.warn('FTAS output or URL isn\'t set.');
 
 			// Open modal window
             this.openSettings();
@@ -132,7 +132,7 @@ export class FtasComponent implements OnInit {
 			else {
 				this.url = this.baseUrl + '?'
 					+ this.generateQueryBase()
-					+ "&advanced_query="
+					+ '&advanced_query='
 					+ encodeURIComponent(this.filter);
 			}
 		}
@@ -147,9 +147,9 @@ export class FtasComponent implements OnInit {
       */
     iframeLoaded() {
         if (!this.iframeInit) {
-            this.ftasMsg = "FTAS is loading...";
+            this.ftasMsg = 'FTAS is loading...';
         } else {
-            this.ftasMsg = "";
+            this.ftasMsg = '';
         }
 
         this.iframeInit = !this.iframeInit;
@@ -161,7 +161,7 @@ export class FtasComponent implements OnInit {
 	  * on close, save settings and regenerate URL
 	  * on dismissal do nothing
 	  */
-    openSettings(update : boolean = true) {
+    openSettings(update: boolean = true) {
 		this.modalRef = this.modalService.open(FtasModalComponent);
 		this.modalRef.componentInstance.data = this.config;
 		this.modalRef.result.then(
@@ -180,8 +180,8 @@ export class FtasComponent implements OnInit {
 							}
 						});
 				} else {
-					let newconfig = Object.assign({}, this.config);
-					newconfig["name"] = "ftas";
+					const newconfig = Object.assign({}, this.config);
+					newconfig['name'] = 'ftas';
 					this.configService.add(newconfig).subscribe(
 						(data) => {
 							this.config = data;
@@ -201,43 +201,43 @@ export class FtasComponent implements OnInit {
       * Set filtering parameters base for FTAS
       * Filtering something in FTAS requires a lot of parameters to set.
       */
-    private generateQueryBase() : URLSearchParams {
-        let queryBase = new URLSearchParams();
+    private generateQueryBase(): URLSearchParams {
+        const queryBase = new URLSearchParams();
 
-        queryBase.set("select_output", String(this.output));
-        queryBase.set("select_output-use", "yes");
-        queryBase.set("query_style", "advanced");
+        queryBase.set('select_output', String(this.output));
+        queryBase.set('select_output-use', 'yes');
+        queryBase.set('query_style', 'advanced');
         //this.query.set("advanced_query", "dst_ip%3D193.170.227.139");
-        queryBase.set("first", this.params["first"]);
-        queryBase.set("last", this.params["last"]);
-        queryBase.set("use_all_fields", "1");
-        queryBase.set("query", "yes");
-        queryBase.set("run_query", "yes");
-        queryBase.set("max_query_time", "60");
-        queryBase.set("max_query_count", "10000");
-        queryBase.set("viewer", "yes");
-        queryBase.set("in_one_step", "1");
-        queryBase.set("viewer_display", "Show");
-        queryBase.set("viewer_aggregate", "yes");
-        queryBase.set("viewer_display_type", "graph");
-        queryBase.set("graph_order_direction", "desc");
-        queryBase.set("viewer_selected_view", "40");
-        queryBase.set("viewer_page_size", "1000");
-        queryBase.set("resolvegeolocation_global", "yes");
-        queryBase.set("show_percent", "yes");
+        queryBase.set('first', this.params['first']);
+        queryBase.set('last', this.params['last']);
+        queryBase.set('use_all_fields', '1');
+        queryBase.set('query', 'yes');
+        queryBase.set('run_query', 'yes');
+        queryBase.set('max_query_time', '60');
+        queryBase.set('max_query_count', '10000');
+        queryBase.set('viewer', 'yes');
+        queryBase.set('in_one_step', '1');
+        queryBase.set('viewer_display', 'Show');
+        queryBase.set('viewer_aggregate', 'yes');
+        queryBase.set('viewer_display_type', 'graph');
+        queryBase.set('graph_order_direction', 'desc');
+        queryBase.set('viewer_selected_view', '40');
+        queryBase.set('viewer_page_size', '1000');
+        queryBase.set('resolvegeolocation_global', 'yes');
+        queryBase.set('show_percent', 'yes');
         //this.query.set("viewer_hide_form", "1");
 
         /**
           * .append must be used here, .set overwrites the existing field
           */
-        queryBase.append("viewer_requested_fields", "src_ip");
-        queryBase.append("viewer_requested_fields", "dst_ip");
-        queryBase.append("viewer_requested_fields", "proto");
-        queryBase.append("viewer_requested_fields", "octets");
-        queryBase.append("viewer_requested_fields", "dst_ip_cnt");
-        queryBase.append("viewer_requested_fields", "flow_source");
-        queryBase.append("viewer_requested_fields", "first");
-        queryBase.append("viewer_requested_fields", "last");
+        queryBase.append('viewer_requested_fields', 'src_ip');
+        queryBase.append('viewer_requested_fields', 'dst_ip');
+        queryBase.append('viewer_requested_fields', 'proto');
+        queryBase.append('viewer_requested_fields', 'octets');
+        queryBase.append('viewer_requested_fields', 'dst_ip_cnt');
+        queryBase.append('viewer_requested_fields', 'flow_source');
+        queryBase.append('viewer_requested_fields', 'first');
+        queryBase.append('viewer_requested_fields', 'last');
 
         return queryBase;
     }

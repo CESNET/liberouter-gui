@@ -5,7 +5,7 @@ import { FtasModule } from './modules/ftas/ftas.module';
 import { SecurityCloudModule } from './modules/security-cloud/sc.module';
 import { NerdModule } from './modules/nerd/nerd.module';
 
-export const modules : Array<Object> = [
+export const modules: Array<Object> = [
 	//		dummyModule,
 	nemeaModule,
 	FtasModule,

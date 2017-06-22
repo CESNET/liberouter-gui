@@ -28,21 +28,21 @@ import { NerdModalComponent } from './nerd-modal/nerd-modal.component'
 export class NerdComponent implements OnInit {
 
     // NERD URL for iframe
-    baseUrl : string;
+    baseUrl: string;
 
     // Sanitizied URL for iframe
     url: SafeResourceUrl;
 
     // Flag for iframe initialization routine
-    iframeInit : Boolean = false;
+    iframeInit: Boolean = false;
     // The loading message
-    msg : string = "";
+    msg = '';
 
     // URL parameters
-    params : Object;
+    params: Object;
 
     // Configuration fetched froms backend
-    config : Object = {};
+    config: Object = {};
 
     // Reference to modal window
     modalRef;
@@ -50,9 +50,9 @@ export class NerdComponent implements OnInit {
     /**
       * Construct the FTAS URL from environment variables
       */
-    constructor(private route : ActivatedRoute,
-				private configService : ConfigService,
-				private modalService : NgbModal) {
+    constructor(private route: ActivatedRoute,
+				private configService: ConfigService,
+				private modalService: NgbModal) {
     }
 
     /**
@@ -94,7 +94,7 @@ export class NerdComponent implements OnInit {
 	  * is fullUrl -> url -> show modal with settings
 	  */
     private setUrl() {
-    	this.baseUrl = "https://";
+    	this.baseUrl = 'https://';
 
    		if (this.config['fullUrl']) {
 			this.baseUrl = this.config['fullUrl']
@@ -106,10 +106,10 @@ export class NerdComponent implements OnInit {
 			this.openSettings();
         }
 
-		if (!this.params || !this.params["ip"])
+		if (!this.params || !this.params['ip'])
 			this.url = this.baseUrl;
 		else {
-			this.url = this.baseUrl + "/ip/" + this.params["ip"];
+			this.url = this.baseUrl + '/ip/' + this.params['ip'];
 		}
     }
 
@@ -121,9 +121,9 @@ export class NerdComponent implements OnInit {
       */
     iframeLoaded() {
         if (!this.iframeInit) {
-            this.msg = "NERD is loading...";
+            this.msg = 'NERD is loading...';
         } else {
-            this.msg = "";
+            this.msg = '';
         }
 
         this.iframeInit = !this.iframeInit;
@@ -136,7 +136,7 @@ export class NerdComponent implements OnInit {
 	  * on dismissal check if the HTTP Status is 404, which means the config
 	  * for such module doesn't exist, in that case reopen with new params.
 	  */
-    openSettings(update : boolean = true) {
+    openSettings(update: boolean = true) {
 		this.modalRef = this.modalService.open(NerdModalComponent);
 		this.modalRef.componentInstance.data = this.config;
 		this.modalRef.result.then(
@@ -155,8 +155,8 @@ export class NerdComponent implements OnInit {
 							}
 						});
 				} else {
-					let newconfig = Object.assign({}, this.config);
-					newconfig["name"] = "nerd";
+					const newconfig = Object.assign({}, this.config);
+					newconfig['name'] = 'nerd';
 					this.configService.add(newconfig).subscribe(
 						(data) => {
 							this.config = data;

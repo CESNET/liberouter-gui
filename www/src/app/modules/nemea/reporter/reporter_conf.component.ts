@@ -11,15 +11,15 @@ import { ReporterService } from './reporter.service';
 })
 export class nemeaReporterConfComponent {
 
-    error : Object;
+    error: Object;
 	success = {
-		message : "Configuration saved. You should restart reporters now.",
+		message : 'Configuration saved. You should restart reporters now.',
 		success : false
 	};
-    config : Object = {};
+    config: Object = {};
 
-	constructor(private router : Router,
-				private reporterService : ReporterService) {}
+	constructor(private router: Router,
+				private reporterService: ReporterService) {}
 
 	ngOnInit() {
 		this.getConfig();
@@ -31,7 +31,7 @@ export class nemeaReporterConfComponent {
 				this.error = {};
 				this.config = data;
 			},
-			(error : Object) => this.processError(error)
+			(error: Object) => this.processError(error)
 		);
 	}
 
@@ -42,69 +42,69 @@ export class nemeaReporterConfComponent {
 				this.config = data;
 				this.success.success = true;
 			},
-			(error : Object) => this.processError(error)
+			(error: Object) => this.processError(error)
 		);
 	}
 
-	addAddrGroup(list : boolean = false) {
-		let newaddr = list ? {"id" : "", "list" : ["1.1.1.1"]} : {id : "", file : "path/to/file"}
-		this.config["addressgroups"].push(newaddr)
+	addAddrGroup(list: boolean = false) {
+		const newaddr = list ? {'id' : '', 'list' : ['1.1.1.1']} : {id : '', file : 'path/to/file'}
+		this.config['addressgroups'].push(newaddr)
 	}
 
-	addAddrGroupIP(list : Object) {
-		this.config["addressgroups"]["list"].push("");
+	addAddrGroupIP(list: Object) {
+		this.config['addressgroups']['list'].push('');
 	}
 
-	remove(section : string, index : number) {
-		console.log("deleting", index)
+	remove(section: string, index: number) {
+		console.log('deleting', index)
 		this.config[section].splice(index, 1);
 	}
 
-	getActionType(item : Object) : String {
-		if ("mongo" in item)
-			return "mongo"
-		else if ("file" in item)
-			return "file"
-		else if ("mark" in item)
-			return "mark"
-		else if ("email" in item)
-			return "email"
-		else if ("trap" in item)
-			return "trap"
-		else if ("warden" in item)
-			return "warden"
+	getActionType(item: Object): String {
+		if ('mongo' in item)
+			return 'mongo'
+		else if ('file' in item)
+			return 'file'
+		else if ('mark' in item)
+			return 'mark'
+		else if ('email' in item)
+			return 'email'
+		else if ('trap' in item)
+			return 'trap'
+		else if ('warden' in item)
+			return 'warden'
 	}
 
-	trackActions(id : number, data : string) {
+	trackActions(id: number, data: string) {
 		return id;
 	}
 
-	addAction(item_type : string) {
-		let item = {
-			"id" : ""
+	addAction(item_type: string) {
+		const item = {
+			'id' : ''
 		}
 		console.log(item_type)
 		switch(item_type) {
-			case "mongo" : {
-				item["mongo"] = {
-					"db" : "",
-					"collection" : ""
+			case 'mongo' : {
+				item['mongo'] = {
+					'db' : '',
+					'collection' : ''
 				}
 
 				break;
 			}
 
-			case "mark" : {
-				item["mark"] = {
-					"path" : "",
-					"value" : ""
+			case 'mark' : {
+				item['mark'] = {
+					'path' : '',
+					'value' : ''
 				}
 
 				break;
 			}
 
-			case "file" : {
-				item["file"] = {}
+			case 'file' : {
+				item['file'] = {}
 				break;
 			}
 
@@ -115,12 +115,12 @@ export class nemeaReporterConfComponent {
 
 		}
 
-		this.config["custom_actions"].push(item);
+		this.config['custom_actions'].push(item);
 	}
 
-	private processError(error : Object) {
+	private processError(error: Object) {
 		console.log(error);
 		this.success.success = false;
-		this.error = JSON.parse(error["_body"]);
+		this.error = JSON.parse(error['_body']);
 	}
 }

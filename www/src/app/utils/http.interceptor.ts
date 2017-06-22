@@ -26,20 +26,20 @@ import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class HttpInterceptor extends Http {
-	private currentUser : Object;
-	private headers : Headers = new Headers({ 'Content-Type': 'application/json' });
-    private configPath : string = environment.configPath;
-	private prefixUrl : string;
-	private api : Object = {};
+	private currentUser: Object;
+	private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+    private configPath: string = environment.configPath;
+	private prefixUrl: string;
+	private api: Object = {};
 	private promise;
 
 	constructor(backend: XHRBackend,
 		defaultOptions: RequestOptions,
 		private router: Router,
-		private config : Object)
+		private config: Object)
 	{
 		super(backend, defaultOptions);
-		this.api = this.config["api"];
+		this.api = this.config['api'];
 	}
 
 	/**
@@ -80,37 +80,37 @@ export class HttpInterceptor extends Http {
     }
 
 	private catchErrors() {
-		return (res : Response) => {
+		return (res: Response) => {
 			if (res.status == 401) {
 				console.debug('Caught 401, logging out!')
-				localStorage.removeItem("currentUser");
+				localStorage.removeItem('currentUser');
 				this.router.navigate(['/login']);
 			}
 
 			// SETUP is required
 			// Maybe you ask why 442. Well, 42 is answer to everything, right?
 			else if (res.status == 442) {
-				console.debug("Setup is required. Redirecting to /setup");
+				console.debug('Setup is required. Redirecting to /setup');
 				this.router.navigate(['/setup']);
 			}
 			return Observable.throw(res);
 		};
 	}
 
-	private getCurrentUser() : Object {
+	private getCurrentUser(): Object {
 		return JSON.parse(localStorage.getItem('currentUser'));
 	}
 
 	/**
 	  * Create URL string for the request based on local configuration
 	  */
-	private buildUrl(url : string) {
-		let urlString = "";
+	private buildUrl(url: string) {
+		let urlString = '';
 
-		urlString += this.api["proto"] || "";
-		urlString += this.api["host"] || "";
-		urlString += this.api["port"] ? ":" + this.api["port"] : "";
-		urlString += this.api["url"] || environment.apiUrl || "";
+		urlString += this.api['proto'] || '';
+		urlString += this.api['host'] || '';
+		urlString += this.api['port'] ? ':' + this.api['port'] : '';
+		urlString += this.api['url'] || environment.apiUrl || '';
 		return urlString + url;
 	}
 }

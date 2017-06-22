@@ -15,8 +15,8 @@ if (environment.production) {
   */
 export function main() {
 	return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", environment.configPath);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', environment.configPath);
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(xhr.response);
@@ -30,7 +30,7 @@ export function main() {
 }
 
 // Fetch the config before bootstraping the app
-main().then((data : string) => {
+main().then((data: string) => {
 	platformBrowserDynamic().bootstrapModule(initApp(JSON.parse(data)));
 });
 

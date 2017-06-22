@@ -4,5 +4,5 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class nConfService {
-	constructor(private http : Http) {}	
+	constructor(private http: Http) {}
 }

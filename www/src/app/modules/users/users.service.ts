@@ -8,24 +8,24 @@ export class UsersService {
 
 	constructor(private http: Http) { }
 
-	add(user : Object) {
+	add(user: Object) {
 		return this.http.post('/users', user)
             .map((response: Response) => {
 				// User successfully added
 				// Extract data from response
-				let body : Object = response.json();
+				const body: Object = response.json();
 
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
-	remove(id : string) {
+	remove(id: string) {
 		return this.http.delete('/users/' + id)
 			.map((response: Response) => {
 				// User successfully added
 				// Extract data from response
-				let body : Object = response.json();
+				const body: Object = response.json();
 
 				return body;
 			})
@@ -34,34 +34,34 @@ export class UsersService {
 
 	list() {
 		return this.http.get('/users')
-			.map((response : Response) => response.json())
+			.map((response: Response) => response.json())
 			.catch(this.handleError);
 	}
 
-	get(id : String) {
+	get(id: String) {
 		return this.http.get('/users/' + id)
 			.map((response: Response) => {
 				// User successfully added
 				// Extract data from response
-				let body : Object = response.json();
+				const body: Object = response.json();
 
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
-	update(id : String, user : Object) {
+	update(id: String, user: Object) {
 		return this.http.put('/users/' + id, user)
 			.map((response: Response) => {
 				// User successfully updated
 				// Extract data from response
-				let body : Object = response.json();
+				const body: Object = response.json();
 
 				return body;
 			})
 			.catch(this.handleError);
 	}
-	handleError(err : Response | any) {
+	handleError(err: Response | any) {
 		return Promise.reject(err);
 	}
 

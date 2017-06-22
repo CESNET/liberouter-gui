@@ -10,16 +10,16 @@ import { AuthService } from 'app/services';
 })
 export class SetupComponent implements OnInit {
 
-	admin : Object = {
-		username : "",
-		password : "",
-		password2 : ""
+	admin: Object = {
+		username : '',
+		password : '',
+		password2 : ''
 	};
 
-	error = "";
+	error = '';
 
-	constructor( private authService : AuthService
-               , private router : Router
+	constructor( private authService: AuthService
+               , private router: Router
                ) { }
 
 	ngOnInit() {
@@ -28,7 +28,7 @@ export class SetupComponent implements OnInit {
 	onSubmit() {
 		this.authService.admin(this.admin).subscribe(
 		    data => {
-		        this.router.navigate(["/login"]);
+		        this.router.navigate(['/login']);
 		    },
 		    err => {
 				this.error = err;

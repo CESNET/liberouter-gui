@@ -11,15 +11,15 @@ import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 import { NerdComponent } from './nerd.component';
 import { NerdModalComponent } from './nerd-modal/nerd-modal.component'
 
-const routes : Routes = [{
+const routes: Routes = [{
     path : 'nerd',
     component : NerdComponent,
     canActivate : [AuthGuard],
     data : {
         role : 10,
-        name : "NERD",
-        description : "Network Entity Reputation Database",
-        icon : "fa-user-secret"
+        name : 'NERD',
+        description : 'Network Entity Reputation Database',
+        icon : 'fa-user-secret'
     }
 }]
 

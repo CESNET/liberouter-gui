@@ -9,15 +9,15 @@ import { AuthService, ConfigService } from './services';
   providers : [AuthService, ConfigService]
 })
 export class AppComponent {
-	isLoginPage : boolean = false;
-	user =  { user : {username : ""}};
-	modules : Array<Object> = [];
-	children : Array<Object>= [];
+	isLoginPage = false;
+	user =  { user : {username : ''}};
+	modules: Array<Object> = [];
+	children: Array<Object>= [];
 
-	constructor(private router : Router,
+	constructor(private router: Router,
 				private route:ActivatedRoute,
-				private auth : AuthService,
-				private config : ConfigService) {}
+				private auth: AuthService,
+				private config: ConfigService) {}
 
 	ngOnInit() {
 		this.config.load();
@@ -26,10 +26,10 @@ export class AppComponent {
 			/* we only want to react if it's the final active route */
 			if (val instanceof NavigationEnd) {
 				/* the variable curUrlTree holds all params, queryParams, segments and fragments from the current (active) route */
-				if (this.router.url == "/setup") {
+				if (this.router.url == '/setup') {
 					this.isLoginPage = true;
 				}
-				else if (this.router.url == "/login") {
+				else if (this.router.url == '/login') {
 					this.isLoginPage = true;
 					this.logout();
 				} else {
@@ -44,7 +44,7 @@ export class AppComponent {
 	}
 
 	getModules() {
-		for(let route of this.router.config ) {
+		for(const route of this.router.config ) {
 			if (route.data && route.data['name']) {
 				route.data['path'] = route.path;
 				this.modules.push(route.data);
@@ -52,7 +52,7 @@ export class AppComponent {
 		}
 	}
 
-	setPath(path : Array<String>) {
+	setPath(path: Array<String>) {
 		this.router.navigate(path);
 	}
 
@@ -64,20 +64,20 @@ export class AppComponent {
 			return;
 		}
 
-		console.info("I should check the session: " + this.user["session_id"]);
+		console.info('I should check the session: ' + this.user['session_id']);
 		this.auth.checkSession().subscribe(
 			data => {},
 			error => {
 				console.log(error.status)
-				console.error("The session \"" + this.user["session_id"] + "\" is invalid");
+				console.error('The session "' + this.user['session_id'] + '" is invalid');
 				this.logout();
 			}
 		)
 	}
 
 	private logout() {
-		localStorage.removeItem("currentUser");
-		this.user = { user : {username : ""}};
+		localStorage.removeItem('currentUser');
+		this.user = { user : {username : ''}};
 		this.router.navigate(['/login']);
 	}
 }

@@ -52,17 +52,17 @@ import { EmailActionComponent } from './reporter/actions/email-action/email-acti
 import { TrapActionComponent } from './reporter/actions/trap-action/trap-action.component';
 import { WardenActionComponent } from './reporter/actions/warden-action/warden-action.component';
 
-const nemeaRoutes : Routes = [
+const nemeaRoutes: Routes = [
 	{
 		path : 'nemea',
 		component : nemeaBase,
 		canActivate : [AuthGuard],
 		data : {
 			basepath : true,
-			name : "NEMEA",
-			description : "System for network traffic analysis and anomaly detection.",
-			icon : "fa-grav",
-			img : "path/to/img",
+			name : 'NEMEA',
+			description : 'System for network traffic analysis and anomaly detection.',
+			icon : 'fa-grav',
+			img : 'path/to/img',
 			role : 10
 		},
 		children : [

@@ -13,33 +13,33 @@ import { EventItemComponent } from './event-item/event-item.component';
 })
 export class EventsComponent implements OnInit {
 
-	events : any;
-	remaining : Object = {
+	events: any;
+	remaining: Object = {
 		total : -1
 	}
 
-	from_date : NgbDateStruct;
-	from_time : NgbTimeStruct;
-	to_date : NgbDateStruct;
-	to_time : NgbTimeStruct;
+	from_date: NgbDateStruct;
+	from_time: NgbTimeStruct;
+	to_date: NgbDateStruct;
+	to_time: NgbTimeStruct;
 
 	private now = new Date();
 
-	query : Object;
+	query: Object;
 
-	loadBtn = "LOAD";
+	loadBtn = 'LOAD';
 	error;
 	totalWhitelisted = 0;
 
-	constructor(private eventsService : EventsService,
-				private router : Router,
-				private route : ActivatedRoute) { }
+	constructor(private eventsService: EventsService,
+				private router: Router,
+				private route: ActivatedRoute) { }
 
 	ngOnInit() {
-		this.loadBtn = "LOADING...";
+		this.loadBtn = 'LOADING...';
 
 		// Get all URL params
-		this.route.queryParams.subscribe((params : Params) => {
+		this.route.queryParams.subscribe((params: Params) => {
 			this.reset(params);
 
 			// none are set, we can continue to fetch last 100 events
@@ -47,10 +47,10 @@ export class EventsComponent implements OnInit {
 				this.eventsService.last_events(100).subscribe(
 					(data) => {
 						this.events = data;
-						this.loadBtn = "LOAD";
+						this.loadBtn = 'LOAD';
 						this.countWhitelisted();
 					},
-					(error : Object) => this.processError(error)
+					(error: Object) => this.processError(error)
 				);
 			} else {
 				console.debug('should load by params')
@@ -61,27 +61,27 @@ export class EventsComponent implements OnInit {
 		});
 	}
 
-	private processData(data : any) {
+	private processData(data: any) {
 		this.remaining = data.pop();
 		this.events = data;
-		this.loadBtn = "LOAD";
+		this.loadBtn = 'LOAD';
 		//this.setParams();
 		this.countWhitelisted();
 	}
 
-	private appendData(data : any) {
+	private appendData(data: any) {
 		this.remaining = data.pop();
 		this.events = this.events.concat(data);
-		this.loadBtn = "LOAD";
+		this.loadBtn = 'LOAD';
 		//this.setParams();
 		this.countWhitelisted();
 	}
 
 
-	private processError(error : Object) {
+	private processError(error: Object) {
 		console.log(error);
 		this.error = error;
-		this.loadBtn = "LOAD";
+		this.loadBtn = 'LOAD';
 		this.setParams();
 	}
 
@@ -95,8 +95,8 @@ export class EventsComponent implements OnInit {
 	private params() {
 		console.log('setting params');
 
-		let fromDate = this.createDate(this.query["from"]);
-		let toDate = this.createDate(this.query["to"]);
+		const fromDate = this.createDate(this.query['from']);
+		const toDate = this.createDate(this.query['to']);
 
 		// Date is ommitted and will be deducted from the 'from' field
 		return {
@@ -121,14 +121,14 @@ export class EventsComponent implements OnInit {
 	}
 
 	private resetParams() {
-		this.remaining["total"] = -1;
+		this.remaining['total'] = -1;
 
 		this.router.navigate(['nemea/events'], {queryParams : {}});
 	}
 
 	reset(params = {}) {
-		let from_time = params["from"] ? new Date(+params["from"]) : new Date();
-		let to_time = params["to"] ? new Date(+params["to"]) : new Date();
+		const from_time = params['from'] ? new Date(+params['from']) : new Date();
+		const to_time = params['to'] ? new Date(+params['to']) : new Date();
 
 		console.log(from_time)
 
@@ -147,13 +147,13 @@ export class EventsComponent implements OnInit {
 				hour: to_time.getHours(),
 				minute: to_time.getMinutes()
 			},
-			description : params["description"] || "",
-			category : params["category"] || "",
-			orderby : params["orderby"] || "DetectTime",
-			dir : params["dir"] || -1,
-			limit : params["limit"] || 100,
-			srcip : params["srcip"] || "",
-			dstip : params["srcip"] || ""
+			description : params['description'] || '',
+			category : params['category'] || '',
+			orderby : params['orderby'] || 'DetectTime',
+			dir : params['dir'] || -1,
+			limit : params['limit'] || 100,
+			srcip : params['srcip'] || '',
+			dstip : params['srcip'] || ''
 		}
 
 		this.from_date = {
@@ -180,14 +180,14 @@ export class EventsComponent implements OnInit {
 	}
 
 	runQuery(append = false) {
-		this.loadBtn = "LOADING...";
+		this.loadBtn = 'LOADING...';
 
-		let queryParams = this.params();
+		const queryParams = this.params();
 		console.log(queryParams)
 
 		// Convert to unix timestamp (second)
-		queryParams["to"] = Math.floor(queryParams["to"]/1000)
-		queryParams["from"] = Math.floor(queryParams["from"]/1000)
+		queryParams['to'] = Math.floor(queryParams['to']/1000)
+		queryParams['from'] = Math.floor(queryParams['from']/1000)
 
 		// Inital load of events and we need deeper history
 		if (append) {
@@ -204,12 +204,12 @@ export class EventsComponent implements OnInit {
 				else
 					this.processData(data);
 			},
-			(error : Object) => this.processError(error));
+			(error: Object) => this.processError(error));
 	}
 
-	getNext(time : number) {
-		console.log("getnext")
-		let date = new Date(time);
+	getNext(time: number) {
+		console.log('getnext')
+		const date = new Date(time);
 		this.query['to'] = {
 				year: date.getFullYear(),
 				month: date.getMonth(),
@@ -224,9 +224,9 @@ export class EventsComponent implements OnInit {
 	}
 
 	private countWhitelisted() {
-	    for (let item of this.events) {
+	    for (const item of this.events) {
 	        try {
-	            if (item["_CESNET"]["Whitelisted"] == "True")
+	            if (item['_CESNET']['Whitelisted'] == 'True')
 	                this.totalWhitelisted += 1;
             } catch(e) {
                 continue;
@@ -239,34 +239,34 @@ export class EventsComponent implements OnInit {
 	  * for both the date and time
 	  */
 	selectDateFrom(event) {
-		if (event["hour"] && event["minute"]) {
-			this.query["from"]["hour"] = event["hour"];
-			this.query["from"]["minute"] = event["minute"];
+		if (event['hour'] && event['minute']) {
+			this.query['from']['hour'] = event['hour'];
+			this.query['from']['minute'] = event['minute'];
 		} else {
-			this.query["from"]["year"] = event["year"];
-			this.query["from"]["month"] = event["month"];
-			this.query["from"]["day"] = event["day"];
+			this.query['from']['year'] = event['year'];
+			this.query['from']['month'] = event['month'];
+			this.query['from']['day'] = event['day'];
 		}
 	}
 
 	selectDateTo(event) {
-		if (event["hour"] && event["minute"]) {
-			this.query["to"]["hour"] = event["hour"];
-			this.query["to"]["minute"] = event["minute"];
+		if (event['hour'] && event['minute']) {
+			this.query['to']['hour'] = event['hour'];
+			this.query['to']['minute'] = event['minute'];
 		} else {
-			this.query["to"]["year"] = event["year"];
-			this.query["to"]["month"] = event["month"];
-			this.query["to"]["day"] = event["day"];
+			this.query['to']['year'] = event['year'];
+			this.query['to']['month'] = event['month'];
+			this.query['to']['day'] = event['day'];
 		}
 	}
 
-	createDate(date : Object) {
-		let now = new Date();
-		let newdate = new Date(date["year"] || now.getFullYear(),
-					   date["month"] || now.getMonth(),
-					   date["day"] || now.getDate(),
-					   date["hour"] || now.getHours(),
-					   date["minute"] || now.getMinutes())
+	createDate(date: Object) {
+		const now = new Date();
+		const newdate = new Date(date['year'] || now.getFullYear(),
+					   date['month'] || now.getMonth(),
+					   date['day'] || now.getDate(),
+					   date['hour'] || now.getHours(),
+					   date['minute'] || now.getMinutes())
 		return newdate;
 	}
 }

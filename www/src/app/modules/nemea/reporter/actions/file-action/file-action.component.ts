@@ -12,8 +12,8 @@ export class FileActionComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit() {
-		if (!("dir" in this.data))
-			this.data["dir"] = false;
+		if (!('dir' in this.data))
+			this.data['dir'] = false;
 	}
 
 	isBool(item) {}

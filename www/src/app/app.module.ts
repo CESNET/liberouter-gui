@@ -52,7 +52,7 @@ const appRoutes: Routes = [
   * Used because we need the config before HttpInterceptor is created
   * Inspired by: https://stackoverflow.com/questions/40909822/how-to-use-httpinterceptor-and-configservice-both-at-the-same-time-in-angular2
   */
-export function initApp(config : any) {
+export function initApp(config: any) {
 	@NgModule({
 	  declarations: [
 		AppComponent,
@@ -81,7 +81,7 @@ export function initApp(config : any) {
 		{
 			provide : Http,
 			useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-				router: Router, config : string) => {
+				router: Router, config: string) => {
 					return new HttpInterceptor(xhrBackend, requestOptions, router, config);
 				},
 			deps: [XHRBackend, RequestOptions, Router, config]

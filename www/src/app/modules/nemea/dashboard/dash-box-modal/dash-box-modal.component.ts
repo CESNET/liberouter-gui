@@ -15,7 +15,7 @@ const metrics = ['Category', 'Node.Name', 'Node.SW', 'Target.IP4', 'Source.IP4']
 })
 export class DashBoxModalComponent implements OnInit {
 
-	@Input() data : Object;
+	@Input() data: Object;
 
 	// Array of options for type selector
 	private types = [
@@ -50,7 +50,7 @@ export class DashBoxModalComponent implements OnInit {
 	/**
 	  * Typeahead lookup
 	  */
-	searchMetric = (term : Observable<string>) => {
+	searchMetric = (term: Observable<string>) => {
 		return term
 			.debounceTime(200)
 			.distinctUntilChanged()
@@ -61,7 +61,7 @@ export class DashBoxModalComponent implements OnInit {
 	/**
 	  * Closing a modal with a button => save the state
 	  */
-	close(result : any) : void {
+	close(result: any): void {
 		console.log(result);
 		this.data = Object.assign(this.data,this.backup);
 		this.activeModal.close(result);
@@ -70,7 +70,7 @@ export class DashBoxModalComponent implements OnInit {
 	/**
 	  * Dismissal of a modal window => don't save the state
 	  */
-	dismiss(result : any) : void {
+	dismiss(result: any): void {
 		console.log(result);
 		this.activeModal.dismiss(result);
 	}

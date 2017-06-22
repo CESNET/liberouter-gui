@@ -2,39 +2,39 @@ export interface Box {
 	/**
 	  * Configuration of the box itself
 	  */
-	config : any;
+	config: any;
 	/**
 	  * Title of the box
 	  */
-	title : string;
+	title: string;
 	/**
 	  * Content which to display below data
 	  */
-	content : string;
+	content: string;
 	/**
 	  * Define type of the box
 	  * Value: chart|top|number
 	  */
-	type : string;
+	type: string;
 	/**
 	  * Options for the graph
 	  */
-	options : Object;
+	options: Object;
 	/**
 	  * time from which to analyze events
 	  */
-	beginTime : number;
+	beginTime: number;
 	/**
 	  * ending time for analyzing events, usually now
 	  * TODO: add time offset for history views
 	  */
-	endTime : number;
+	endTime: number;
 	/**
 	  * Time window size in hours
 	  */
-	period : number;
+	period: number;
 	/**
 	  * metric for analysis
 	  */
-	metric : string;
+	metric: string;
 }

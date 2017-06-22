@@ -7,7 +7,7 @@ import { environment } from 'environments/environment';
 export class ConfigService {
 
     private config: Object = null;
-    private baseUrl : string = "/configuration";
+    private baseUrl = '/configuration';
 
     constructor(private http: Http) {}
 
@@ -35,7 +35,7 @@ export class ConfigService {
         });
     }
 
-    public getModule(name : string) {
+    public getModule(name: string) {
 		return this.http.get(this.baseUrl + '/' + name)
 			.map( res => res.json())
 			.catch(this.handleError);
@@ -47,26 +47,26 @@ export class ConfigService {
 			.catch(this.handleError);
     }
 
-    public update(name : string, data : Object) {
+    public update(name: string, data: Object) {
     	console.log(data);
 		return this.http.put(this.baseUrl + '/' + name, data)
 			.map( res => res.json())
 			.catch(this.handleError);
     }
 
-    public add(data : Object) {
+    public add(data: Object) {
 		return this.http.post(this.baseUrl, data)
 			.map( res => res.json())
 			.catch(this.handleError);
     }
 
-    public remove(name : string) {
+    public remove(name: string) {
 		return this.http.delete(this.baseUrl + '/' + name)
 			.map( res => res.json())
 			.catch(this.handleError);
     }
 
-    private handleError(err : Response | any) {
+    private handleError(err: Response | any) {
 		return Promise.reject(err);
 	}
 }

@@ -7,15 +7,15 @@ import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { SecurityCloudComponent } from './sc.component'
 
-const routes : Routes = [{
+const routes: Routes = [{
     path : 'security-cloud',
     component : SecurityCloudComponent,
     canActivate : [AuthGuard],
     data : {
         role : 10,
-        name : "Security Cloud",
-        description : "Distributed, highly available IP flow record collector.",
-        icon : "fa-cloud"
+        name : 'Security Cloud',
+        description : 'Distributed, highly available IP flow record collector.',
+        icon : 'fa-cloud'
     }
 }]
 

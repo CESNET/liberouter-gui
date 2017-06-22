@@ -4,12 +4,12 @@ import { Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
 @Injectable()
 export class BoxService {
 
-	constructor(private http : Http) {}
+	constructor(private http: Http) {}
 
 	piechart(box) {
-		let requestOptions = new RequestOptions();
+		const requestOptions = new RequestOptions();
 
-		let params: URLSearchParams = new URLSearchParams();
+		const params: URLSearchParams = new URLSearchParams();
 
 		/**
 		  * Set time window
@@ -24,17 +24,17 @@ export class BoxService {
 		requestOptions.search = params;
 
 		return this.http.get('/nemea/events/aggregate', requestOptions).map(
-			(response : Response) => {
-				let body = response.json()
+			(response: Response) => {
+				const body = response.json()
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
 	barchart(box) {
-		let requestOptions = new RequestOptions();
+		const requestOptions = new RequestOptions();
 
-		let params: URLSearchParams = new URLSearchParams();
+		const params: URLSearchParams = new URLSearchParams();
 
 		/**
 		  * Set time window
@@ -49,34 +49,34 @@ export class BoxService {
 		requestOptions.search = params;
 
 		return this.http.get('/nemea/events/aggregate', requestOptions).map(
-			(response : Response) => {
-				let body = response.json()
+			(response: Response) => {
+				const body = response.json()
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
 	count(box) {
-		let requestOptions = new RequestOptions();
-		let params: URLSearchParams = new URLSearchParams();
+		const requestOptions = new RequestOptions();
+		const params: URLSearchParams = new URLSearchParams();
 
 		params.set('begintime', box['beginTime']);
 		params.set('endtime', box['endTime']);
-		params.set('category', "any");
+		params.set('category', 'any');
 
 		requestOptions.search = params;
 
 		return this.http.get('/nemea/events/count', requestOptions).map(
-			(response : Response) => {
-				let body = response.json()
+			(response: Response) => {
+				const body = response.json()
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
 	top(box) {
-		let requestOptions = new RequestOptions();
-		let params: URLSearchParams = new URLSearchParams();
+		const requestOptions = new RequestOptions();
+		const params: URLSearchParams = new URLSearchParams();
 
 		params.set('begintime', box['beginTime']);
 		params.set('endtime', box['endTime']);
@@ -84,15 +84,15 @@ export class BoxService {
 		requestOptions.search = params;
 
 		return this.http.get('/nemea/events/top', requestOptions).map(
-			(response : Response) => {
-				let body = response.json()
+			(response: Response) => {
+				const body = response.json()
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
 
-	private handleError(err : Response | any) {
+	private handleError(err: Response | any) {
 		return Promise.reject(err);
 	}
 }

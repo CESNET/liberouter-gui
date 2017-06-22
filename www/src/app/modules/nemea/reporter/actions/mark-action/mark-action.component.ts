@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class MarkActionComponent implements OnInit {
 
-	@Input() data : Object;
+	@Input() data: Object;
 
 	constructor() { }
 

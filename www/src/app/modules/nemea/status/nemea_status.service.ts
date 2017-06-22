@@ -4,12 +4,12 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class nStatService {
-	constructor(private http : Http) {}
+	constructor(private http: Http) {}
 
 	stats() {
 		return this.http.get('/nemea/status/stats').map(
-			(response : Response) => {
-				let body : Object = response.json();
+			(response: Response) => {
+				const body: Object = response.json();
 				return body;
 			})
 			.catch(this.handleError);
@@ -17,14 +17,14 @@ export class nStatService {
 
 	topology() {
 		return this.http.get('/nemea/status').map(
-			(response : Response) => {
-				let body = response.json();
+			(response: Response) => {
+				const body = response.json();
 				return body;
 			})
 			.catch(this.handleError);
 	}
 
-	private handleError(err : Response | any) {
+	private handleError(err: Response | any) {
 		return Promise.reject(err);
 	}
 }

@@ -46,16 +46,16 @@ export class DashBoxComponent {
 	@Output() onDuplicate = new EventEmitter<Object>();
 	@Output() onSave = new EventEmitter<Object>();
 
-	@ViewChild("piechart")
+	@ViewChild('piechart')
 	private piechart;
 
-	@ViewChild("areachart")
+	@ViewChild('areachart')
 	private areachart;
 
 	private data = [];
-	private modalRef : any;
+	private modalRef: any;
 
-	constructor(private boxService : BoxService,
+	constructor(private boxService: BoxService,
 			   private modalService: NgbModal) {
 	}
 
@@ -67,14 +67,14 @@ export class DashBoxComponent {
 		this.timeShift();
 
 		switch (this.box.type) {
-			case "piechart":
+			case 'piechart':
 				// Fetch data
 				this.boxService.piechart(this.box).subscribe(
 					(data) => { this.data = data },
 					(err) => { console.error(err) }
 				);
 				break;
-			case "barchart":
+			case 'barchart':
 				// Fetch data
 				this.boxService.barchart(this.box).subscribe(
 					(data) => { this.data = data; this.processDates(); },
@@ -82,14 +82,14 @@ export class DashBoxComponent {
 				);
 				break;
 
-			case "count":
+			case 'count':
 				this.boxService.count(this.box).subscribe(
 					(data) => { this.data = data },
 					(err) => { console.error(err) }
 				);
 				break;
 
-			case "top":
+			case 'top':
 				this.boxService.top(this.box).subscribe(
 					(data) => { this.data = data },
 					(err) => { console.error(err) }
@@ -97,7 +97,7 @@ export class DashBoxComponent {
 				break;
 
 			default:
-				console.warn("unknown type '%s'", this.box.type);
+				console.warn('unknown type \'%s\'', this.box.type);
 				break;
 		}
 	}
@@ -109,9 +109,9 @@ export class DashBoxComponent {
 	  * period is the size of time window
 	  */
 	timeShift() {
-		let now = new Date();
+		const now = new Date();
 
-        this.box.beginTime = Math.floor((now.getTime() - this.box["period"]*60*60*1000 - this.offset * 60 * 60 * 1000)/1000);
+        this.box.beginTime = Math.floor((now.getTime() - this.box['period']*60*60*1000 - this.offset * 60 * 60 * 1000)/1000);
         this.box.endTime = Math.floor((Number(now) - this.offset * 60 * 60 * 1000)/1000);
     }
 
@@ -136,10 +136,10 @@ export class DashBoxComponent {
 	  * unfortunately it cannot display hours/minutes becuase ngx sends just date
 	  */
     xAxis = function(d) {
-    	let day = d.getDate();
-    	let month = d.getMonth();
-    	let hours = d.getHours();
-    	let minutes = d.getMinutes();
+    	const day = d.getDate();
+    	const month = d.getMonth();
+    	const hours = d.getHours();
+    	const minutes = d.getMinutes();
 		return day + '/' + month;
 	};
 
@@ -181,7 +181,7 @@ export class DashBoxComponent {
 			},
 			(reason) => {
 				// Dismissal of the modal, do nothing
-				console.debug("Modal dismissed");
+				console.debug('Modal dismissed');
 			}
 		);
 	}
@@ -190,8 +190,8 @@ export class DashBoxComponent {
 	  * Remove this box from the array of boxes
 	  */
 	remove() {
-		console.debug("Deleting box");
-		this.onDelete.emit({"box" : this.box, "index" : this.index });
+		console.debug('Deleting box');
+		this.onDelete.emit({'box' : this.box, 'index' : this.index });
 	}
 
 	/**

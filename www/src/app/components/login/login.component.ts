@@ -11,20 +11,20 @@ import { AuthService } from 'app/services';
 export class LoginComponent implements OnInit {
 
 	loading = false;
-	loginBtn = "Login";
+	loginBtn = 'Login';
 	user = {
-		id : "",
-		username : "",
-		password : "",
-		email : ""
+		id : '',
+		username : '',
+		password : '',
+		email : ''
 	};
 	formError = false;
-	formErrorMsg = "";
-	returnUrl : String;
+	formErrorMsg = '';
+	returnUrl: String;
 
 	constructor(
-		private route : ActivatedRoute,
-		private router : Router,
+		private route: ActivatedRoute,
+		private router: Router,
 		private authService: AuthService) {}
 
 	ngOnInit() {
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
 		// check if the user is logged in and if so redirect them to HP
-		let lsUser = JSON.parse(localStorage.getItem("currentUser"));
+		const lsUser = JSON.parse(localStorage.getItem('currentUser'));
 
 		if (lsUser != null && lsUser['session_id']) {
 			this.user = lsUser;
@@ -40,27 +40,27 @@ export class LoginComponent implements OnInit {
 		}
 	}
 
-	setError(msg : string) {
+	setError(msg: string) {
 		this.formError = true;
 		this.formErrorMsg = msg;
 		this.loading = false;
-		this.loginBtn = "Login";
+		this.loginBtn = 'Login';
 	}
 
 	unsetError() {
 		this.formError = false;
-		this.formErrorMsg = "";
+		this.formErrorMsg = '';
 		this.loading = false;
-		this.loginBtn = "Login";
+		this.loginBtn = 'Login';
 	}
 
 	login() {
 		// Authenticate the user and redirect them
 		this.loading = true;
-		this.loginBtn = "Loading...";
+		this.loginBtn = 'Loading...';
 
-		if (this.user.username == "" || this.user.password == "") {
-			this.setError("Missing username or password");
+		if (this.user.username == '' || this.user.password == '') {
+			this.setError('Missing username or password');
 			return;
 		}
 
@@ -72,14 +72,14 @@ export class LoginComponent implements OnInit {
 				},
 				error => {
 					if (error.status > 499) {
-						this.setError("Can't connect to server.");
+						this.setError('Can\'t connect to server.');
 						return;
 					}
 					try {
-						let body = JSON.parse(error['_body']);
+						const body = JSON.parse(error['_body']);
 						this.setError(body['message']);
 					} catch(err) {
-						this.setError("Error logging in.");
+						this.setError('Error logging in.');
 					}
 				}
 			);

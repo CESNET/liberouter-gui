@@ -18,7 +18,7 @@ export class DashboardViewComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit() {
-		this.boxes = this.dashboard["boxes"];
+		this.boxes = this.dashboard['boxes'];
 	}
 	/**
 	  * Grid configuration taken from: https://github.com/BTMorton/angular2-grid/blob/master/demo-dashboard/app/app.component.ts
@@ -51,9 +51,9 @@ export class DashboardViewComponent implements OnInit {
 	  * Add default box to boxes array
 	  */
 	addCleanBox() {
-		console.log("should add box");
+		console.log('should add box');
 
-		let box = {
+		const box = {
 			config : {
 				'dragHandle': '.handle',
 				'sizex': 10,
@@ -73,14 +73,14 @@ export class DashboardViewComponent implements OnInit {
 				'minWidth': 0,
 				'minHeight': 0,
 			},
-			title : "New Box",
-			content : "",
+			title : 'New Box',
+			content : '',
 			options : null,
-			type : "piechart",
+			type : 'piechart',
 			beginTime : -1,
 			endTime : -1,
 			period : 240,
-			metric : "Category"
+			metric : 'Category'
 		}
 
 		this.boxes.push(box);
@@ -90,7 +90,7 @@ export class DashboardViewComponent implements OnInit {
 
 	}
 
-	addBox(box : Box) {
+	addBox(box: Box) {
 		this.boxes.push(box);
 	}
 
@@ -98,9 +98,9 @@ export class DashboardViewComponent implements OnInit {
 	  * Remove a box from boxes array and save it
 	  */
 	deleteBox(box) {
-		console.log("should delete: ", box.box, box.index);
+		console.log('should delete: ', box.box, box.index);
 
-		let index = this.boxes.indexOf(box.box, 0);
+		const index = this.boxes.indexOf(box.box, 0);
 
 		if (index > -1) {
 			this.boxes.splice(index, 1);
@@ -113,10 +113,10 @@ export class DashboardViewComponent implements OnInit {
 	  *
 	  * TODO: this causes the browser to freeze, don't know why
 	  */
-	duplicateBox(box : Box) {
-		console.log("duplicating")
-		let newbox = Object.assign({}, box);
-		newbox["title"] = "Duplicate of " + newbox["title"];
+	duplicateBox(box: Box) {
+		console.log('duplicating')
+		const newbox = Object.assign({}, box);
+		newbox['title'] = 'Duplicate of ' + newbox['title'];
 		this.boxes.push(newbox);
 	}
 

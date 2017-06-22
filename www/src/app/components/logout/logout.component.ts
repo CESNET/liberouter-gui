@@ -9,10 +9,10 @@ import { Router } from '@angular/router';
   providers : [AuthService]
 })
 export class LogoutComponent implements OnInit {
-	returnUrl = "/login";
+	returnUrl = '/login';
 
 	constructor(
-		private router : Router,
+		private router: Router,
 		private authService: AuthService) {}
 
 	ngOnInit() {
@@ -20,15 +20,15 @@ export class LogoutComponent implements OnInit {
 			.subscribe(
 				data => {
 					console.log('Success logging out.');
-					localStorage.removeItem("currentUser");
+					localStorage.removeItem('currentUser');
 					this.router.navigate([this.returnUrl]);
 				},
 				error => {
 					console.log('Error logging out.');
-					localStorage.removeItem("currentUser");
+					localStorage.removeItem('currentUser');
 					this.router.navigate([this.returnUrl]);
 				}
 			);
-	} 
+	}
 
 }

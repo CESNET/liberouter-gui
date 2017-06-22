@@ -8,7 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DashModalComponent implements OnInit {
 
-	@Input() data : Object;
+	@Input() data: Object;
 
 	private backup;
 
@@ -21,7 +21,7 @@ export class DashModalComponent implements OnInit {
 	/**
 	  * Closing a modal with a button => save the state
 	  */
-	close(result : any) : void {
+	close(result: any): void {
 		console.log(result);
 		this.data = Object.assign(this.data,this.backup);
 		this.activeModal.close(result);
@@ -30,7 +30,7 @@ export class DashModalComponent implements OnInit {
 	/**
 	  * Dismissal of a modal window => don't save the state
 	  */
-	dismiss(result : any) : void {
+	dismiss(result: any): void {
 		console.log(result);
 		this.activeModal.dismiss(result);
 	}

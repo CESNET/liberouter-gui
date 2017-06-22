@@ -9,12 +9,12 @@ import { nStatService } from './nemea_status.service';
 	providers : [nStatService]
 })
 export class nemeaStatusComponent {
-	error : Object;
-	refreshing : Boolean = false;
-	last_refresh_time : Date = new Date();
-	img_path : any;
-	data : Object;
-	id : any;
+	error: Object;
+	refreshing: Boolean = false;
+	last_refresh_time: Date = new Date();
+	img_path: any;
+	data: Object;
+	id: any;
 
 	intervals = [
 		{value: 1, viewValue: '1 s'},
@@ -27,14 +27,14 @@ export class nemeaStatusComponent {
 	];
 
 	// Refresh interval in seconds
-	refresh_interval : number = 5;
+	refresh_interval = 5;
 
-	constructor(private api : nStatService) {}
+	constructor(private api: nStatService) {}
 
 	ngOnInit() {
 		this.api.topology().subscribe(
-			(data : Object) => this.processTopology(data),
-			(error : Object) => this.processError(error));
+			(data: Object) => this.processTopology(data),
+			(error: Object) => this.processError(error));
 
 		this.refresh();
 		this.id = setInterval(() => { this.refresh(); }, (this.refresh_interval * 1000));
@@ -56,7 +56,7 @@ export class nemeaStatusComponent {
 
 		this.api.stats().subscribe(
 			(data) => this.processData(data),
-			(error : Object) => this.processError(error)
+			(error: Object) => this.processError(error)
 		)
 	}
 
@@ -74,31 +74,31 @@ export class nemeaStatusComponent {
 		this.id = setInterval(() => { this.refresh() }, this.refresh_interval*1000);
 	}
 
-	processTopology(data : any) {
+	processTopology(data: any) {
 		console.log(data);
 		this.data = data;
 
-		for (var idx in this.data) {
+		for (const idx in this.data) {
 			this.data[idx][1]['outputs-avg'] = Array();
-			for (var idx2 in this.data[idx][1]['outputs']) {
+			for (const idx2 in this.data[idx][1]['outputs']) {
 			this.data[idx][1]['outputs-avg'] = this.data[idx][1]['outputs-avg'].concat(Object.assign(this.data[idx][1]['outputs'][idx2]))
 			}
 		}
 	}
 
-	processData(data : any) {
+	processData(data: any) {
 		console.log(data);
 		//this.data = data;
-		let time_diff : Number = Date.now() - this.last_refresh_time.getTime();
+		const time_diff: Number = Date.now() - this.last_refresh_time.getTime();
 		this.last_refresh_time = new Date();
 
-		let counters : Object = data['stats'];
+		const counters: Object = data['stats'];
 
-		for (var key in data) {
-			for (var module_idx in this.data) {
+		for (const key in data) {
+			for (const module_idx in this.data) {
 				if (this.data[module_idx][0] == key) {
 
-					let module_item = this.data[module_idx][1];
+					const module_item = this.data[module_idx][1];
 
 					if (module_item['in_counter'] != undefined) {
 						module_item['in_counter'] = (data[key]['INIFC0'] - module_item['INIFC0']) / (Number(time_diff)/1000);
@@ -107,7 +107,7 @@ export class nemeaStatusComponent {
 						}
 
 					//console.log(module_item)
-					for (var output_idx in module_item['outputs']) {
+					for (const output_idx in module_item['outputs']) {
 						module_item['outputs-avg'][output_idx]['sent-msg-avg'] = (data[key]['outputs'][output_idx]['sent-msg'] - module_item['outputs'][output_idx]['sent-msg']) / (Number(time_diff)/1000);
 						module_item['outputs-avg'][output_idx]['drop-msg-avg'] = (data[key]['outputs'][output_idx]['drop-msg'] - module_item['outputs'][output_idx]['drop-msg']) / (Number(time_diff)/1000);
 
@@ -119,14 +119,14 @@ export class nemeaStatusComponent {
 		this.refreshing = false;
 	}
 
-	processError(error : Object) {
+	processError(error: Object) {
 		if (error['status'] >= 404) {
 			this.error = error;
 		}
 		console.log(error);
 	}
 
-	setDropClass(ifc : Object) : string {
+	setDropClass(ifc: Object): string {
 		if (ifc['drop-msg-avg'] == 0) {
 			return('drop-rate-ok');
 		} else if ((ifc['drop-msg-avg']/ifc['send-msg-avg']) < 0.001) {
