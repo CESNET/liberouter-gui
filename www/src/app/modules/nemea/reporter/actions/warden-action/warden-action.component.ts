@@ -6,11 +6,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./warden-action.component.scss']
 })
 export class WardenActionComponent implements OnInit {
-	@Input() data;
+    @Input() data;
 
-	constructor() { }
+    constructor() { }
 
-	ngOnInit() {
-	}
+    ngOnInit() {
+    }
 
 }

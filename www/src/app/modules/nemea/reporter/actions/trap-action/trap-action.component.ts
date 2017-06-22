@@ -7,11 +7,11 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class TrapActionComponent implements OnInit {
 
-	@Input() data;
+    @Input() data;
 
-	constructor() { }
+    constructor() { }
 
-	ngOnInit() {
-	}
+    ngOnInit() {
+    }
 
 }
