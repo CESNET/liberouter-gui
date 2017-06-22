@@ -1,14 +1,13 @@
-import { Component, Pipe, PipeTransform } from '@angular/core';
-import { nStatService } from './nemea_status.service';
+import { Component, OnInit, OnDestroy} from '@angular/core';
+import { NemeaStatusService } from './nemea_status.service';
 
 @Component({
-    //moduleId : module.id.replace("/dist/", "/"),
     selector : 'nemea-status',
     templateUrl : './nemea_status.html',
     styleUrls : ['./nemea_status.css'],
-    providers : [nStatService]
+    providers : [NemeaStatusService]
 })
-export class nemeaStatusComponent {
+export class NemeaStatusComponent implements OnInit, OnDestroy {
     error: Object;
     refreshing: Boolean = false;
     last_refresh_time: Date = new Date();
@@ -29,7 +28,7 @@ export class nemeaStatusComponent {
     // Refresh interval in seconds
     refresh_interval = 5;
 
-    constructor(private api: nStatService) {}
+    constructor(private api: NemeaStatusService) {}
 
     ngOnInit() {
         this.api.topology().subscribe(
@@ -48,7 +47,6 @@ export class nemeaStatusComponent {
 
     refresh() {
         if (this.refreshing) {
-            console.info('Still refreshing')
             return;
         }
 
@@ -75,44 +73,56 @@ export class nemeaStatusComponent {
     }
 
     processTopology(data: any) {
-        console.log(data);
         this.data = data;
 
         for (const idx in this.data) {
-            this.data[idx][1]['outputs-avg'] = Array();
-            for (const idx2 in this.data[idx][1]['outputs']) {
-            this.data[idx][1]['outputs-avg'] = this.data[idx][1]['outputs-avg'].concat(Object.assign(this.data[idx][1]['outputs'][idx2]))
+            if (this.data.hasOwnProperty(idx)) {
+                this.data[idx][1]['outputs-avg'] = Array();
+                for (const idx2 in this.data[idx][1]['outputs']) {
+                    if (this.data[idx][1]['outputs'].hasOwnProperty(idx2)) {
+                        this.data[idx][1]['outputs-avg'] = this.data[idx][1]['outputs-avg']
+                            .concat(Object.assign(this.data[idx][1]['outputs'][idx2]))
+                    }
+                }
             }
         }
     }
 
     processData(data: any) {
         console.log(data);
-        //this.data = data;
         const time_diff: Number = Date.now() - this.last_refresh_time.getTime();
         this.last_refresh_time = new Date();
 
         const counters: Object = data['stats'];
 
         for (const key in data) {
-            for (const module_idx in this.data) {
-                if (this.data[module_idx][0] == key) {
+            if (data.hasOwnProperty(key)) {
+                for (const module_idx in this.data) {
+                    if (this.data.hasOwnProperty(module_idx) && this.data[module_idx][0] === key) {
+                        const module_item = this.data[module_idx][1];
 
-                    const module_item = this.data[module_idx][1];
-
-                    if (module_item['in_counter'] != undefined) {
-                        module_item['in_counter'] = (data[key]['INIFC0'] - module_item['INIFC0']) / (Number(time_diff)/1000);
-                    } else {
-                        module_item['in_counter'] = 0;
+                        if (module_item['in_counter'] !== undefined) {
+                            module_item['in_counter'] = (data[key]['INIFC0'] - module_item['INIFC0'])
+                                / (Number(time_diff)/1000);
+                        } else {
+                            module_item['in_counter'] = 0;
                         }
 
-                    //console.log(module_item)
-                    for (const output_idx in module_item['outputs']) {
-                        module_item['outputs-avg'][output_idx]['sent-msg-avg'] = (data[key]['outputs'][output_idx]['sent-msg'] - module_item['outputs'][output_idx]['sent-msg']) / (Number(time_diff)/1000);
-                        module_item['outputs-avg'][output_idx]['drop-msg-avg'] = (data[key]['outputs'][output_idx]['drop-msg'] - module_item['outputs'][output_idx]['drop-msg']) / (Number(time_diff)/1000);
+                        for (const output_idx in module_item['outputs']) {
+                            if (module_item['outputs'].hasOwnProperty(output_idx)) {
+                                module_item['outputs-avg'][output_idx]['sent-msg-avg'] =
+                                    (data[key]['outputs'][output_idx]['sent-msg']
+                                    - module_item['outputs'][output_idx]['sent-msg'])
+                                    / (Number(time_diff)/1000);
+                                module_item['outputs-avg'][output_idx]['drop-msg-avg'] =
+                                    (data[key]['outputs'][output_idx]['drop-msg']
+                                     - module_item['outputs'][output_idx]['drop-msg'])
+                                     / (Number(time_diff)/1000);
+                            }
+                        }
 
+                        this.data[module_idx][1] = Object.assign(module_item, data[key]);
                     }
-                    this.data[module_idx][1] = Object.assign(module_item, data[key]);
                 }
             }
         }
@@ -127,7 +137,7 @@ export class nemeaStatusComponent {
     }
 
     setDropClass(ifc: Object): string {
-        if (ifc['drop-msg-avg'] == 0) {
+        if (ifc['drop-msg-avg'] === 0) {
             return('drop-rate-ok');
         } else if ((ifc['drop-msg-avg']/ifc['send-msg-avg']) < 0.001) {
             return('drop-rate-low');

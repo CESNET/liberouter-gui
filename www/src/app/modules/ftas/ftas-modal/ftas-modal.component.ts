@@ -12,7 +12,7 @@ export class FtasModalComponent implements OnInit {
     data;
 
     // Backup of model data detached from ngModel
-    private backup;
+    public backup;
 
     constructor(public activeModal: NgbActiveModal) { }
 

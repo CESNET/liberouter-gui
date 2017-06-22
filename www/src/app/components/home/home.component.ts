@@ -12,8 +12,7 @@ export class HomeComponent implements OnInit {
 
     constructor(private router: Router) {}
 
-    ngOnInit()
-    {
+    ngOnInit() {
         // Inspect all available routes and find all modules
         for(const route of this.router.config ) {
             if (route.data && route.data['name']) {

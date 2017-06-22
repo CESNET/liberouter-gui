@@ -81,8 +81,8 @@ export function initApp(config: any) {
         {
             provide : Http,
             useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-                router: Router, config: string) => {
-                    return new HttpInterceptor(xhrBackend, requestOptions, router, config);
+                router: Router, configObject) => {
+                    return new HttpInterceptor(xhrBackend, requestOptions, router, configObject);
                 },
             deps: [XHRBackend, RequestOptions, Router, config]
         }

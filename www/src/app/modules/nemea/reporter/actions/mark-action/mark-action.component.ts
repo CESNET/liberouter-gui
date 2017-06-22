@@ -14,11 +14,11 @@ export class MarkActionComponent implements OnInit {
     ngOnInit() { }
 
     isBool(value) {
-        if (value.value.toLowerCase() == 'true')
+        if (value.value.toLowerCase() === 'true') {
             value.value = true;
-
-        else if (value.value.toLowerCase() == 'false')
+        } else if (value.value.toLowerCase() === 'false') {
             value.value = false;
+        }
 
         return value;
     }

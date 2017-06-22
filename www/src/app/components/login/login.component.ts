@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         this.loginBtn = 'Loading...';
 
-        if (this.user.username == '' || this.user.password == '') {
+        if (this.user.username === '' || this.user.password === '') {
             this.setError('Missing username or password');
             return;
         }

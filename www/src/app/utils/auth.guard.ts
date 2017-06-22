@@ -23,10 +23,9 @@ export class AuthGuard implements CanActivate, CanLoad {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         if (this.isLoggedIn()) {
-        // logged in so return true
-        //console.log(route.data)
+            // logged in so return true
             const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (route.data['role'] == undefined) {
+            if (route.data['role'] === undefined) {
                 console.warn('No role is set for route \'' + route.data['path'] + '\'');
                 return true;
             }

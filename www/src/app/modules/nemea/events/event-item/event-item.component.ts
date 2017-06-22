@@ -24,14 +24,14 @@ export class EventItemComponent implements OnInit {
                 this.params = params;
 
                 if (this.params['id'] &&
-                        this.params['id'] == this.item['_id']['$oid'] &&
+                        this.params['id'] === this.item['_id']['$oid'] &&
                         !this.modalRef) {
                     this.modalRef = this.modalService.open(EventDetailComponent);
                     this.modalRef.componentInstance.data = this.item;
                     this.modalRef.result.then(
                         (result) => {
                             // The modal was closed and we shall redirect
-                            if (result != undefined) {
+                            if (result !== undefined) {
                                 console.log('should redirect', result);
                                 this.router.navigate(result);
                             } else {
@@ -39,7 +39,7 @@ export class EventItemComponent implements OnInit {
                             }
                         },
                         (reason) => {
-                            //dismissal
+                            // dismissal
                             this.unsetId(this.router, this.params)
                         });
                 }

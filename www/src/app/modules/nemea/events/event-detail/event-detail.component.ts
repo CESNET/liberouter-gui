@@ -27,14 +27,13 @@ export class EventDetailComponent implements OnInit {
 
     ftas() {
         // Add source IP to query
-        if (this.data['Source'] != undefined &&
-                this.data['Source'][0]['IP4'] != undefined) {
+        if (this.data['Source'] !== undefined && this.data['Source'][0]['IP4'] !== undefined) {
             this.ftasUrlParams['src_ip'] = this.data['Source'][0]['IP4'][0];
             console.log('adding src IP')
         }
 
         // Add target IP to query
-        if (this.data['Target'] != undefined && this.data['Target'][0]['IP4'] != undefined) {
+        if (this.data['Target'] !== undefined && this.data['Target'][0]['IP4'] !== undefined) {
             this.ftasUrlParams['dst_ip'] = this.data['Target'][0]['IP4'][0];
             console.log('adding dst IP')
         }
@@ -43,13 +42,10 @@ export class EventDetailComponent implements OnInit {
         this.ftasUrlParams['first'] = Math.floor(this.data['DetectTime']['$date']/1000) - 600;
         this.ftasUrlParams['last'] = Math.floor(Date.now()/1000);
 
-        console.log(this.ftasUrlParams);
-
         this.activeModal.close([this.ftasUrl, this.ftasUrlParams]);
     }
 
     scgui() {
-        console.log(this.data);
         const time = new Date(this.data['DetectTime']['$date'])
         this.scUrlParams = {'eventtime' : Math.floor(time.getTime()/1000)}
 
@@ -58,9 +54,9 @@ export class EventDetailComponent implements OnInit {
     }
 
     nerd() {
-        if (this.data['Source'] != undefined && this.data['Source'][0]['IP4'] != undefined) {
+        if (this.data['Source'] !== undefined && this.data['Source'][0]['IP4'] !== undefined) {
             this.nerdUrlParams['ip'] = this.data['Source'][0]['IP4'][0];
-        } else if (this.data['Target'] != undefined && this.data['Target'][0]['IP4'] != undefined) {
+        } else if (this.data['Target'] !== undefined && this.data['Target'][0]['IP4'] !== undefined) {
             this.nerdUrlParams['ip'] = this.data['Target'][0]['IP4'][0];
         }
 

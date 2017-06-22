@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
-import { FormsModule }      from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,7 +10,7 @@ import { UsersAddComponent } from './users-add/users-add.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UsersEditComponent } from './users-edit/users-edit.component';
 
-import { AuthGuard } from  'app/utils/auth.guard';
+import { AuthGuard } from 'app/utils/auth.guard';
 
 const usersRoutes: Routes = [
     {
@@ -73,4 +73,4 @@ const usersRoutes: Routes = [
         RouterModule
     ]
 })
-export class usersModule {};
+export class UsersModule {};

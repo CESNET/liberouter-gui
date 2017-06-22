@@ -47,9 +47,9 @@ export class SecurityCloudComponent implements OnInit {
               * Setup FTAS URL
               * If params are set we can do some filtering
               */
-            if (params['eventtime'] == undefined)
+            if (params['eventtime'] === undefined) {
                 this.url = this.baseUrl;
-            else {
+            } else {
                 /**
                   * Get time of event
                   */

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
-import { FormsModule }      from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgGridModule } from 'angular2-grid';
@@ -14,10 +14,10 @@ import { CodemirrorModule } from 'ng2-codemirror';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AuthGuard } from  'app/utils/auth.guard';
+import { AuthGuard } from 'app/utils/auth.guard';
 import { IdeaPipe } from './events/idea.pipe';
 
-import { nemeaBase, nemeaComponent } from './nemea.component';
+import { NemeaBaseComponent, NemeaComponent } from './nemea.component';
 
 /**
   * NEMEA Events
@@ -37,12 +37,12 @@ import { DashBoxModalComponent } from './dashboard/dash-box-modal/dash-box-modal
 /**
   * NEMEA Reporter Configuration
   */
-import { nemeaReporterConfComponent } from './reporter/reporter_conf.component';
+import { NemeaReporterConfComponent } from './reporter/reporter_conf.component';
 
 /**
   * NEMEA Status
   */
-import { nemeaStatusComponent } from './status/nemea_status.component';
+import { NemeaStatusComponent } from './status/nemea_status.component';
 import { DashboardViewComponent } from './dashboard/dashboard-view/dashboard-view.component';
 import { DashModalComponent } from './dashboard/dash-modal/dash-modal.component';
 import { MarkActionComponent } from './reporter/actions/mark-action/mark-action.component';
@@ -55,7 +55,7 @@ import { WardenActionComponent } from './reporter/actions/warden-action/warden-a
 const nemeaRoutes: Routes = [
     {
         path : 'nemea',
-        component : nemeaBase,
+        component : NemeaBaseComponent,
         canActivate : [AuthGuard],
         data : {
             basepath : true,
@@ -68,7 +68,7 @@ const nemeaRoutes: Routes = [
         children : [
             {
                 path : '',
-                component: nemeaComponent,
+                component: NemeaComponent,
                 canActivate : [AuthGuard],
                 data : {
                     role : 10
@@ -76,7 +76,7 @@ const nemeaRoutes: Routes = [
             },
             {
                 path : 'status',
-                component: nemeaStatusComponent,
+                component: NemeaStatusComponent,
                 canActivate : [AuthGuard],
                 data : {
                     role : 10
@@ -100,15 +100,7 @@ const nemeaRoutes: Routes = [
             },
             {
                 path : 'reporters',
-                component: nemeaReporterConfComponent,
-                canActivate : [AuthGuard],
-                data : {
-                    role : 10
-                }
-            },
-            {
-                path : 'reporters/:id',
-                component: nemeaReporterConfComponent,
+                component: NemeaReporterConfComponent,
                 canActivate : [AuthGuard],
                 data : {
                     role : 10
@@ -132,10 +124,10 @@ const nemeaRoutes: Routes = [
     ],
     declarations : [
         IdeaPipe,
-        nemeaBase,
-        nemeaComponent,
-        nemeaStatusComponent,
-        nemeaReporterConfComponent,
+        NemeaBaseComponent,
+        NemeaComponent,
+        NemeaStatusComponent,
+        NemeaReporterConfComponent,
         EventsComponent,
         EventItemComponent,
         EventDetailComponent,
@@ -150,7 +142,7 @@ const nemeaRoutes: Routes = [
         EmailActionComponent,
         TrapActionComponent,
         WardenActionComponent
-        ],
+    ],
     exports : [],
     providers : [SafePipe],
     entryComponents : [
@@ -159,4 +151,4 @@ const nemeaRoutes: Routes = [
         DashModalComponent
     ]
 })
-export class nemeaModule {};
+export class NemeaModule {};

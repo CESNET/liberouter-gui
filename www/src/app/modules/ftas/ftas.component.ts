@@ -71,7 +71,7 @@ export class FtasComponent implements OnInit {
             },
             error => {
                 // Config for module doesn't exist
-                if (error.status == 404) {
+                if (error.status === 404) {
                     console.log(error);
                     this.openSettings(false);
                 }
@@ -88,11 +88,10 @@ export class FtasComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.params = params;
             for (const key in params) {
-                if (key != 'first' && key != 'last') {
-                    if (this.filter == undefined) {
+                if (key !== 'first' && key !== 'last') {
+                    if (this.filter === undefined) {
                         this.filter = key + '=' + params[key];
-                    }
-                    else {
+                    } else {
                         this.filter += ' and ' + key + '=' + params[key];
                     }
                 }
@@ -120,16 +119,16 @@ export class FtasComponent implements OnInit {
 
         console.log(this.baseUrl, this.output)
 
-        if (isNaN(this.output) || this.baseUrl == 'https://') {
+        if (isNaN(this.output) || this.baseUrl === 'https://') {
             console.warn('FTAS output or URL isn\'t set.');
 
             // Open modal window
             this.openSettings();
         } else {
             // Set URL params
-            if (this.filter == undefined)
+            if (this.filter === undefined) {
                 this.url = this.baseUrl;
-            else {
+            } else {
                 this.url = this.baseUrl + '?'
                     + this.generateQueryBase()
                     + '&advanced_query='
@@ -175,7 +174,7 @@ export class FtasComponent implements OnInit {
                         },
                         (error) => {
                             console.error(error);
-                            if (error.status == 404) {
+                            if (error.status === 404) {
                                 this.openSettings(false);
                             }
                         });
@@ -207,7 +206,7 @@ export class FtasComponent implements OnInit {
         queryBase.set('select_output', String(this.output));
         queryBase.set('select_output-use', 'yes');
         queryBase.set('query_style', 'advanced');
-        //this.query.set("advanced_query", "dst_ip%3D193.170.227.139");
+        // this.query.set("advanced_query", "dst_ip%3D193.170.227.139");
         queryBase.set('first', this.params['first']);
         queryBase.set('last', this.params['last']);
         queryBase.set('use_all_fields', '1');
@@ -225,7 +224,7 @@ export class FtasComponent implements OnInit {
         queryBase.set('viewer_page_size', '1000');
         queryBase.set('resolvegeolocation_global', 'yes');
         queryBase.set('show_percent', 'yes');
-        //this.query.set("viewer_hide_form", "1");
+        // this.query.set("viewer_hide_form", "1");
 
         /**
           * .append must be used here, .set overwrites the existing field

@@ -21,8 +21,6 @@ export class AuthService {
                     return;
                 }
 
-                console.debug(resp)
-
                 if (resp) {
                     // store user details and token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(resp));
@@ -36,18 +34,13 @@ export class AuthService {
         const user = JSON.parse(localStorage.getItem('currentUser'));
         console.log(user);
         return this.http.delete('/authorization')
-            .map((response: Response) => {
-                console.log(response);
-            });
-            //localStorage.removeItem('currentUser');
+            .map((response: Response) => {});
 
     }
 
     checkSession() {
         return this.http.get('/authorization').map(
-            (response: Response) => {
-                console.debug('Session is valid');
-            })
+            (response: Response) => {})
             .catch(this.handleError);
     }
 
@@ -55,9 +48,7 @@ export class AuthService {
         return this.http.post('/setup'
             , JSON.stringify(user))
             .map(
-            (resp: Response) => {
-                console.debug('Admin inserted');
-            })
+            (resp: Response) => {})
             .catch(this.handleError);
     }
 

@@ -1,4 +1,4 @@
-import { Component, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ReporterService } from './reporter.service';
@@ -9,7 +9,7 @@ import { ReporterService } from './reporter.service';
     styleUrls : ['./reporter_conf.scss'],
     providers : [ReporterService]
 })
-export class nemeaReporterConfComponent {
+export class NemeaReporterConfComponent implements OnInit {
 
     error: Object;
     success = {
@@ -61,18 +61,19 @@ export class nemeaReporterConfComponent {
     }
 
     getActionType(item: Object): String {
-        if ('mongo' in item)
+        if ('mongo' in item) {
             return 'mongo'
-        else if ('file' in item)
+        } else if ('file' in item) {
             return 'file'
-        else if ('mark' in item)
+        } else if ('mark' in item) {
             return 'mark'
-        else if ('email' in item)
+        } else if ('email' in item) {
             return 'email'
-        else if ('trap' in item)
+        } else if ('trap' in item) {
             return 'trap'
-        else if ('warden' in item)
+        } else if ('warden' in item) {
             return 'warden'
+        }
     }
 
     trackActions(id: number, data: string) {

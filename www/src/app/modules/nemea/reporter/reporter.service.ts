@@ -25,11 +25,13 @@ export class ReporterService {
 
 
     save(idx: number, conf: string) {
-        if (idx < 0)
+        if (idx < 0) {
             throw new Error('Index not set');
+        }
 
-        if (conf == '')
+        if (conf === '') {
             throw new Error('Configuration is empty')
+        }
 
         console.log(idx);
         console.log(conf);

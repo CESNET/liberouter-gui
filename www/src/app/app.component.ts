@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService, ConfigService } from './services';
 
@@ -8,7 +8,7 @@ import { AuthService, ConfigService } from './services';
   styleUrls: ['./app.component.css'],
   providers : [AuthService, ConfigService]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     isLoginPage = false;
     user =  { user : {username : ''}};
     modules: Array<Object> = [];
@@ -26,10 +26,9 @@ export class AppComponent {
             /* we only want to react if it's the final active route */
             if (val instanceof NavigationEnd) {
                 /* the variable curUrlTree holds all params, queryParams, segments and fragments from the current (active) route */
-                if (this.router.url == '/setup') {
+                if (this.router.url === '/setup') {
                     this.isLoginPage = true;
-                }
-                else if (this.router.url == '/login') {
+                } else if (this.router.url === '/login') {
                     this.isLoginPage = true;
                     this.logout();
                 } else {
@@ -64,7 +63,6 @@ export class AppComponent {
             return;
         }
 
-        console.info('I should check the session: ' + this.user['session_id']);
         this.auth.checkSession().subscribe(
             data => {},
             error => {

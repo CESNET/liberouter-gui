@@ -11,19 +11,14 @@ import { Box } from '../box';
 export class DashboardViewComponent implements OnInit {
 
     @Input() dashboard;
-    private boxes;
+    public boxes;
 
     @Output() onSave = new EventEmitter<Object>();
 
-    constructor() { }
-
-    ngOnInit() {
-        this.boxes = this.dashboard['boxes'];
-    }
     /**
       * Grid configuration taken from: https://github.com/BTMorton/angular2-grid/blob/master/demo-dashboard/app/app.component.ts
       */
-    private gridConfig: NgGridConfig = <NgGridConfig>{
+    public gridConfig: NgGridConfig = <NgGridConfig>{
         'margins': [5],
         'draggable': true,
         'resizable': true,
@@ -46,6 +41,12 @@ export class DashboardViewComponent implements OnInit {
         'zoom_on_drag': false,
         'limit_to_screen': true
     };
+
+    constructor() { }
+
+    ngOnInit() {
+        this.boxes = this.dashboard['boxes'];
+    }
 
     /**
       * Add default box to boxes array

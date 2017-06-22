@@ -3,7 +3,7 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class nStatService {
+export class NemeaStatusService {
     constructor(private http: Http) {}
 
     stats() {

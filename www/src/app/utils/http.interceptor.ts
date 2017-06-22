@@ -36,8 +36,7 @@ export class HttpInterceptor extends Http {
     constructor(backend: XHRBackend,
         defaultOptions: RequestOptions,
         private router: Router,
-        private config: Object)
-    {
+        private config: Object) {
         super(backend, defaultOptions);
         this.api = this.config['api'];
     }
@@ -48,13 +47,12 @@ export class HttpInterceptor extends Http {
       *     - API URL prefix
       */
     request(url: Request,
-        options?: RequestOptionsArgs): Observable<Response>
-    {
+        options?: RequestOptionsArgs): Observable<Response> {
         // Prefix the URL with environment prefix if set
         url.url = this.buildUrl(url.url);
         this.currentUser = this.getCurrentUser();
 
-        if (this.currentUser != undefined) {
+        if (this.currentUser !== undefined) {
             this.headers.set('Authorization', this.currentUser['session_id']);
         }
 
@@ -81,16 +79,12 @@ export class HttpInterceptor extends Http {
 
     private catchErrors() {
         return (res: Response) => {
-            if (res.status == 401) {
-                console.debug('Caught 401, logging out!')
+            if (res.status === 401) {
                 localStorage.removeItem('currentUser');
                 this.router.navigate(['/login']);
-            }
-
+            } else if (res.status === 442) {
             // SETUP is required
             // Maybe you ask why 442. Well, 42 is answer to everything, right?
-            else if (res.status == 442) {
-                console.debug('Setup is required. Redirecting to /setup');
                 this.router.navigate(['/setup']);
             }
             return Observable.throw(res);

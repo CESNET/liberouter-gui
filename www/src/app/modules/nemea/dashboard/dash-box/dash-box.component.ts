@@ -24,7 +24,7 @@ import { Box } from '../box';
   styleUrls: ['./dash-box.component.scss'],
   providers : [BoxService]
 })
-export class DashBoxComponent {
+export class DashBoxComponent implements OnInit {
 
     @Input() box;
 
@@ -152,10 +152,11 @@ export class DashBoxComponent {
         console.log(this.piechart);
         console.log(this.areachart);
 
-        if (this.piechart != undefined)
+        if (this.piechart !== undefined) {
             this.piechart.update();
-        else if(this.areachart != undefined)
+        } else if(this.areachart !== undefined) {
             this.areachart.update();
+        }
     }
 
     /**
@@ -181,7 +182,6 @@ export class DashBoxComponent {
             },
             (reason) => {
                 // Dismissal of the modal, do nothing
-                console.debug('Modal dismissed');
             }
         );
     }
@@ -190,7 +190,6 @@ export class DashBoxComponent {
       * Remove this box from the array of boxes
       */
     remove() {
-        console.debug('Deleting box');
         this.onDelete.emit({'box' : this.box, 'index' : this.index });
     }
 

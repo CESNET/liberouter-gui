@@ -30,6 +30,7 @@ export class EventsComponent implements OnInit {
     loadBtn = 'LOAD';
     error;
     totalWhitelisted = 0;
+    public hideWhitelisted = false;
 
     constructor(private eventsService: EventsService,
                 private router: Router,
@@ -53,9 +54,6 @@ export class EventsComponent implements OnInit {
                     (error: Object) => this.processError(error)
                 );
             } else {
-                console.debug('should load by params')
-                console.log(params);
-
                 this.runQuery();
             }
         });
@@ -65,7 +63,6 @@ export class EventsComponent implements OnInit {
         this.remaining = data.pop();
         this.events = data;
         this.loadBtn = 'LOAD';
-        //this.setParams();
         this.countWhitelisted();
     }
 
@@ -73,7 +70,6 @@ export class EventsComponent implements OnInit {
         this.remaining = data.pop();
         this.events = this.events.concat(data);
         this.loadBtn = 'LOAD';
-        //this.setParams();
         this.countWhitelisted();
     }
 
@@ -116,11 +112,11 @@ export class EventsComponent implements OnInit {
     /**
       * Navigate to same route which triggers reinitialization of the route
       */
-    private setParams() {
+    public setParams() {
         this.router.navigate(['nemea/events'], {queryParams : this.params()});
     }
 
-    private resetParams() {
+    public resetParams() {
         this.remaining['total'] = -1;
 
         this.router.navigate(['nemea/events'], {queryParams : {}});
@@ -199,10 +195,11 @@ export class EventsComponent implements OnInit {
 
         this.eventsService.query(queryParams).subscribe(
             (data) => {
-                if (append)
+                if (append) {
                     this.appendData(data);
-                else
+                } else {
                     this.processData(data);
+                }
             },
             (error: Object) => this.processError(error));
     }
@@ -218,16 +215,15 @@ export class EventsComponent implements OnInit {
                 minute : date.getMinutes()
             }
 
-        console.log(new Date(this.query['from']))
-
         this.runQuery(true);
     }
 
     private countWhitelisted() {
         for (const item of this.events) {
             try {
-                if (item['_CESNET']['Whitelisted'] == 'True')
+                if (item['_CESNET']['Whitelisted'] === 'True') {
                     this.totalWhitelisted += 1;
+                }
             } catch(e) {
                 continue;
             }

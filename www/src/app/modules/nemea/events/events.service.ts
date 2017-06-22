@@ -17,8 +17,10 @@ export class EventsService {
 
     query(query: Object) {
         const params: URLSearchParams = new URLSearchParams();
-        for(const key in query) {
-            params.set(key.toString(), query[key]);
+        for (const key in query) {
+            if (query.hasOwnProperty(key)) {
+                params.set(key.toString(), query[key]);
+            }
         }
         return this.http.get('/nemea/events/query', {search : params}).map(
             (response: Response) => {

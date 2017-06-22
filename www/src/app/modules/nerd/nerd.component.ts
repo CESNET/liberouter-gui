@@ -66,7 +66,7 @@ export class NerdComponent implements OnInit {
             },
             error => {
                 // Config for module doesn't exist
-                if (error.status == 404) {
+                if (error.status === 404) {
                     console.log(error);
                     this.openSettings(false);
                 }
@@ -102,13 +102,13 @@ export class NerdComponent implements OnInit {
             this.baseUrl += this.config['url'];
         }
 
-        if (this.baseUrl == 'https://') {
+        if (this.baseUrl === 'https://') {
             this.openSettings();
         }
 
-        if (!this.params || !this.params['ip'])
+        if (!this.params || !this.params['ip']) {
             this.url = this.baseUrl;
-        else {
+        } else {
             this.url = this.baseUrl + '/ip/' + this.params['ip'];
         }
     }
@@ -150,7 +150,7 @@ export class NerdComponent implements OnInit {
                         },
                         (error) => {
                             console.error(error);
-                            if (error.status == 404) {
+                            if (error.status === 404) {
                                 this.openSettings(false);
                             }
                         });

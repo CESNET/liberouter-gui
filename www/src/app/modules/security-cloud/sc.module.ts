@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 
-import { AuthGuard } from  'app/utils/auth.guard';
+import { AuthGuard } from 'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { SecurityCloudComponent } from './sc.component'

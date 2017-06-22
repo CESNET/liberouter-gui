@@ -32,8 +32,8 @@ export class UsersEditComponent implements OnInit {
     constructor(private usersService: UsersService, private route: ActivatedRoute, private router: Router) {}
 
     ngOnInit() {
-        this.route.params.subscribe(data => {
-            this.userId = data['id'];
+        this.route.params.subscribe(params => {
+            this.userId = params['id'];
 
             this.usersService.get(this.userId).subscribe(
                 (data: Object) => {
@@ -53,9 +53,9 @@ export class UsersEditComponent implements OnInit {
         // Create a diff between user and user_original
         const diff_user: Object = {};
         for (const key in this.user) {
-            if (key != '_id' && key != 'settings' &&
-                this.user_original[key] != this.user[key])
-            {
+            if (key !== '_id' &&
+                key !== 'settings' &&
+                this.user_original[key] !== this.user[key]) {
                 diff_user[key] = this.user[key]
             }
         }

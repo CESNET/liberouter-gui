@@ -76,9 +76,9 @@ export class DashboardComponent implements OnInit {
 
         const user = JSON.parse(localStorage.getItem('currentUser'));
 
-        if (user['user']['settings'] == null)
+        if (user['user']['settings'] == null) {
             user['user']['settings'] = { 'nemea' : { 'dashboard' : this.dashboards } };
-        else {
+        } else {
             if ('nemea' in user['user']['settings']) {
                 if ('dashboard' in user['user']['settings']['nemea']) {
                     user['user']['settings']['nemea']['dashboard'] = this.dashboards;
@@ -124,12 +124,11 @@ export class DashboardComponent implements OnInit {
                   * Also would be nice to reload data
                   */
 
-                this.save({}, dashboard['offset'] != offset);
+                this.save({}, dashboard['offset'] !== offset);
 
             },
             (reason) => {
                 // Dismissal of the modal, do nothing
-                console.debug('Modal dismissed');
             }
         );
     }

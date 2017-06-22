@@ -10,9 +10,9 @@ export class DashModalComponent implements OnInit {
 
     @Input() data: Object;
 
-    private backup;
+    public backup;
 
-    constructor(private activeModal: NgbActiveModal) { }
+    constructor(public activeModal: NgbActiveModal) { }
 
     ngOnInit() {
         this.backup = Object.assign({}, this.data);

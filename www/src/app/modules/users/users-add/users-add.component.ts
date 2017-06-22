@@ -43,11 +43,11 @@ export class UsersAddComponent implements OnInit {
     addUser() {
         // Check if all required fields are set
         // Check password verification
-        if ((this.user.username == '' ||
-            this.user.email == ''   ||
-            this.user.password == '' ||
-            this.passwordValidation == '') &&
-            this.passwordValidation == this.user.password) {
+        if ((this.user.username === '' ||
+            this.user.email === ''   ||
+            this.user.password === '' ||
+            this.passwordValidation === '') &&
+            this.passwordValidation === this.user.password) {
             this.error = 'Required fields are missing.';
             return;
         } else {

@@ -37,7 +37,7 @@ export class DashBoxModalComponent implements OnInit {
         }
     ]
 
-    private backup;
+    public backup;
     private modal;
 
     constructor(public activeModal: NgbActiveModal) { }
@@ -50,8 +50,8 @@ export class DashBoxModalComponent implements OnInit {
     /**
       * Typeahead lookup
       */
-    searchMetric = (term: Observable<string>) => {
-        return term
+    searchMetric = (inputTerm: Observable<string>) => {
+        return inputTerm
             .debounceTime(200)
             .distinctUntilChanged()
             .map(term => term.length < 2 ? []

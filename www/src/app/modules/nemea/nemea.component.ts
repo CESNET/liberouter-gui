@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector : 'nemea',
     template : `<router-outlet></router-outlet>`
 })
-export class nemeaBase {};
+export class NemeaBaseComponent {};
 
 @Component({
     selector : 'nemea-view',
@@ -42,7 +42,7 @@ export class nemeaBase {};
     </section>
     `
 })
-export class nemeaComponent {
+export class NemeaComponent implements OnInit {
     constructor() {}
 
     ngOnInit() { }
