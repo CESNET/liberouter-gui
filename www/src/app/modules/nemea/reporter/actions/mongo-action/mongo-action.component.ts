@@ -6,11 +6,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./mongo-action.component.scss']
 })
 export class MongoActionComponent implements OnInit {
-	@Input() data;
+    @Input() data;
 
-	constructor() { }
+    constructor() { }
 
-	ngOnInit() {
-	}
+    ngOnInit() {
+    }
 
 }
