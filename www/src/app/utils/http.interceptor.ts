@@ -52,7 +52,7 @@ export class HttpInterceptor extends Http {
         url.url = this.buildUrl(url.url);
         this.currentUser = this.getCurrentUser();
 
-        if (this.currentUser !== undefined) {
+        if (this.currentUser !== null) {
             this.headers.set('Authorization', this.currentUser['session_id']);
         }
 
@@ -65,16 +65,6 @@ export class HttpInterceptor extends Http {
 
         // Call the original Http
         return super.request(url, options).catch(this.catchErrors());
-    }
-
-    /**
-      * Original GET method caller
-      * Use only if you know you don't need:
-      *     - Authorization header added automatically
-      *     - API URL prefix
-      */
-    public get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-        return super.get(url, options);
     }
 
     private catchErrors() {
