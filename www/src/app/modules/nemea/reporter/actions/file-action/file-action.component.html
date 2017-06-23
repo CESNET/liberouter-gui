@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="input-group col-2">
+		<div [(ngModel)]="data.dir" ngbRadioGroup name="dirfile">
+			<label class="btn btn-primary">
+				<input type="radio" [value]="true"> Directory
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" [value]="false"> File
+			</label>
+		</div>
+	</div>
+
+	<div class="input-group col">
+		<span class="input-group-addon">Path</span>
+		<input type="text"
+			name="path"
+			class="form-control"
+			[(ngModel)]="data.path"
+			required>
+	</div>
+</div>
+

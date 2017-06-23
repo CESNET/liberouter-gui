@@ -1,49 +1,211 @@
 <h2>
 	<a routerLink='/nemea'>
-		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea
+		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea Reporters Configuration
 	</a>
 </h2>
 
-
-
-
-<div id="content" class="container-fluid">
-    <div class="row">
-        <div class="reporter-list col-4">
-            <section class="box reporter" [ngClass]="{'active' : activeConfig == rep[1]['idx']}" *ngFor="let rep of reporters" (click)="selectReporter(rep[1])">
-                <h3>
-                    {{ rep[0] }}
-                    <span class="status {{ rep[1]['status'] }}" [class]="">{{ rep[1]['status'] }}</span>
-                </h3>
-                <p>Memory Usage: {{ rep[1]["MEM-vms"] / 1048576 | number : '1.3-3' }} MB</p>
-                <!--p>Parameters: {{ rep[1]["params"] }}</p-->
-                <p>Config path: {{ rep[1]["config"] }}</p>
-                <!--{{ rep | json }}-->
-            </section>
-        </div>
-
-        <div class="config col-8">
-            <section class="box">
-                <div class="alert alert-danger" role="alert" *ngIf="error != ''">
-                    {{ error }}
-                </div>
-
-                <div *ngIf="selectedConfig == '' && error == ''">
-                    <div class="alert alert-info">
-                        Please select a reporter
-                    </div>
-                </div>
-
-                <div *ngIf="selectedConfig != '' || activeConfig >= 0">
-                    <codemirror [(ngModel)]="selectedConfig"
-                        [config]="config"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()">
-                    </codemirror>
-
-                </div>
-            </section>
-            <button class="btn btn-primary" value="Save config" (click)="saveConfig()" [disabled]="activeConfig < 0">Save config</button>
-        </div>
-    </div>
+<div class="alert alert-danger" *ngIf="error?.error">
+	{{ error.message }}
 </div>
+
+<form novalidate (ngSubmit)="saveConfig()" class="container-fluid" #form="ngForm">
+	<div class="card my-4">
+		<div class="card-block">
+			<h4 class="card-title">Address Groups
+				<span class="fa fa-info-circle"
+					aria-hidden="true"
+					ngbPopover="Each address group is identified by its ID, this ID can be used as a reference to it in a rule."
+					triggers="mouseenter:mouseleave"
+					placement="right">
+				</span>
+			</h4>
+			<div class="row form-group pb-3" *ngFor="let item of config.addressgroups; let i = index">
+				<div class="col-3">
+					<div class="input-group">
+						<span class="btn btn-danger input-group-addon"
+							(click)="remove('addressgroups', i)">
+							&times;
+						</span>
+						<span class="input-group-addon">
+							ID
+						</span>
+						<input name="ag-id-{{ i }}"
+							[(ngModel)]="item.id"
+							class="form-control"
+							required>
+					</div>
+				</div>
+				<div class="col" *ngIf="item.list">
+					<div class="list-group">
+						<div class="list-group-item">
+							<h6>IP Addresses <span class="fa fa-info-circle"
+												aria-hidden="true"
+												ngbPopover="Specify a list of IP address on which rules can be applied."
+												triggers="mouseenter:mouseleave"
+												placement="right">
+											</span>
+							</h6>
+						</div>
+						<div class="input-group list-group-item"
+							*ngFor="let addr of item.list; let addr_i = index;">
+							<span class="input-group-btn">
+								<button class="btn btn-danger"
+									type="button"
+									(click)="item.list.splice(addr_i, 1)">&times;</button>
+							</span>
+							<input name="ag-ip-{{addr_i}}"
+								class="form-control"
+								[(ngModel)]="item.list[addr_i]">
+						</div>
+						<div class="list-group-item active btn btn-primary"
+							(click)="item.list.push('')">
+							Add IP address
+						</div>
+					</div>
+				</div>
+
+				<div class="col" *ngIf="item.file">
+					<div class="input-group">
+						<span class="input-group-addon">Path to file</span>
+						<input name="ag-file-{{ i }}"
+							[(ngModel)]="item.file"
+							class="form-control"
+							required>
+					</div>
+				</div>
+			</div>
+
+			<div class="btn btn-primary" (click)="addAddrGroup(0)">Add Address Group with File</div>
+			<div class="btn btn-primary" (click)="addAddrGroup(1)">Add Address Group with List</div>
+		</div>
+	</div>
+
+	<div class="card my-4">
+		<div class="card-block">
+			<h4 class="card-title">Custom Actions</h4>
+			<div class="row form-group custom_actions pb-3" *ngFor="let item of config.custom_actions; let i = index">
+				<div class="col-3">
+					<div class="input-group">
+						<span class="btn btn-danger input-group-addon" (click)="remove('custom_actions', i)">&times;</span>
+						<span class="input-group-addon">ID</span>
+						<input name="r-id-{{ i }}"
+							[(ngModel)]="item.id"
+							class="form-control"
+							required>
+					</div>
+				</div>
+				<div class="col-8" [ngSwitch]="getActionType(item)">
+					<mongo-action *ngSwitchCase="'mongo'" [data]="item['mongo']"></mongo-action>
+					<mark-action *ngSwitchCase="'mark'" [data]="item['mark']"></mark-action>
+					<file-action *ngSwitchCase="'file'" [data]="item['file']"></file-action>
+					<email-action *ngSwitchCase="'email'" [data]="item['email']"></email-action>
+					<trap-action *ngSwitchCase="'trap'" [data]="item['trap']"></trap-action>
+					<warden-action *ngSwitchCase="'warden'" [data]="item['warden']"></warden-action>
+				</div>
+			</div>
+
+			<div ngbDropdown>
+				<div class="btn btn-primary" ngbDropdownToggle
+					id="addAction">
+					Add Custom Action
+				</div>
+				<div class="dropdown-menu" aria-labelledby="addAction">
+					<span class="dropdown-item" (click)="addAction('mark')">Mark</span>
+					<span class="dropdown-item" (click)="addAction('mongo')">Mongo</span>
+					<span class="dropdown-item" (click)="addAction('file')">File</span>
+					<span class="dropdown-item" (click)="addAction('email')">Email</span>
+					<span class="dropdown-item" (click)="addAction('trap')">Trap</span>
+					<span class="dropdown-item" (click)="addAction('warden')">Warden</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- RULES -->
+	<div class="card my-4">
+		<div class="card-block">
+			<h4 class="card-title">Rules</h4>
+			<div class="form-group rule pb-3 mb-3" *ngFor="let item of config.rules; let i = index">
+				<div class="row mb-3">
+					<!-- CONDITION -->
+					<div class="col">
+						<div class="input-group">
+							<span class="btn btn-danger input-group-addon" (click)="remove('rules', i)">&times;</span>
+							<span class="input-group-addon">Condition</span>
+							<input name="rule-cond-{{ i }}"
+								[(ngModel)]="item.condition"
+								class="form-control"
+								placeholder="Empty condition is tautology">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<!-- ACTIONS -->
+					<div class="col">
+						<div class="list-group">
+							<div class="list-group-item">
+								<h6>Actions</h6>
+							</div>
+							<div class="input-group list-group-item"
+								*ngFor="let action of item.actions;let action_i = index;trackBy:trackActions">
+								<span class="input-group-btn">
+									<button class="btn btn-danger"
+										type="button"
+										(click)="item.actions.splice(action_i, 1)">&times;</button>
+								</span>
+								<input name="rule-action-{{ i }}-{{action_i}}"
+									class="form-control"
+									[(ngModel)]="item.actions[action_i]">
+							</div>
+							<div class="list-group-item active btn btn-primary"
+								(click)="item.actions.push('')">
+								Add Action
+							</div>
+						</div>
+					</div>
+
+					<!-- ELSE ACTIONS -->
+					<div class="col">
+						<div class="list-group">
+							<div class="list-group-item">
+								<h6>Else Actions</h6>
+							</div>
+							<div class="input-group list-group-item"
+								*ngFor="let action of item.elseactions;let action_i = index;trackBy:trackActions">
+								<span class="input-group-btn">
+									<button class="btn btn-danger"
+										type="button"
+										(click)="item.elseactions.splice(action_i, 1)">&times;</button>
+								</span>
+								<input name="rule-elseaction-{{ i }}-{{action_i}}"
+									class="form-control"
+									[(ngModel)]="item.elseactions[action_i]">
+							</div>
+							<div class="list-group-item active btn btn-primary"
+								(click)="item.elseactions.push('')">
+								Add Else Action
+							</div>
+						</div>
+					</div> <!-- /ELSE ACTIONS -->
+				</div>
+			</div> <!-- /form-group -->
+
+			<div class="btn btn-primary"
+				(click)="config.rules.push({
+					'id' : config?.rules?.length,
+					'actions' : [],
+					'elseactions' : [],
+					'condition' : ''})">
+				Add Rule
+			</div>
+
+		</div> <!-- /card-block -->
+	</div> <!-- /RULES -->
+
+	<div class="mb-4">
+		<button type="submit" class="btn btn-primary btn-lg">Save</button>
+		<span class="msg success ml-4" *ngIf="success?.success">{{ success.message }}</span>
+	</div>
+</form>

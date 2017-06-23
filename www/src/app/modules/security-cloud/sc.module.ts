@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-import { AuthGuard } from  'app/utils/auth.guard';
+import { AuthGuard } from 'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { SecurityCloudComponent } from './sc.component';
@@ -18,38 +18,39 @@ import { ScGraphRenderComponent } from './sc-graph/sc-graph-render/sc-graph-rend
 
 import { NgDygraphsModule } from 'ng-dygraphs';
 
-const routes : Routes = [{
-	path : 'security-cloud',
-	component : SecurityCloudComponent,
-	canActivate : [AuthGuard],
-	data : {
-		role : 10,
-		name : "Security Cloud",
-		description : "Distributed, highly available IP flow record collector.",
-		icon : "fa-cloud"
-	}
+
+const routes: Routes = [{
+    path : 'security-cloud',
+    component : SecurityCloudComponent,
+    canActivate : [AuthGuard],
+    data : {
+        role : 10,
+        name : 'Security Cloud',
+        description : 'Distributed, highly available IP flow record collector.',
+        icon : 'fa-cloud'
+    }
 }]
 
 @NgModule({
-	imports: [
-		CommonModule,
-		FormsModule,
-		SafePipeModule,
-		RouterModule.forChild(routes),
-		NgbModule,
-		NgDygraphsModule,
-	],
-	declarations: [
-		SecurityCloudComponent,
-		ScGraphComponent,
-		ScStatsComponent,
-		ScDbqryComponent,
-		ScDbqryFdisthelpComponent,
-		OutputVolumeConversionPipe,
-		ScGraphRenderComponent
-	],
-	providers : [
-		SafePipe
-	]
+    imports: [
+        CommonModule,
+        FormsModule,
+        SafePipeModule,
+        RouterModule.forChild(routes),
+        NgbModule,
+        NgDygraphsModule,
+    ],
+    declarations: [
+        SecurityCloudComponent,
+        ScGraphComponent,
+        ScStatsComponent,
+        ScDbqryComponent,
+        ScDbqryFdisthelpComponent,
+        OutputVolumeConversionPipe,
+        ScGraphRenderComponent
+    ],
+    providers : [
+        SafePipe
+    ]
 })
 export class SecurityCloudModule { }

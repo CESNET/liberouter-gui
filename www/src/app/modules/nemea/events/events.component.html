@@ -1,190 +1,199 @@
 <h2>
-	<a routerLink='/nemea'>
-		<i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea
-	</a>
+    <a routerLink='/nemea'>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i> Nemea
+    </a>
 </h2>
 
 <section class="query-builder box">
-	<form (ngSubmit)="runQuery()" name="query_form" class="query box">
-		<div class="d-flex flex-row">
-			<div class="row-space">
-				<div class="form-group">
-					<label for="timeFrom">Time from</label>
-						<ngb-timepicker [(ngModel)]="query.from"
-							name="timeFrom"
-							[spinners]="false">
-						</ngb-timepicker>
+    <form (ngSubmit)="setParams()" name="query_form" class="query box">
+        <div class="d-flex flex-row">
+            <div class="row-space">
+                <div class="form-group">
+                    <label for="timeFrom">Time from</label>
+                    <div class="row">
+                        <ngb-timepicker [(ngModel)]="from_time"
+                            (ngModelChange)="selectDateFrom($event)"
+                            class="col-4"
+                            name="timeFrom"
+                            [spinners]="false">
+                        </ngb-timepicker>
 
-					<div class="input-group">
-						<input class="form-control"
-							placeholder="{{ query.date.year}}-{{query.date.month}}-{{query.date.day}}"
-							name="dp"
-							ngbDatepicker
-							[(ngModel)]="query.date"
-							#d="ngbDatepicker"
-							name="datepicker">
-						<div class="input-group-addon" (click)="d.toggle()">
-							<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						</div>
-					</div>
-				</div>
+                        <div class="input-group col">
+                            <input class="form-control"
+                                placeholder="{{ query.from.year}}-{{query.from.month}}-{{query.from.day}}"
+                                name="dp"
+                                ngbDatepicker
+                                [(ngModel)]="from_date"
+                                (ngModelChange)="selectDateFrom($event)"
+                                #d="ngbDatepicker">
+                            <div class="input-group-addon" (click)="d.toggle()">
+                                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-				<div class="form-group">
-					<label>Time To</label>
-					<ngb-timepicker [(ngModel)]="query.to"
-						name="timeTo"
-						[spinners]="false">
-					</ngb-timepicker>
+                <div class="form-group">
+                    <label>Time To</label>
+                    <div class="row">
+                        <ngb-timepicker [(ngModel)]="to_time"
+                            (ngModelChange)="selectDateTo($event)"
+                            class="col-4"
+                            name="timeTo"
+                            [spinners]="false">
+                        </ngb-timepicker>
 
-					<div class="input-group">
-						<input class="form-control"
-							placeholder="{{ query.date.year}}-{{query.date.month}}-{{query.date.day}}"
-							name="dp"
-							ngbDatepicker
-							[(ngModel)]="query.date"
-							#d="ngbDatepicker"
-							name="datepicker">
-						<div class="input-group-addon" (click)="d.toggle()">
-							<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						</div>
-					</div>
+                        <div class="input-group col">
+                            <input class="form-control"
+                                placeholder="{{ query.to.year}}-{{query.to.month}}-{{query.to.day}}"
+                                name="dp_to"
+                                ngbDatepicker
+                                [(ngModel)]="to_date"
+                                (ngModelChange)="selectDateTo($event)"
+                                #dto="ngbDatepicker"
+                                name="datepicker_to">
+                            <div class="input-group-addon" (click)="dto.toggle()">
+                                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
 
-				</div>
-			</div>
+                </div>
+            </div>
 
-			<div class="d-flex flex-column row-space">
+            <div class="d-flex flex-column row-space">
 
-				<div class="form-group">
-					<label>Category</label>
-					<input [(ngModel)]="query.category" name="Category" class="form-control">
-				</div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input [(ngModel)]="query.category" name="Category" class="form-control">
+                </div>
 
-				<div class="form-group">
-					<label>Description</label>
-					<input [(ngModel)]="query.description" name="Description" class="form-control">
-				</div>
-			</div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input [(ngModel)]="query.description" name="Description" class="form-control">
+                </div>
+            </div>
 
-			<div class="d-flex flex-column row-space">
-				<div class="form-group">
-					<label>Limit</label>
-					<input [(ngModel)]="query.limit" name="Limit" class="form-control">
-				</div>
+            <div class="d-flex flex-column row-space">
+                <div class="form-group">
+                    <label>Limit</label>
+                    <input [(ngModel)]="query.limit" name="Limit" class="form-control">
+                </div>
 
-				<div class="form-group">
-					<label>Order by</label>
-					<input type="text" [(ngModel)]="query.orderby" name="OrderBy" class="form-control">
-				</div>
+                <div class="form-group">
+                    <label>Order by</label>
+                    <input type="text" [(ngModel)]="query.orderby" name="OrderBy" class="form-control">
+                </div>
 
-				<label>Direction</label>
-				<div class="btn-group" data-toggle="buttons">
-					<label class="btn btn-primary"
-						[ngClass]="{'active' : query.dir == 1}"
-						title="Earliest first">
-						<input type="radio" data-toggle="tooltip"
-							name="options"
-							id="option1"
-							autocomplete="off"
-							[value]="1"
-							[(ngModel)]="query.dir">
-						Ascending
-					</label>
-					<label class="btn btn-primary"
-						[ngClass]="{'active' : query.dir == -1}"
-						title="Latest first">
-						<input type="radio"
-							name="options"
-							id="option1"
-							autocomplete="off"
-							[value]="-1"
-							[(ngModel)]="query.dir">
-						Descending
-					</label>
-				</div>
-			</div>
-			<div class="d-flex flex-column row-space">
-				<div class="form-group">
-					<label>Source IP</label>
-					<input type="text" [(ngModel)]="query.srcip" name="srcip" class="form-control">
-				</div>
+                <label>Direction</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary"
+                        [ngClass]="{'active' : query.dir == 1}"
+                        title="Earliest first">
+                        <input type="radio" data-toggle="tooltip"
+                            name="options"
+                            id="option1"
+                            autocomplete="off"
+                            [value]="1"
+                            [(ngModel)]="query.dir">
+                        Ascending
+                    </label>
+                    <label class="btn btn-primary"
+                        [ngClass]="{'active' : query.dir == -1}"
+                        title="Latest first">
+                        <input type="radio"
+                            name="options"
+                            id="option1"
+                            autocomplete="off"
+                            [value]="-1"
+                            [(ngModel)]="query.dir">
+                        Descending
+                    </label>
+                </div>
+            </div>
+            <div class="d-flex flex-column row-space">
+                <div class="form-group">
+                    <label>Source IP</label>
+                    <input type="text" [(ngModel)]="query.srcip" name="srcip" class="form-control">
+                </div>
 
-				<div class="form-group">
-					<label>Destination IP</label>
-					<input type="text" [(ngModel)]="query.dstip" name="dstip" class="form-control">
-				</div>
+                <div class="form-group">
+                    <label>Destination IP</label>
+                    <input type="text" [(ngModel)]="query.dstip" name="dstip" class="form-control">
+                </div>
 
-				<div class="form-group">
+                <div class="form-group">
 
-					<label class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" [(ngModel)]="hideWhitelisted" name="whitelisted">
-						<span class="custom-control-indicator"></span>
-						<span class="custom-control-description">Hide whitelisted items ({{ totalWhitelisted }})</span>
-					</label>
-				</div>
-			</div>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" [(ngModel)]="hideWhitelisted" name="whitelisted">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">Hide whitelisted items ({{ totalWhitelisted }})</span>
+                    </label>
+                </div>
+            </div>
 
-			<div class="d-flex flex-column row-space">
-				<button class="btn btn-primary btn-lg" type="submit" [disabled]="">{{ loadBtn }}</button>
-				<br/>
-				<button class="btn btn-primary btn-warning btn-lg" type="button" (click)="reset()">RESET</button>
-			</div>
-		</div>
-	</form>
+            <div class="d-flex flex-column row-space">
+                <button class="btn btn-primary btn-lg" type="submit" [disabled]="">{{ loadBtn }}</button>
+                <br/>
+                <button class="btn btn-primary btn-warning btn-lg" type="button" (click)="resetParams()">RESET</button>
+            </div>
+        </div>
+    </form>
 </section>
 
 <section class="box">
-	<table class="table box table-hover">
-		<thead>
-			<tr>
-				<td>
-					Event Time
-				</td>
-				<td>
-					Category
-				</td>
-				<td>
-					Source
-				</td>
-				<td>
-					Target
-				</td>
-				<td>
-					Description
-				</td>
-				<td>
-					Flows
-				</td>
-				<td>
-					Detail
-				</td>
-			</tr>
-		</thead> <!-- head -->
+    <table class="table box table-hover">
+        <thead>
+            <tr>
+                <td>
+                    Event Time
+                </td>
+                <td>
+                    Category
+                </td>
+                <td>
+                    Source
+                </td>
+                <td>
+                    Target
+                </td>
+                <td>
+                    Description
+                </td>
+                <td>
+                    Flows
+                </td>
+                <td>
+                    Detail
+                </td>
+            </tr>
+        </thead> <!-- head -->
 
-		<tbody>
-			<tr *ngIf="events?.length == 0 || !events">
-				<td colspan="7">
-					<h3 class="text-center" *ngIf="loadBtn == 'LOADING...'">{{ loadBtn }}</h3>
-					<h3 class="text-center" *ngIf="loadBtn != 'LOADING...'"><em>No events match given criteria.</em></h3>
-				</td>
-			</tr>
+        <tbody>
+            <tr *ngIf="events?.length == 0 || !events">
+                <td colspan="7">
+                    <h3 class="text-center" *ngIf="loadBtn == 'LOADING...'">{{ loadBtn }}</h3>
+                    <h3 class="text-center" *ngIf="loadBtn != 'LOADING...'"><em>No events match given criteria.</em></h3>
+                </td>
+            </tr>
             <tr nemea-event *ngFor="let event of events" [item]="event" [ngClass]="{'whitelisted' : event?._CESNET?.Whitelisted == 'True', 'hidden' : hideWhitelisted}">
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td colspan=7 *ngIf="remaining?.total > 1 || remaining?.total < 0">
-					<button class="btn btn-primary btn-lg text-center next-btn"
-						 *ngIf="(events && events?.length > 0)"
-						(click)="getNext(events[events.length-1]['DetectTime']['$date'])"
-						[disabled]="loadBtn != 'LOAD'">
-						Load next <span *ngIf="remaining?.total > 0">
-							{{ query.limit < remaining?.total ? query.limit : remaining?.total }}</span>
-							<span *ngIf="remaining?.total == -1">{{ query.limit }}</span> items<br/>
-							<small *ngIf="remaining?.total > 0">{{ remaining.total - 1}}<span *ngIf="remaining.total > query.limit">+</span> remaining</small>
-					</button>
-				</td>
-			</tr>
-		</tfoot>
-	</table>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan=7 *ngIf="remaining?.total > 1 || remaining?.total < 0">
+                    <button class="btn btn-primary btn-lg text-center next-btn"
+                         *ngIf="(events && events?.length > 0)"
+                        (click)="getNext(events[events.length-1]['DetectTime']['$date'])"
+                        [disabled]="loadBtn != 'LOAD'">
+                        Load next <span *ngIf="remaining?.total > 0">
+                            {{ query.limit < remaining?.total ? query.limit : remaining?.total }}</span>
+                            <span *ngIf="remaining?.total == -1">{{ query.limit }}</span> items<br/>
+                            <small *ngIf="remaining?.total > 0">{{ remaining.total - 1}}<span *ngIf="remaining.total > query.limit">+</span> remaining</small>
+                    </button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 
-	</section>
+    </section>
