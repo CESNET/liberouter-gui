@@ -13,7 +13,7 @@ scgui_bp.add_url_rule('/stats', view_func = getStatistics, methods = ['GET'])
 
 # scgui/profiles
 scgui_bp.add_url_rule('/profiles', view_func = getProfile, methods = ['GET'])
-# module_bp.add_url_rule('/profiles', view_func = getStatistics, methods = ['PUT'])
+# TODO: updateProfile (PUT method)
 scgui_bp.add_url_rule('/profiles', view_func = createProfile, methods = ['POST'])
 scgui_bp.add_url_rule('/profiles', view_func = deleteProfile, methods = ['DELETE'])
 

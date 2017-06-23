@@ -3,4 +3,4 @@
 from liberouterapi.error import ApiException
 
 class SCGUIException(ApiException):
-	status_code = 500
+    status_code = 500
