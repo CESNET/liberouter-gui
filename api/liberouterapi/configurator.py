@@ -4,12 +4,12 @@ import configparser
 import argparse
 import sys
 import os
-from liberouterapi import app
 import logging
 
 log = logging.getLogger(__name__)
 
 import unittest
+
 class Config(object):
     """
     @class Config
@@ -27,7 +27,7 @@ class Config(object):
         """
         Load configuration
         """
-        app.logger.debug("Loading user configuration")
+        log.debug("Loading user configuration")
         self.config = configparser.ConfigParser()
 
         self.config.read(args['config'])
