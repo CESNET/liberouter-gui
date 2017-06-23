@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
                 private config: ConfigService) {}
 
     ngOnInit() {
-        this.config.load();
         this.router.events.subscribe(val => {
             /* the router will fire multiple events */
             /* we only want to react if it's the final active route */
