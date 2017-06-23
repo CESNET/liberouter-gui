@@ -13,28 +13,28 @@
 		<div class="col-lg-10">
 			<!-- Graphs -->
 			<sc-graph [profiles]="profiles"
-			[selectedProfile]="selectedProfile"
-			[(time)]="time"
-			[(timeUpdated)]="timeUpdated">
+				[selectedProfile]="selectedProfile"
+				[(time)]="time"
+				[(timeUpdated)]="timeUpdated">
 			</sc-graph>
 		</div>
 		<div class="col-lg-2">
 			<!-- other actions -->
 			<div class="card">
-				<div class="card-header card-primary card-inverse text-center">
+				<h4 class="card-header card-primary card-inverse text-center">
 					Other Action
+				</h4>
+				
+				<div class="card-block">
+					<!-- TODO: Dropdown for switching profiles -->
 				</div>
 				
 				<div class="card-block">
-					<div *ngFor="let x of linkList">
-						{{ x.name }}
+					<div class="btn-group btn-group-justified">
+						<button class="btn btn-secondary" type="submit">
+							Open parallel instance
+						</button>
 					</div>
-				</div>
-				
-				<div class="card-block">
-					<button class="btn btn-secondary">
-						Create parallel instance
-					</button>
 				</div>
 			</div>
 		</div>
@@ -47,15 +47,15 @@
 		[selectedProfile]="selectedProfile"
 		[sel]="time.sel"
 		[timeUpdated]="timeUpdated">
-		</sc-stats>
+	</sc-stats>
 	
 	<br>
 	
 	<div class="row">
 		<div class="col-lg-12">
 			<sc-dbqry [profiles]="profiles"
-			[selectedProfile]="selectedProfile"
-			[sel]="time.sel">
+				[selectedProfile]="selectedProfile"
+				[sel]="time.sel">
 			</sc-dbqry>
 		</div>
 	</div>

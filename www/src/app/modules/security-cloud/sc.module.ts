@@ -13,21 +13,18 @@ import { ScGraphComponent } from './sc-graph/sc-graph.component';
 import { ScStatsComponent } from './sc-stats/sc-stats.component';
 import { ScDbqryComponent } from './sc-dbqry/sc-dbqry.component';
 import { ScDbqryFdisthelpComponent } from './sc-dbqry/sc-dbqry-fdisthelp/sc-dbqry-fdisthelp.component';
-import { OutputVolumeConversionPipe } from './sc.OutputVolumeConversionPipe';
+import { OutputVolumeConversionPipe } from './modules/OutputVolumeConversionPipe';
 import { ScGraphRenderComponent } from './sc-graph/sc-graph-render/sc-graph-render.component';
 
-import { NgDygraphsModule } from 'ng-dygraphs';
-
-
 const routes: Routes = [{
-    path : 'security-cloud',
-    component : SecurityCloudComponent,
-    canActivate : [AuthGuard],
-    data : {
-        role : 10,
-        name : 'Security Cloud',
-        description : 'Distributed, highly available IP flow record collector.',
-        icon : 'fa-cloud'
+    path: 'security-cloud',
+    component: SecurityCloudComponent,
+    canActivate: [AuthGuard],
+    data: {
+        role: 10,
+        name: 'Security Cloud',
+        description: 'Distributed, highly available IP flow record collector.',
+        icon: 'fa-cloud'
     }
 }]
 
@@ -38,7 +35,6 @@ const routes: Routes = [{
         SafePipeModule,
         RouterModule.forChild(routes),
         NgbModule,
-        NgDygraphsModule,
     ],
     declarations: [
         SecurityCloudComponent,
@@ -49,7 +45,7 @@ const routes: Routes = [{
         OutputVolumeConversionPipe,
         ScGraphRenderComponent
     ],
-    providers : [
+    providers: [
         SafePipe
     ]
 })

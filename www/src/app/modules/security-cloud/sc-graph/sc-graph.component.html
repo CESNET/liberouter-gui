@@ -1,41 +1,41 @@
 <div class="card">
-	<div class="card-header card-primary card-inverse text-center">
-		<!-- Proklik na modal s dalšími vars -->
+	<h4 class="card-header card-primary card-inverse text-center">
+		<!-- todo : thumbnails and varswap -->
 		{{ getRRDConstant().name }} on {{ profiles.getProfile(selectedProfile).name }}
-	</div>
+	</h4>
 	
 	<div class="card-block">
 		<!-- active graph area -->
 		<sc-graph-render
-		[selectedProfile]="selectedProfile"
-		[(time)]="time"
-		[(timeUpdated)]="timeUpdated"
-		[selectedVar]="selectedVar"
-		[renderSettings]="renderSettings"
-		[channels]="channels"></sc-graph-render>
+			[selectedProfile]="selectedProfile"
+			[(time)]="time"
+			[(timeUpdated)]="timeUpdated"
+			[selectedVar]="selectedVar"
+			[renderSettings]="renderSettings"
+			[channels]="channels">
+		</sc-graph-render>
 	</div>
 	
 	<div class="card-block">
 		<div class="form-check form-check-inline" *ngFor="let channel of channels">
 			<label class="form-check-label">
-				<input class="form-check-input" value="channel.name" type="checkbox" [(ngModel)]="channel.checked"> {{channel.name}}
+				<input class="form-check-input" value="channel.name" type="checkbox"
+					[(ngModel)]="channel.checked"> {{channel.name}}
 			</label>
 		</div>
 	</div>
 	
 	<div class="card-footer">
-		<div class="row">
-			<div class="col-md-3">
+		<div class="row align-items-center">
+			<div class="col-md-2">
 				<form class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<input class="form-control" placeholder="yyyy-mm-dd"
-							name="dp" [(ngModel)]="pickerDate"
-							ngbDatepicker #d="ngbDatepicker"
-							(ngModelChange)="pickerChanged($event)">
-							<div class="input-group-addon" (click)="d.toggle()">
-								<i class="fa fa-calendar" aria-hidden="true"
-								style="cursor: pointer;"></i>
+							<input class="form-control" placeholder="yyyy-mm-dd" name="dp"
+								[(ngModel)]="pickerDate" ngbDatepicker #d="ngbDatepicker"
+								(ngModelChange)="pickerChanged($event)">
+							<div class="input-group-addon cursor-pointer" (click)="d.toggle()">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
 							</div>
 						</div>
 					</div>
@@ -43,35 +43,31 @@
 			</div>
 			
 			<!-- Render settings -->
-			<div class="col-md-2">
-				<!--div class="form-check form-check-inline"
-				*ngFor="let x of RenderSettingsLabel">
-					<label class="form-check-label">
-						<input class="form-check-input"
-						type="radio" name="renderSettings"
-						value="x.value" [(ngModel)]="selectedRenderSetting">
-						{{x.name}}
-					</label>
-				</div-->
-				<div class="form-check form-check-inline">
-					<label class="form-check-label">
-						<input class="form-check-input" type="radio"
-						name="renderSettings" value="line"
-						[(ngModel)]="renderSettings"> Line
-					</label>
-				</div>
-				<div class="form-check form-check-inline">
-					<label class="form-check-label">
-						<input class="form-check-input" type="radio"
-						name="renderSettings" value="stacked"
-						[(ngModel)]="renderSettings"> Stacked
-					</label>
+			<div class="col-md-2 text-center">
+				<div class="box">
+					<div class="form-check form-check-inline">
+						<label class="form-check-label">
+							<input class="form-check-input" type="radio" name="renderSettings"
+								value="line" [(ngModel)]="renderSettings"> Line
+						</label>
+					</div>
+					<div class="form-check form-check-inline">
+						<label class="form-check-label">
+							<input class="form-check-input" type="radio" name="renderSettings"
+								value="stacked" [(ngModel)]="renderSettings"> Stacked
+						</label>
+					</div>
 				</div>
 			</div>
 			
-			<div class="col-md-4">
+			<div class="col-md-5">
 				<!-- Selected time box -->
-				<input class="form-control text-center" type="text" [ngModel]="readableTime" readonly>
+				<div class="box">
+					{{ time.sel.bgn | date : 'y-MM-dd HH:mm' }}
+					<span *ngIf="time.sel.bgn != time.sel.end">
+						- {{ time.sel.end | date : 'y-MM-dd HH:mm' }}
+					</span>
+				</div>
 			</div>
 			
 			<div class="col-md-3">
