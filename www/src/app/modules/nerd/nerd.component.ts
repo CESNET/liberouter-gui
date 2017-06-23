@@ -28,21 +28,21 @@ import { NerdModalComponent } from './nerd-modal/nerd-modal.component'
 export class NerdComponent implements OnInit {
 
     // NERD URL for iframe
-    baseUrl : string;
+    baseUrl: string;
 
     // Sanitizied URL for iframe
     url: SafeResourceUrl;
 
     // Flag for iframe initialization routine
-    iframeInit : Boolean = false;
+    iframeInit: Boolean = false;
     // The loading message
-    msg : string = "";
+    msg = '';
 
     // URL parameters
-    params : Object;
+    params: Object;
 
     // Configuration fetched froms backend
-    config : Object = {};
+    config: Object = {};
 
     // Reference to modal window
     modalRef;
@@ -50,67 +50,67 @@ export class NerdComponent implements OnInit {
     /**
       * Construct the FTAS URL from environment variables
       */
-    constructor(private route : ActivatedRoute,
-				private configService : ConfigService,
-				private modalService : NgbModal) {
+    constructor(private route: ActivatedRoute,
+                private configService: ConfigService,
+                private modalService: NgbModal) {
     }
 
     /**
       * Get URL params and prepare the advanced query field for NERD iframe
       */
     ngOnInit() {
-    	this.configService.getModule('nerd').subscribe(
-    		config => {
-    			this.config = config;
-    			this.fetchParams();
-    		},
-			error => {
-				// Config for module doesn't exist
-				if (error.status == 404) {
-					console.log(error);
-					this.openSettings(false);
-				}
-			}
-		);
+        this.configService.getModule('nerd').subscribe(
+            config => {
+                this.config = config;
+                this.fetchParams();
+            },
+            error => {
+                // Config for module doesn't exist
+                if (error.status === 404) {
+                    console.log(error);
+                    this.openSettings(false);
+                }
+            }
+        );
     }
 
-	/**
-	  * Fetch parameters from the route and create filter from them
-	  *
-	  * Then set URL for iframe
-	  */
+    /**
+      * Fetch parameters from the route and create filter from them
+      *
+      * Then set URL for iframe
+      */
     private fetchParams() {
-		this.route.params.subscribe(params => {
-        	this.params = params;
-			this.setUrl();
+        this.route.params.subscribe(params => {
+            this.params = params;
+            this.setUrl();
         });
     }
 
-	/**
-	  * Set NERD URL
-	  * If params are set we can do IP filtering
-	  *
-	  * Fall-through model for setting the baseUrl where preferred method
-	  * is fullUrl -> url -> show modal with settings
-	  */
+    /**
+      * Set NERD URL
+      * If params are set we can do IP filtering
+      *
+      * Fall-through model for setting the baseUrl where preferred method
+      * is fullUrl -> url -> show modal with settings
+      */
     private setUrl() {
-    	this.baseUrl = "https://";
+        this.baseUrl = 'https://';
 
-   		if (this.config['fullUrl']) {
-			this.baseUrl = this.config['fullUrl']
-		} else if (this.config['url']) {
+        if (this.config['fullUrl']) {
+            this.baseUrl = this.config['fullUrl']
+        } else if (this.config['url']) {
             this.baseUrl += this.config['url'];
         }
 
-        if (this.baseUrl == 'https://') {
-			this.openSettings();
+        if (this.baseUrl === 'https://') {
+            this.openSettings();
         }
 
-		if (!this.params || !this.params["ip"])
-			this.url = this.baseUrl;
-		else {
-			this.url = this.baseUrl + "/ip/" + this.params["ip"];
-		}
+        if (!this.params || !this.params['ip']) {
+            this.url = this.baseUrl;
+        } else {
+            this.url = this.baseUrl + '/ip/' + this.params['ip'];
+        }
     }
 
 
@@ -121,55 +121,55 @@ export class NerdComponent implements OnInit {
       */
     iframeLoaded() {
         if (!this.iframeInit) {
-            this.msg = "NERD is loading...";
+            this.msg = 'NERD is loading...';
         } else {
-            this.msg = "";
+            this.msg = '';
         }
 
         this.iframeInit = !this.iframeInit;
     }
 
-	/**
-	  * open modal window with settings
-	  *
-	  * on close, save settings and regenerate URL
-	  * on dismissal check if the HTTP Status is 404, which means the config
-	  * for such module doesn't exist, in that case reopen with new params.
-	  */
-    openSettings(update : boolean = true) {
-		this.modalRef = this.modalService.open(NerdModalComponent);
-		this.modalRef.componentInstance.data = this.config;
-		this.modalRef.result.then(
-			(result) => {
-				// The modal was closed, save settings
-				if (update) {
-					this.configService.update('nerd', this.config).subscribe(
-						(data) => {
-							this.config = data;
-							this.setUrl();
-						},
-						(error) => {
-							console.error(error);
-							if (error.status == 404) {
-								this.openSettings(false);
-							}
-						});
-				} else {
-					let newconfig = Object.assign({}, this.config);
-					newconfig["name"] = "nerd";
-					this.configService.add(newconfig).subscribe(
-						(data) => {
-							this.config = data;
-							this.setUrl();
-						},
-						(error) => {
-							console.error(error);
-						});
-				}
-			},
-			(reason) => {
-				// dismissal, do nothing
-			});
+    /**
+      * open modal window with settings
+      *
+      * on close, save settings and regenerate URL
+      * on dismissal check if the HTTP Status is 404, which means the config
+      * for such module doesn't exist, in that case reopen with new params.
+      */
+    openSettings(update: boolean = true) {
+        this.modalRef = this.modalService.open(NerdModalComponent);
+        this.modalRef.componentInstance.data = this.config;
+        this.modalRef.result.then(
+            (result) => {
+                // The modal was closed, save settings
+                if (update) {
+                    this.configService.update('nerd', this.config).subscribe(
+                        (data) => {
+                            this.config = data;
+                            this.setUrl();
+                        },
+                        (error) => {
+                            console.error(error);
+                            if (error.status === 404) {
+                                this.openSettings(false);
+                            }
+                        });
+                } else {
+                    const newconfig = Object.assign({}, this.config);
+                    newconfig['name'] = 'nerd';
+                    this.configService.add(newconfig).subscribe(
+                        (data) => {
+                            this.config = data;
+                            this.setUrl();
+                        },
+                        (error) => {
+                            console.error(error);
+                        });
+                }
+            },
+            (reason) => {
+                // dismissal, do nothing
+            });
     }
 
 }

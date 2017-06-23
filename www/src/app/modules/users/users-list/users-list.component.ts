@@ -4,9 +4,9 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { UsersService } from '../users.service';
 
 enum Roles {
-	"Administrator" = 0,
-	"User" = 10,
-	"Guest" = 255
+    'Administrator' = 0,
+    'User' = 10,
+    'Guest' = 255
 }
 
 @Component({
@@ -17,46 +17,46 @@ enum Roles {
 })
 export class UsersListComponent implements OnInit {
 
-	users : Array<Object> = [];
-	currentUser = JSON.parse(localStorage.getItem('currentUser'));
-	roles = Roles;
-	user = {};
-	deleteBtn = ["Delete", "Cancel"];
+    users: Array<Object> = [];
+    currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    roles = Roles;
+    user = {};
+    deleteBtn = ['Delete', 'Cancel'];
 
-	constructor (private usersService : UsersService) {}
+    constructor (private usersService: UsersService) {}
 
-	ngOnInit() {
-		console.log("trying to list users")
-		this.listUsers();
-	}
+    ngOnInit() {
+        console.log('trying to list users')
+        this.listUsers();
+    }
 
-	private listUsers() {
-		this.usersService.list().subscribe(
-			data => {
-				console.log(data);
-				this.users = data;
-			},
-			error => {
-				console.log(error)
-			}
-		);
-	}
+    private listUsers() {
+        this.usersService.list().subscribe(
+            data => {
+                console.log(data);
+                this.users = data;
+            },
+            error => {
+                console.log(error)
+            }
+        );
+    }
 
-	public confirmDelete(user) {
-		this.user = user;
-	}
+    public confirmDelete(user) {
+        this.user = user;
+    }
 
-	removeUser(user:Object) {
-		console.log(user['id']['$oid']);
-		this.usersService.remove(user['id']['$oid']).subscribe(
-			data => {
-				console.log(data);
-				this.listUsers();
-			},
-			error => {
-				console.log(error);
-			}
-		)
-	}
+    removeUser(user:Object) {
+        console.log(user['id']['$oid']);
+        this.usersService.remove(user['id']['$oid']).subscribe(
+            data => {
+                console.log(data);
+                this.listUsers();
+            },
+            error => {
+                console.log(error);
+            }
+        )
+    }
 
 }

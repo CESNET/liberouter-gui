@@ -1,25 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
-import { FormsModule }		from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { AuthGuard } from  'app/utils/auth.guard';
+import { AuthGuard } from 'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { FtasComponent } from './ftas.component';
 import { FtasModalComponent } from './ftas-modal/ftas-modal.component'
 
-const ftasRoutes : Routes = [{
+const ftasRoutes: Routes = [{
     path : 'ftas',
     component : FtasComponent,
     canActivate : [AuthGuard],
     data : {
         role : 10,
-        name : "FTAS",
-        description : "Flow-based Traffic Analysis System",
-        icon : "fa-first-order"
+        name : 'FTAS',
+        description : 'Flow-based Traffic Analysis System',
+        icon : 'fa-first-order'
     }
 }]
 
@@ -39,7 +39,7 @@ const ftasRoutes : Routes = [{
     SafePipe
   ],
   entryComponents : [
-	FtasModalComponent
+    FtasModalComponent
   ]
 })
 export class FtasModule { }

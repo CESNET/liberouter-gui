@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
 	"project": {
-		"version": "0.2.0",
+		"version": "0.3.2",
 		"name": "liberouter-gui"
 	},
 	"apps": [
@@ -9,7 +9,8 @@
 			"root": "src",
 			"outDir": "dist",
 			"assets": [
-				"assets",
+                "assets/config-sample.json",
+                "assets/img",
 				"favicon.ico",
 				".htaccess",
 				"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
@@ -20,11 +21,10 @@
 			"test": "test.ts",
 			"tsconfig": "tsconfig.app.json",
 			"testTsconfig": "tsconfig.spec.json",
-			"prefix": "app",
+			"prefix": "",
 			"styles": [
 				"styles/main.scss",
-				"../node_modules/bootstrap/dist/css/bootstrap.min.css",
-				"../node_modules/codemirror/lib/codemirror.css"
+				"../node_modules/bootstrap/dist/css/bootstrap.min.css"
 			],
 			"scripts": [],
 			"environmentSource": "environments/environment.ts",
