@@ -1,14 +1,30 @@
 #!/bin/python3
 
-from liberouterapi import config
+try:
+    from liberouterapi import config
+except:
+    """
+    This is only a fallback so unittests can do their job
+    """
+    pass
+
 import json
 from bs4 import BeautifulSoup
 from bs4 import element
 import os
 import re
 
-IPFIXCOL_DATA = config.modules['scgui']['ipfixcol_data']
-IPFIXCOL_CONF = config.modules['scgui']['ipfixcol_conf']
+
+IPFIXCOL_DATA = ''
+IPFIXCOL_CONF = ''
+try:
+    IPFIXCOL_DATA = config.modules['scgui']['ipfixcol_data']
+    IPFIXCOL_CONF = config.modules['scgui']['ipfixcol_conf']
+except:
+    """
+    This is only a fallback so unittests can do their job
+    """
+    pass
 
 class ProfilesError(Exception):
     def __init__(self, message):
@@ -17,12 +33,11 @@ class ProfilesError(Exception):
 class Profiles(object):
     class __Prof:
         def __init__(self, path = None):
-            self.path = ""
-            self.tree = ""
-            self.data = ""
+            self.path = ''
+            self.tree = ''
+            self.data = ''
 
             self.setConfiguration(path)
-
 
         def __fillChannel(self, channel):
             """
@@ -32,7 +47,7 @@ class Profiles(object):
             Returns dictionary of channel's data
             """
             assert(isinstance(channel, element.Tag))
-            assert(channel.name == "channel")
+            assert(channel.name == 'channel')
 
             out = dict()
 
@@ -265,10 +280,11 @@ class Profiles(object):
             Auxiliary method for acceptance testing. This method allows to overwrite
             internal data tree and paths. This method is also used by __init__
             """
-            self.path = IPFIXCOL_CONF
-
+            print(path)
             if path is not None:
                 self.path = path
+            else:
+                self.path = IPFIXCOL_CONF
 
             with open(self.path) as handle:
                 self.tree = BeautifulSoup(handle, 'lxml')
@@ -278,6 +294,7 @@ class Profiles(object):
     __instance = None
     def __new__(cls, path = None):
         if Profiles.__instance is None:
+            print(path)
             Profiles.__instance = Profiles.__Prof(path)
         return Profiles.__instance
 

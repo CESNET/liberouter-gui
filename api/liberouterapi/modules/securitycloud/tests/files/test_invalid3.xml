@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!-- Live profile (default - always must exists) -->
+<profile name="live">
+	<!--## Type of a profile -->
+	<type>normal</type>
+	<!--## Directory for data store of valuable data and statistics -->
+	<directory>/data/live/</directory>
+
+	<!-- List of channels that belong to the profile -->
+	<channelList>
+		<channel name="ch1">
+			<!--## List of sources from which channel will receive data -->
+			<sourceList>
+				<!--## Live profile always use "*" -->
+				<source>*</source>
+			</sourceList>
+			<!--## Filter applied on records, specifying whether it belongs to the profile -->
+			<filter>ipVersion = 4</filter>
+		</channel>
+		<channel name="ch2">
+			<sourceList>
+				<source>*</source>
+			</sourceList>
+			<filter>ipVersion = 6</filter>
+		</channel>
+	</channelList>
+
+	<subprofileList>
+		<profile name="pokus">
+			<type>normal</type>
+			<directory>/data//live/pokus</directory>
+			
+			<channelList>
+				<channel name="ch1">
+					<sourceList>
+						<source>ch1</source>
+						<source>ch2</source>
+					</sourceList>
+					
+					<filter/>
+				</channel>
+				<!-- the channel tag should name name attribute -->
+				<channel name="ch2">
+					<sourceList>
+						<source>ch1</source>
+						<source>ch2</source>
+					</sourceList>
+					
+					<filter/>
+				</channel>
+			</channelList>
+			
+			<subprofileList>
+				<profile name="New_Profile">
+					<!-- Missing type tag -->
+					<directory>/data//live/pokus/New_Profile</directory>
+					
+					<channelList>
+						<channel name="New_Channel">
+							<sourceList>
+								<source>ch1</source>
+								<source>ch2</source>
+							</sourceList>
+							
+							<filter>*</filter>
+						</channel>
+					</channelList>
+				</profile>
+			</subprofileList>
+		</profile>
+	</subprofileList>
+</profile>

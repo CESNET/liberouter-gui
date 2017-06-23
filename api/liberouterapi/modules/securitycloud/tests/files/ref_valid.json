@@ -1,0 +1,66 @@
+[
+    {
+        "channels": [
+            {
+                "filter": "ipVersion = 4",
+                "name": "ch1",
+                "sources": [
+                    "*"
+                ]
+            },
+            {
+                "filter": "ipVersion = 6",
+                "name": "ch2",
+                "sources": [
+                    "*"
+                ]
+            }
+        ],
+        "name": "live",
+        "path": "/live",
+        "subprofiles": [
+            {
+                "channels": [
+                    {
+                        "filter": "",
+                        "name": "ch1",
+                        "sources": [
+                            "ch1",
+                            "ch2"
+                        ]
+                    },
+                    {
+                        "filter": "",
+                        "name": "ch2",
+                        "sources": [
+                            "ch1",
+                            "ch2"
+                        ]
+                    }
+                ],
+                "name": "test",
+                "path": "/live/test",
+                "subprofiles": [
+                    {
+                        "channels": [
+                            {
+                                "filter": "*",
+                                "name": "New_Channel",
+                                "sources": [
+                                    "ch1",
+                                    "ch2"
+                                ]
+                            }
+                        ],
+                        "name": "New_Profile",
+                        "path": "/live/test/New_Profile",
+                        "subprofiles": [],
+                        "type": "normal"
+                    }
+                ],
+                "type": "normal"
+            }
+        ],
+        "type": "normal"
+    }
+]
