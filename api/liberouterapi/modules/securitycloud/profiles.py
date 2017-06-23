@@ -9,8 +9,6 @@ import re
 
 IPFIXCOL_DATA = config.modules['scgui']['ipfixcol_data']
 IPFIXCOL_CONF = config.modules['scgui']['ipfixcol_conf']
-#IPFIXCOL_DATA = "/data"
-#IPFIXCOL_CONF = "/data/live"
 
 class ProfilesError(Exception):
     def __init__(self, message):
@@ -153,7 +151,7 @@ class Profiles(object):
             output += "</profile>"
             return output
 
-        def getJSON(self):
+        def getJSONString(self):
             return json.dumps(self.data)
 
         def exportXML(self, altPath = None):
@@ -183,7 +181,7 @@ class Profiles(object):
             """
             Profile with specified profilePath will have its list of subprofiles
             expanded with data. Data is a dictionary with profile data defined in
-            the same way as is json produced by getJSON. There is no need for 
+            the same way as is json produced by getJSONString. There is no need for 
             defining path since it will be overwritten by this function. True is
             returned on success, False otherwise.
             """

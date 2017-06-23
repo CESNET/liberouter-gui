@@ -137,7 +137,7 @@ class Stats():
         finally:
             return result
 
-    def getJSON(self):
+    def getJSONString(self):
         return json.dumps({"Sum": self.sums, "Rate": self.rates})
 
 if __name__ == '__main__':
@@ -147,4 +147,4 @@ if __name__ == '__main__':
     end = 1486432500
 
     stats = Stats(profile, bgn, end)
-    print(stats.getJSON())
+    print(stats.getJSONString())

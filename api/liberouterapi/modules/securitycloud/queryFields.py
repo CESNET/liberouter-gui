@@ -16,17 +16,13 @@ class Fields():
             raise FieldsError("Failed to retrieve libnf-info")
 
         buffer = p.stdout.read().decode("utf-8")
-        self.data = {
-            "names": [],
-            "hints": [],
-        }
+        self.data = []
 
         subbuf = buffer.split(':')
         for row in subbuf:
             if row:
                 s = row.split(';')
-                self.data["names"].append(s[0])
-                self.data["hints"].append(s[1])
+                self.data.append({"name": s[0], "hint": s[1]})
 
-    def getJSON(self):
+    def getJSONString(self):
         return json.dumps(self.data)

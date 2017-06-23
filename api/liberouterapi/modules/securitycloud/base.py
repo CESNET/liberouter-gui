@@ -11,10 +11,9 @@ from .error import SCGUIException
 def getStatistics():
     req = request.args.to_dict()
 
-
     try:
         stats = Statistics(req['profile'], req['bgn'], req['end'])
-        return stats.getJSON()
+        return stats.getJSONString()
     except KeyError as e:
         raise SCGUIException("Key error: " + str(e))
     except ProfilesError as e:
@@ -34,6 +33,10 @@ def getProfile():
         raise SCGUIException(str(e))
 
 def fillChannel(channel, data):
+    """
+    Auxiliary function for createProfile(). This method parses part of url parameters and breaks
+    them into a dictionary object representing single profile channel.
+    """
     items = data.split(':')
     channel["name"] = items[0]
     channel["filter"] = items[1]
@@ -88,7 +91,7 @@ def deleteProfile():
 def getQueryFields():
     try:
         f = Fields()
-        return f.getJSON()
+        return f.getJSONString()
     except FieldsError as e:
         raise SCGUIException(str(e))
 
@@ -98,7 +101,7 @@ def getGraph():
 
     try:
         g = Graphs(req["profile"], req["bgn"], req["end"], req["var"], req["points"])
-        return g.getJSON()
+        return g.getJSONString()
     except KeyError as e:
         raise SCGUIException(str(e))
     except GraphsError as e:

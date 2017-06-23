@@ -131,9 +131,9 @@ class Graphs():
             # store merged data back to self.data as json string
             self.data = json.dumps(aux)
 
-    def getJSON(self):
+    def getJSONString(self):
         return self.data
 
 if __name__ == "__main__":
     g = Graph("/live", 1486428900, 1486432500, "flows", 0)
-    print(g.getJSON())
+    print(g.getJSONString())
