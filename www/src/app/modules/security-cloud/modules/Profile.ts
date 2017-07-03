@@ -44,7 +44,7 @@ export class ProfileMap {
             profilePath = profilePath.slice(1);
         }
 
-        const pname : string[] = profilePath.split('/', 1);
+        const pname: string[] = profilePath.split('/', 1);
         if (pname.length === 1) {
             return this.data[pname[0]];
         }
@@ -58,13 +58,13 @@ export class ProfileMap {
      *  @return ProfileLink array
      */
     getLinkList(level: string): ProfileLink[] {
-        let result: ProfileLink[] = [];
+        const result: ProfileLink[] = [];
 
         for (let k in this.data) {
             result.push(new ProfileLink((level + ' ' + k), this.data[k].path));
 
             level += '-';
-            let aux: ProfileLink[] = this.data[k].subprofiles.getLinkList(level);
+            const aux: ProfileLink[] = this.data[k].subprofiles.getLinkList(level);
 
             for (let p of aux) {
                 result.push(p);

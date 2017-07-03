@@ -1,3 +1,8 @@
-<div #dygraphsWrapper>
-	<div #chart>text</div>
+<div id="DygraphsWrapper" #DygraphsWrapper>
+    <div id="GraphArea">
+        <div #GraphAreaCursor1 id="GraphAreaCursor1"></div>
+        <div #GraphAreaCurSpan id="GraphAreaCurSpan"></div> <!-- *ngIf="time.sel.bgn != time.sel.end" -->
+        <div #GraphAreaCursor2 id="GraphAreaCursor2"></div> <!-- *ngIf="time.sel.bgn != time.sel.end" -->
+    </div>
+	<div #Chart>text</div>
 </div>

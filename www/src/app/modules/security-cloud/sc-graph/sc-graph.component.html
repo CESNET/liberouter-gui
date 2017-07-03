@@ -6,10 +6,10 @@
 	
 	<div class="card-block">
 		<!-- active graph area -->
-		<sc-graph-render
+		<sc-graph-render #RenderComponent
 			[selectedProfile]="selectedProfile"
-			[(time)]="time"
-			[(timeUpdated)]="timeUpdated"
+			[time]="time"
+            (timeChange)="handleTimeChangePropagation($event)"
 			[selectedVar]="selectedVar"
 			[renderSettings]="renderSettings"
 			[channels]="channels">
@@ -17,10 +17,11 @@
 	</div>
 	
 	<div class="card-block">
-		<div class="form-check form-check-inline" *ngFor="let channel of channels">
+		<div class="form-check form-check-inline" *ngFor="let channel of channels; let i=index">
 			<label class="form-check-label">
 				<input class="form-check-input" value="channel.name" type="checkbox"
-					[(ngModel)]="channel.checked"> {{channel.name}}
+					[(ngModel)]="channel.checked"
+                    (click)="renderComponent.changeChannelVisibility(i)"> {{channel.name}}
 			</label>
 		</div>
 	</div>

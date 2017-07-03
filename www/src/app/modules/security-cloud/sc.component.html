@@ -14,8 +14,8 @@
 			<!-- Graphs -->
 			<sc-graph [profiles]="profiles"
 				[selectedProfile]="selectedProfile"
-				[(time)]="time"
-				[(timeUpdated)]="timeUpdated">
+				[time]="time"
+                (timeChange)="handleTimeChangePropagation($event)">
 			</sc-graph>
 		</div>
 		<div class="col-lg-2">

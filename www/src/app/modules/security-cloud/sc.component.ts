@@ -111,6 +111,10 @@ export class SecurityCloudComponent implements OnInit {
         }
     }
 
+    handleTimeChangePropagation(event: any) {
+        this.timeUpdated = !this.timeUpdated;
+    }
+
     /**
      *  @brief Method for swapping profiles from dropdown menu
      */

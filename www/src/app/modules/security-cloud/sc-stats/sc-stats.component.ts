@@ -18,9 +18,9 @@ import { ScStatService } from './sc-stats.service';
 export class ScStatsComponent implements OnInit, OnChanges {
     /* EXTERNAL VARIABLES */
     @Input() profiles: ProfileMap;
-    @Input() selectedProfile : string;
+    @Input() selectedProfile: string;
     @Input() sel: TimeSelection;
-    @Input() timeUpdated : boolean;
+    @Input() timeUpdated: boolean;
 
     /* INTERNAL VARIABLES */
     error: any = null; ///< Http request error storage

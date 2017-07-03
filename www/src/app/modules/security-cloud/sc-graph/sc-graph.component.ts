@@ -1,12 +1,13 @@
 // Global modules
 import { Component, Input, Output,
-OnInit, OnChanges, EventEmitter, SimpleChanges } from '@angular/core';
+OnInit, OnChanges, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 
 // Local modules
 import { ProfileMap, Channel } from '../modules/Profile';
 import { TimeSpecs, TimeSelection, TimeView } from '../modules/TimeSpecs';
 import { RRDVariables } from '../modules/RRDVariables';
 import { Utility } from '../modules/Utility';
+import { ScGraphRenderComponent } from './sc-graph-render/sc-graph-render.component';
 
 export class ChannelSettings {
     name: string;
@@ -22,12 +23,11 @@ export class ScGraphComponent implements OnInit, OnChanges {
     /* EXTERNAL VARIABLES */
     @Input() profiles: ProfileMap;
     @Input() selectedProfile: string;
+    @ViewChild('RenderComponent') renderComponent: ScGraphRenderComponent;
 
     /* 2-WAY DATA BINDING */
     @Input() time: TimeSpecs;
     @Output() timeChange = new EventEmitter(); // this.timeChange.emit(this.time)
-    @Input() timeUpdated: boolean;
-    @Output() timeUpdatedChange = new EventEmitter();
 
     /* INTERNAL VARIABLES */
     selectedVar = 0; ///< Index to RRDVariables
@@ -82,8 +82,10 @@ export class ScGraphComponent implements OnInit, OnChanges {
      */
     triggerEmitters() {
         this.timeChange.emit(this.time);
-        this.timeUpdated = !this.timeUpdated;
-        this.timeUpdatedChange.emit(this.timeUpdated);
+    }
+
+    handleTimeChangePropagation(event: any) {
+        this.timeChange.emit(this.time);
     }
 
     /**

@@ -1,6 +1,30 @@
-#dygraphs-wrapper {
+#DygraphsWrapper {
 	position: relative;
 	left: 0px;
 	width: 100%;
 	height: 300px;
+}
+
+#GraphArea {
+    position: absolute;
+    width: 1000px;
+    height: 300px;
+}
+
+#GraphAreaCursor1 {
+    position: absolute;
+    width: 2px;
+    background: #000;
+}
+
+#GraphAreaCursor2 {
+    position: absolute;
+    width: 2px;
+    background: #000;
+}
+
+#GraphAreaCurSpan {
+    position: absolute;
+    background: #00FF00;
+    opacity: 0.2;
 }
