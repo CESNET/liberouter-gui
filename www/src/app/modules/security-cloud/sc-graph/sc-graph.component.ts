@@ -1,10 +1,11 @@
 // Global modules
 import { Component, Input, Output,
 OnInit, OnChanges, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import {NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 // Local modules
 import { ProfileMap, Channel } from '../modules/Profile';
-import { TimeSpecs, TimeSelection, TimeView } from '../modules/TimeSpecs';
+import { TimeSpecs, TimeSelection, TimeView, ResolutionTable } from '../modules/TimeSpecs';
 import { RRDVariables } from '../modules/RRDVariables';
 import { Utility } from '../modules/Utility';
 import { ScGraphRenderComponent } from './sc-graph-render/sc-graph-render.component';
@@ -12,12 +13,14 @@ import { ScGraphRenderComponent } from './sc-graph-render/sc-graph-render.compon
 export class ChannelSettings {
     name: string;
     checked: boolean;
+    color: string;
 }
 
 @Component({
     selector: 'sc-graph',
     templateUrl: './sc-graph.component.html',
-    styleUrls: ['./sc-graph.component.scss']
+    styleUrls: ['./sc-graph.component.scss'],
+    providers: [NgbDatepickerConfig]
 })
 export class ScGraphComponent implements OnInit, OnChanges {
     /* EXTERNAL VARIABLES */
@@ -33,12 +36,20 @@ export class ScGraphComponent implements OnInit, OnChanges {
     selectedVar = 0; ///< Index to RRDVariables
     channels: ChannelSettings[]; ///< ngModel for channel checkboxes
     pickerDate; ///< ngModel for datepicker
+    resolutionTable = ResolutionTable; ///< Make the table visible to template
+    selectedResolution = 0; ///< Auxiliary handle for ngModel. Only graph-render can modify view.res
 
     renderSettings = 'stacked';
 
-    constructor() { }
+    constructor(dpconf: NgbDatepickerConfig) {
+        const date = new Date();
+        
+        dpconf.maxDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
+    }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.selectedResolution = this.time.view.res;
+    }
 
     /**
      *  @brief Handle external changes to @Input based variables
@@ -56,6 +67,16 @@ export class ScGraphComponent implements OnInit, OnChanges {
             }
         }
     }
+    
+    generateChannelColors() {
+        const step: number = 360 / this.channels.length;
+        let i = 0;
+        
+        for (let channel of this.channels) {
+            channel.color = 'hsl(' + String(step * i) + ', 75%, 50%';
+            i++;
+        }
+    }
 
     /**
      *  @brief Create control array for filtering channels displayed in graph
@@ -71,8 +92,10 @@ export class ScGraphComponent implements OnInit, OnChanges {
         // Forget any previous content, create new array
         this.channels = new Array<ChannelSettings>();
         for (let channel of rawChannels) {
-            this.channels.push({name: channel.name, checked: true});
+            this.channels.push({name: channel.name, checked: true, color: '#000'});
         }
+        
+        this.generateChannelColors();
     }
 
     /**
@@ -94,22 +117,17 @@ export class ScGraphComponent implements OnInit, OnChanges {
      *  @param [in] event Object with attributes year, month, day. There specify
      *  new selected timeslot
      *
-     *  @details View frame must be aligned in a way that selected interval is
-     *  in the middle.
+     *  @details Calls designated method in child component
      */
     pickerChanged(event: any) {
-        // Selecting only single timeslot
-        this.time.sel.bgn = new Date(event.year, event.month, event.day).getTime();
-        this.time.sel.end = this.time.sel.bgn;
-
-        // Cursor will be in center of the view
-        this.time.view.bgn = this.time.sel.bgn - this.time.view.res / 2;
-        this.time.view.end = this.time.sel.bgn + this.time.view.res / 2;
-
-        // Since ngOnChanges does not catch update from the inside
-        this.triggerEmitters();
+       this.renderComponent.changeSelectedTime(event);
     }
 
+    resolutionChanged(newResolution) {
+        this.selectedResolution = newResolution;
+        this.renderComponent.changeResolution(true, this.selectedResolution);
+    }
+    
     getRRDConstant() {
         return RRDVariables[this.selectedVar];
     }
