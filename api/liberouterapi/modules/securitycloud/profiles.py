@@ -280,7 +280,6 @@ class Profiles(object):
             Auxiliary method for acceptance testing. This method allows to overwrite
             internal data tree and paths. This method is also used by __init__
             """
-            print(path)
             if path is not None:
                 self.path = path
             else:
@@ -294,7 +293,6 @@ class Profiles(object):
     __instance = None
     def __new__(cls, path = None):
         if Profiles.__instance is None:
-            print(path)
             Profiles.__instance = Profiles.__Prof(path)
         return Profiles.__instance
 

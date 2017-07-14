@@ -9,55 +9,23 @@ import { environment } from 'environments/environment';
 // Local modules
 import { ProfileMap, Channel, ProfileLink } from './modules/Profile';
 import { TimeSpecs, TimeSelection, TimeView } from './modules/TimeSpecs';
+import { AppConfig } from './modules/AppConfig';
+
+// Service
+import { ScService } from './sc.service';
 
 @Component({
     selector : 'app-security-cloud',
     templateUrl : './sc.component.html',
-    styleUrls : ['./sc.component.scss']
+    styleUrls : ['./sc.component.scss'],
+    providers : [ScService]
 })
 export class SecurityCloudComponent implements OnInit {
-    // TODO: Following variable will be initialized by a async request
-    profiles: ProfileMap = new ProfileMap({
-        'live': {
-            name: 'live',
-            type: 'normal',
-            path: '/live',
-            channels: [
-                {
-                    name: 'ch1',
-                    filter: '*',
-                    sources: ['*']
-                },
-                {
-                    name: 'ch2',
-                    filter: '*',
-                    sources: ['*']
-                }
-            ],
-            subprofiles: new ProfileMap({
-                'test': {
-                    name: 'test',
-                    type: 'normal',
-                    path: '/live/test',
-                    channels: [
-                        {
-                            name: 'ch1',
-                            filter: '*',
-                            sources: [ 'ch1', 'ch2' ]
-                        },
-                        {
-                            name: 'ch2',
-                            filter: '*',
-                            sources: [ 'ch2' ]
-                        },
-                    ],
-                    subprofiles: new ProfileMap({})
-                }
-            })
-        }
-    });
+    profiles: ProfileMap = null;
+    config: AppConfig = null;
     selectedProfile: string = null; ///< Identifier of currently selected profile(default: /live)
     linkList: ProfileLink[] = null;
+    error: any = null;
 
     time: TimeSpecs = new TimeSpecs;
     /**
@@ -75,7 +43,7 @@ export class SecurityCloudComponent implements OnInit {
     /**
       * Construct the FTAS URL from environment variables
       */
-    constructor( private route: ActivatedRoute ) {}
+    constructor( private route: ActivatedRoute, private api: ScService ) {}
 
     /**
       * Get URL params and prepare the advanced query field for FTAS iframe
@@ -98,19 +66,57 @@ export class SecurityCloudComponent implements OnInit {
             }
         });*/
 
-        const debug = true;
-        if (debug) {
-            const twelveHours: number = 12 * 60 * 60 * 1000;
-            this.selectedProfile = '/live';
-            this.time.view.bgn = 1486428000000;
-            this.time.view.res = 1;
-            this.time.view.end = this.time.view.bgn + twelveHours;
-            this.time.sel.bgn = 1486428900000;
-            this.time.sel.end = 1486429500000;
-            this.linkList = this.profiles.getLinkList('');
-        }
+        this.getProfilesData();
+        this.getConfigData();
+
+        this.selectedProfile = '/live';
     }
 
+    getProfilesData() {
+        this.api.profiles().subscribe(
+            (data: Object) => this.processProfilesData(data),
+            (error: Object) => this.processError(error)
+        );
+    }
+
+    getConfigData() {
+        this.api.config().subscribe(
+            (data: Object) => this.processAppConfigData(data),
+            (error: Object) => this.processError(error)
+        );
+    }
+
+    /**
+     *  @brief Handle for processing incoming Profiles data
+     */
+    processProfilesData(data: any) {
+        this.profiles = new ProfileMap(data);
+
+        this.linkList = this.profiles.getLinkList('');
+    }
+
+    /**
+     *  @brief Handle for processing incoming AppConfig data
+     */
+    processAppConfigData(data: any) {
+        this.config = data;
+    }
+
+    /**
+     *  @brief Handle for processing async request errors
+     */
+    processError(error: any) {
+        if (error['status'] >= 404) {
+            this.error = error;
+        }
+
+        console.error('Error when retrieving graph:');
+        console.error(error);
+    }
+
+    /**
+     *  @brief Method for handling time change propagated from graph component
+     */
     handleTimeChangePropagation(event: any) {
         this.timeUpdated = !this.timeUpdated;
     }

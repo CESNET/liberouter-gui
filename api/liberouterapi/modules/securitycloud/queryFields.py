@@ -11,11 +11,12 @@ class Fields():
     def __init__(self):
         cmd = "libnf-info | tail -n +4 | sed -r 's/(\s\s)+/\t/g' | cut -f3,4 | tr '\t' ';' | tr '\n' ':'"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        p.wait()
-        if p.returncode is not 0:
+        
+        try:
+            buffer = p.communicate(timeout=15)[0].decode("utf-8")
+        except TimeoutExpired:
             raise FieldsError("Failed to retrieve libnf-info")
 
-        buffer = p.stdout.read().decode("utf-8")
         self.data = []
 
         subbuf = buffer.split(':')

@@ -8,13 +8,9 @@ import { ProfileMap, Channel } from '../modules/Profile';
 import { TimeSpecs, TimeSelection, TimeView, ResolutionTable } from '../modules/TimeSpecs';
 import { RRDVariables } from '../modules/RRDVariables';
 import { Utility } from '../modules/Utility';
+import { ChannelSettings, ChannelSettingsBuilder } from '../modules/ChannelSettings';
+import { AppConfig } from '../modules/AppConfig';
 import { ScGraphRenderComponent } from './sc-graph-render/sc-graph-render.component';
-
-export class ChannelSettings {
-    name: string;
-    checked: boolean;
-    color: string;
-}
 
 @Component({
     selector: 'sc-graph',
@@ -26,6 +22,7 @@ export class ScGraphComponent implements OnInit, OnChanges {
     /* EXTERNAL VARIABLES */
     @Input() profiles: ProfileMap;
     @Input() selectedProfile: string;
+    @Input() config: AppConfig;
     @ViewChild('RenderComponent') renderComponent: ScGraphRenderComponent;
 
     /* 2-WAY DATA BINDING */
@@ -34,21 +31,24 @@ export class ScGraphComponent implements OnInit, OnChanges {
 
     /* INTERNAL VARIABLES */
     selectedVar = 0; ///< Index to RRDVariables
-    channels: ChannelSettings[]; ///< ngModel for channel checkboxes
+    channels: ChannelSettings[] = null; ///< ngModel for channel checkboxes
     pickerDate; ///< ngModel for datepicker
     resolutionTable = ResolutionTable; ///< Make the table visible to template
-    selectedResolution = 0; ///< Auxiliary handle for ngModel. Only graph-render can modify view.res
+    selectedResolution: string; ///< Auxiliary handle for ngModel. Only graph-render can modify view.res
 
     renderSettings = 'stacked';
 
     constructor(dpconf: NgbDatepickerConfig) {
         const date = new Date();
-        
+
         dpconf.maxDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
     }
 
     ngOnInit() {
-        this.selectedResolution = this.time.view.res;
+        // At this point, sc-graph-render component is not created yet and thus I can't do this via
+        // this.changeResolution()
+        this.selectedResolution = '1';
+        this.time.view.res = parseInt(this.selectedResolution);
     }
 
     /**
@@ -63,39 +63,9 @@ export class ScGraphComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         for (let x in changes) {
             if (x === 'selectedProfile') {
-                this.buildChannels();
+                this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
             }
         }
-    }
-    
-    generateChannelColors() {
-        const step: number = 360 / this.channels.length;
-        let i = 0;
-        
-        for (let channel of this.channels) {
-            channel.color = 'hsl(' + String(step * i) + ', 75%, 50%';
-            i++;
-        }
-    }
-
-    /**
-     *  @brief Create control array for filtering channels displayed in graph
-     *
-     *  @details Checkboxes for filtering displayed channels are bound to
-     *  this.channels. It's a list of names of a current profile and
-     *  a boolean values meaning displayed/hidden.
-     */
-    buildChannels() {
-        // Get list of channels of a current profile
-        const rawChannels: Channel[] = this.profiles.getProfile(this.selectedProfile).channels;
-
-        // Forget any previous content, create new array
-        this.channels = new Array<ChannelSettings>();
-        for (let channel of rawChannels) {
-            this.channels.push({name: channel.name, checked: true, color: '#000'});
-        }
-        
-        this.generateChannelColors();
     }
 
     /**
@@ -107,6 +77,9 @@ export class ScGraphComponent implements OnInit, OnChanges {
         this.timeChange.emit(this.time);
     }
 
+    /**
+     *  @brief Handle time change propagated from graph-render
+     */
     handleTimeChangePropagation(event: any) {
         this.timeChange.emit(this.time);
     }
@@ -123,12 +96,11 @@ export class ScGraphComponent implements OnInit, OnChanges {
        this.renderComponent.changeSelectedTime(event);
     }
 
-    resolutionChanged(newResolution) {
-        this.selectedResolution = newResolution;
-        this.renderComponent.changeResolution(true, this.selectedResolution);
-    }
-    
     getRRDConstant() {
         return RRDVariables[this.selectedVar];
+    }
+
+    updateResolutionPtr(event: any) {
+        this.selectedResolution = this.time.view.res.toString();
     }
 }

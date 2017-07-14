@@ -21,7 +21,7 @@ def grayscale(color):
 
 class GraphsError(Exception):
     def __init__(self, message):
-        super(GraphError, self).__init__(message)
+        super(GraphsError, self).__init__(message)
 
 class Graphs():
     def __init__(self, profile, bgn, end, var, pixelwidth):
@@ -87,12 +87,14 @@ class Graphs():
         output of executed command. Raises exception if command did not finished
         successfully.
         """
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, cwd=path)
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, cwd=path, shell=True)
 
-        p.wait()
-        if p.returncode is not 0:
+        try:
+            out = p.communicate(timeout=15)[0]
+            return out.decode(encoding="utf-8")
+        except TimeoutExpired:
+            out = p.communicate()[0]
             raise GraphsError("Failed to retrieve rrdtool data")
-        return p.stdout.read().decode(encoding="utf-8")
 
     def __loadData(self):
         """
@@ -103,14 +105,15 @@ class Graphs():
         --start marks timestamp of left border f graph, --end marks the other border.
         Then cdefs and render rules are inserted. Width specifies pixel size of
         the graph. Hopefully this will force rrdtool to make data aggregation
-        for me when requesting 
+        for me when requesting.
         """
-        cmd = RRDTOOL + " graph - -a JSONTIME -Z --width " + str(self.pxw) + " --start " + str(self.bgn) + " --end " + str(self.end) + " " + self.__buildCdefs() + " " + self.__buildRenderRules()
+        cmd = RRDTOOL + " graph - -a JSONTIME -Z -S 300 --width " + str(self.pxw) + " --start " + str(self.bgn) + " --end " + str(self.end) + " " + self.__buildCdefs() + " " + self.__buildRenderRules()
         args = shlex.split(cmd)
+        # NOTE: shlex.quote
 
         if SINGLE_MACHINE:
             cwdpath = IPFIXCOL_DATA + self.profile["path"] + "/rrd/channels/"
-            self.data = self.__getRrdtoolData(args, cwdpath)
+            self.data = self.__getRrdtoolData(cmd, cwdpath)
         else:
             # Auxiliary dictionary for merging source files
             aux = None

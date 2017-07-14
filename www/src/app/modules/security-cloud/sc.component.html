@@ -1,18 +1,27 @@
-<section class="container-fluid mb-4">
+<div class="container-fluid mb-4">
 	<div class="card">
 		<div class="card-block">
 			<h2>SecurityCloud</h2>
 		</div>
 	</div>
-</section>
+</div>
 
-<section class="container-fluid">
+<div class="container-fluid" *ngIf="profiles == null || config == null">
+    <div class="card">
+        <div class="card-block">
+            DON'T PANIC! Your app is being initialized...
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="profiles && config">
     <div class="row mb-4">
         <div class="col-lg-10">
             <!-- Graphs -->
             <sc-graph [profiles]="profiles"
                 [selectedProfile]="selectedProfile"
                 [time]="time"
+                [config]="config"
                 (timeChange)="handleTimeChangePropagation($event)">
             </sc-graph>
         </div>
@@ -24,7 +33,7 @@
                 </h4>
                 
                 <div class="card-block">
-                    <div ngbDropdown class="d-inline-block">
+                    <div ngbDropdown class="d-inline-block btn-block">
                         <button class="btn btn-secondary btn-block" ngbDropdownToggle>
                             Change profile
                         </button>
@@ -58,10 +67,11 @@
 	
 	<div class="row mb-4">
 		<div class="col-lg-12">
-			<sc-dbqry [profiles]="profiles"
-				[selectedProfile]="selectedProfile"
-				[sel]="time.sel">
-			</sc-dbqry>
+            <sc-dbqry [profiles]="profiles"
+                [selectedProfile]="selectedProfile"
+                [sel]="time.sel"
+                [config]="config">
+            </sc-dbqry>
 		</div>
 	</div>
-</section>
+</div>

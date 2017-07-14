@@ -5,12 +5,13 @@ ViewChild, ElementRef } from '@angular/core';
 
 // Local modules
 import { RRDVariables } from '../../modules/RRDVariables';
-import { ScGraphService} from './sc-graph-render.service';
+import { ChannelSettings } from '../../modules/ChannelSettings';
 import { TimeSpecs, ResolutionTable } from '../../modules/TimeSpecs';
 import { Utility } from '../../modules/Utility';
+import { AppConfig } from '../../modules/AppConfig';
 
 // Services
-import { ChannelSettings } from '../sc-graph.component';
+import { ScGraphService} from './sc-graph-render.service';
 
 /*
     NOTE: Dygraph module is not exactly prepared for angular2/typescript
@@ -44,6 +45,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
     @Input() selectedVar: number;
     @Input() renderSettings: string;
     @Input() channels: ChannelSettings[];
+    @Input() config: AppConfig;
     @ViewChild('Chart') chart: ElementRef;
     @ViewChild('DygraphsWrapper') wrapper: ElementRef;
     @ViewChild('GraphAreaCursor1') cursor1: ElementRef;
@@ -53,8 +55,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
     /* 2-WAY DATA BINDING */
     @Input() time: TimeSpecs;
     @Output() timeChange = new EventEmitter();
-    /*@Input() timeUpdated: boolean;
-    @Output() timeUpdatedChange = new EventEmitter();*/
+    @Output() resolutionChange = new EventEmitter();
 
     /* PRIVATE VARIABLES */
     private _g: any = null;
@@ -81,7 +82,6 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
         const debug = true;
         if (debug) {
             this.time.view.bgn = 1486428000000;
-            this.time.view.res = 1;
             this.time.view.end = this.time.view.bgn + ResolutionTable[this.time.view.res].value;
             this.time.sel.bgn = 1486428900000;
             this.time.sel.end = 1486429500000;
@@ -90,11 +90,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
         // Initialize callback reference
         GraphComponentPtr = this;
 
-        // Initialize graph data
         this.getData();
-
-        // Register basic callback for setting cursor position
-        this.chart.nativeElement.onmousedown = this.moveCursor;
     }
 
     /**
@@ -208,6 +204,9 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
 
         if (this._g == null) {
             this.initGraph(data);
+
+            // Register basic callback for setting cursor position
+            this.chart.nativeElement.onmousedown = this.moveCursor;
         }
         else {
             this.updateGraph(data);
@@ -260,7 +259,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
             stackedGraph: this.renderSettings === 'stacked',
             fillGraph: this.renderSettings === 'stacked',
             labelsKMG2: true,
-            labelsUTC: false, // TODO: Local vs UTC
+            labelsUTC: !this.config.useLocalTime,
             highlightCircleSize: 5,
             panEdgeFraction: 0.1,
             interactionModel: {},
@@ -273,7 +272,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
      *  @brief Pass new data to existing graph object
      *
      *  @param [in] data Sanitized data
-     *  
+     *
      *  @details Data, legend, label and render mode are updated.
      */
     updateGraph(data: any) {
@@ -288,7 +287,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
 
     /**
      *  @brief Retrieve array of channel colors from the whole channel array
-     *  
+     *
      *  @return Array with extracted colors
      */
     getChannelColors(): string[] {
@@ -297,7 +296,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
         for (let i in this.channels) {
             result[i] = this.channels[i].color;
         }
-        
+
         return result;
     }
 
@@ -442,12 +441,12 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
      */
     centerizeTimeWindow() {
         const now: number = this.getCurrentTimestamp();
-        
+
         const axis: number = (this.time.sel.end + this.time.sel.bgn) / 2;
 
         this.time.view.bgn = axis - ResolutionTable[this.time.view.res].value / 2;
         this.time.view.end = axis + ResolutionTable[this.time.view.res].value / 2;
-        
+
         if (this.time.view.end > now) {
             this.time.sel.bgn = now;
             this.time.sel.end = now;
@@ -469,7 +468,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
             const ratio: number = (this.time.sel.bgn - this.time.view.bgn)
                 / (this.time.view.end - this.time.view.bgn);
 
-            if (ratio < 0.05 || (ratio > 0.95 && this.time.view.end != this.getCurrentTimestamp())) {
+            if (ratio < 0.05 || (ratio > 0.95 && this.time.view.end !== this.getCurrentTimestamp())) {
                 this.centerizeTimeWindow();
             }
         }
@@ -525,29 +524,31 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
             GraphComponentPtr.testWindowBoundaries();
         }
     }
-    
+
     /**
      *  @brief Change resolution of the time window
-     *  
+     *
      *  @param [in] absolute Whether the value is absolute or relative
      *  @param [in] value Modifier value for time.view.res
-     *  
+     *
      *  @details After properly setting up new resolution (and boundary checks), a single time slot
      *  is selected (axis of current selection) and then graph is recentered and redrawn.
-     *  
+     *
      *  @note I *cannot* keep the selected time window intact simply becase new resolution might be
      *  smaller than selected time window and that would break the app. Hence the selecting single
      *  time slot.
-     *  
+     *
      *  @note This method is supposed to be called from parent component
      */
-    changeResolution(absolute: boolean, value: number) {
+    changeResolution(absolute: boolean, input: string) {
+        const value = parseInt(input);
+
         if (absolute) {
             this.time.view.res = value;
         }
         else {
             this.time.view.res += value;
-            
+
             if (this.time.view.res < 0) {
                 this.time.view.res = 0;
             }
@@ -555,53 +556,55 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
                 this.time.view.res = ResolutionTable.length - 1;
             }
         }
-        
+
         const axis: number = (this.time.sel.end + this.time.sel.bgn) / 2;
         this.time.sel.bgn = axis;
         this.time.sel.end = axis;
-        
+
+        this.resolutionChange.emit();
+
         this.centerizeTimeWindow();
     }
-    
+
     /**
      *  @brief Retrieve timestamp of the timeslot happening right now
      */
     getCurrentTimestamp(): number {
         const FIXED_TIMESLOT_SIZE = 300000;
-        
+
         let now: number = new Date().getTime();
         now = now - (now % FIXED_TIMESLOT_SIZE) - FIXED_TIMESLOT_SIZE;
-        
+
         return now;
     }
-    
+
     /**
      *  @brief Change position of time window
-     *  
+     *
      *  @param [in] value How to change time window
-     *  
-     *  @details If value is 0, move view to left by size 
-     *  
+     *
+     *  @details If value is 0, move view to left by size
+     *
      *  @note This method is supposed to be called from parent component
      */
     changeTimeWindow(value: number) {
         const now: number = this.getCurrentTimestamp();
-        
-        switch(value) {
+
+        switch (value) {
         case 0: // Move view to left
             this.time.view.bgn -= ResolutionTable[this.time.view.res].value;
             this.time.view.end -= ResolutionTable[this.time.view.res].value;
             this.time.sel.bgn -= ResolutionTable[this.time.view.res].value;
             this.time.sel.end -= ResolutionTable[this.time.view.res].value;
             break;
-            
+
         case 1: // Move view to right
             this.time.view.bgn += ResolutionTable[this.time.view.res].value;
             this.time.view.end += ResolutionTable[this.time.view.res].value;
             this.time.sel.bgn += ResolutionTable[this.time.view.res].value;
             this.time.sel.end += ResolutionTable[this.time.view.res].value;
             break;
-            
+
         case 2: // Move view to now
             this.time.sel.bgn = now;
             this.time.sel.end = now;
@@ -609,22 +612,22 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
             this.time.view.bgn = now - ResolutionTable[this.time.view.res].value;
             break;
         }
-        
+
         this.getData();
     }
-    
-    
+
+
     /**
      *  @brief Changes selected time by selecting a single timeslot at a specied day at 00:00
-     *  
+     *
      *  @param [in] event A tuple (year, month, day)
-     *  
+     *
      *  @details Year-Month-Day 00:00 is selected, graph is centerized around that and reloaded.
      */
     changeSelectedTime(event: any) {
         this.time.sel.bgn = new Date(event.year, event.month - 1, event.day).getTime();
         this.time.sel.end = this.time.sel.bgn;
-        
+
         this.centerizeTimeWindow();
     }
 }

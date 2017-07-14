@@ -1,158 +1,173 @@
 <div class="card">
-	<h4 class="card-header card-primary card-inverse text-center">
-		Database Query
-	</h4>
-	
-	<div class="card-block">
-		<div class="row">
-			<div class="col-lg-1">
-				<!-- Channel picker -->
-				<div class="card card-outline-secondary">
-					<h6 class="card-header text-center">
-						Channels
-					</h6>
-					
-					<div class="card-block" id="DB_Channels">
-						<div class="form-check" 
-							*ngFor="let channel of profiles.getProfile(selectedProfile).channels">
-							<label class="form-check-label">
-								<input class="form-check-input" type="checkbox"
-									checked>
-								{{ channel.name }}
-							</label>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-lg-4">
-				<!-- Filter textarea -->
-				<div class="card card-outline-secondary">
-					<h6 class="card-header text-center">
-						Filter
-					</h6>
-					
-					<div class="card-block">
-						<textarea class="form-control" rows="5"
-							id="DB_Filter"></textarea>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-lg-7">
-				<div class="card card-outline-secondary">
-				<!-- Options -->
-					<ngb-tabset justify="center">
-						<ngb-tab id="custom-navbar" title="Fast Options">
-							<ng-template ngbTabContent>
-								<div class="card" style="border-color: white">
-									<div class="card-block">
-										<div class="row align-items-center">
-											<div class="col-sm-2 col-xs-4">
-												<b>Limit to:</b>
-											</div>
-											<div class="col-sm-4 col-xs-8">
-												<select id="DB_LimitSelect"
-													[(ngModel)]="selectedLimit" class="form-control">
-													<option *ngFor="let limit of limitto"
-														[value]="limit.value">
-														{{ limit.desc }}
-													</option>
-												</select>
-											</div>
-											<div class="col-sm-2 col-xs-4">
-												<b>Aggregate:</b>
-											</div>
-											<div class="col-sm-4 col-xs-8">
-												<!-- TODO: Autocomplete instead of multiselect -->
-												<select id="DB_AggregateList" class="form-control">
-													<option *ngFor="let x of fields"
-														[value]="x.name" [title]="x.hint">
-														{{x.name}}
-													</option>
-												</select>
-											</div>
-										</div>
-										<div class="row align-items-center">
-											<div class="col-sm-2 col-xs-4">
-												<b>Order by:</b>
-											</div>
-											<div class="col-sm-4 col-xs-8">
-												<select id="DB_OrderBy"
-												class="form-control">
-													<option *ngFor="let x of fields"
-														[value]="x.name" [title]="x.hint">
-														{{x.name}}
-													</option>
-												</select>
-											</div>
-											<div class="col-sm-2 col-xs-4">
-												<b>Direction:</b>
-											</div>
-											<div class="col-sm-4 col-xs-8">
-												<select id="DB_OrderDir" class="form-control">
-													<option value="" selected>
-														Default
-													</option>
-													<option value="#asc">
-														Ascending
-													</option>
-													<option value="#desc">
-														Descending
-													</option>
-												</select>
-											</div>
-										</div>
-										<div class="row align-items-center">
-											<div class="col-sm-2 col-xs-4">
-												<b>Output:</b>
-											</div>
-											<div class="col-sm-4 col-xs-8">
-												<select id="DB_OutputFormat" class="form-control">
-													<option value="pretty" selected>
-														Pretty
-													</option>
-													<option value="csv">
-														Csv
-													</option>
-													<option value="long">
-														Long
-													</option>
-												</select>
-											</div>
-											<div class="col-sm-2 col-xs-4">
-												&nbsp;
-											</div>
-											<div class="col-sm-4 col-xs-8">
-												<label>
-													<input type="checkbox" id="DB_NoSummary">
-													No summary
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</ng-template>
-						</ngb-tab>
-						
-						<ngb-tab title="Custom Options">
-							<ng-template ngbTabContent>
-								<div class="card">
-									<div class="card-block">
-										<sc-dbqry-fdisthelp></sc-dbqry-fdisthelp>
-										<textarea class="form-control" rows="5" id="DB_CustomOptions">
-										</textarea>
-									</div>
-								</div>
-							</ng-template>
-						</ngb-tab>
-					</ngb-tabset>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div class="card-footer">
-		Results here
-	</div>
+    <h4 class="card-header card-primary card-inverse text-center">
+        Database Query
+    </h4>
+    
+    <div class="card-block">
+        <div class="row">
+            <div class="col-lg-2">
+                <!-- Channel picker -->
+                <div class="card card-outline-secondary">
+                    <h6 class="card-header text-center">
+                        Channels
+                    </h6>
+                    
+                    <div class="card-block" id="DB_Channels">
+                        <div class="form-check form-check-inline" *ngFor="let channel of channels;
+                            let i=index">
+                            <label class="form-check-label">
+                                <input class="form-check-input" value="channel.name" type="checkbox"
+                                    [(ngModel)]="channel.checked">
+                                    <span [ngStyle]="{'background': channel.color}">
+                                        &nbsp;&nbsp;
+                                    </span>
+                                    &nbsp;{{ channel.name }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Filter textarea -->
+                <div class="card card-outline-secondary">
+                    <h6 class="card-header text-center">
+                        Filter
+                    </h6>
+                    
+                    <div class="card-block">
+                        <textarea class="form-control" rows="5" [(ngModel)]="filter"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card card-outline-secondary">
+                <!-- Options -->
+                    <ngb-tabset justify="center" (tabChange)="beforeTabChange($event)">
+                        <ngb-tab id="custom-navbar" title="Fast Options" id="FastOptions">
+                            <ng-template ngbTabContent>
+                                <div class="card" style="border-color: white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-2 col-xs-4">
+                                                <b>Limit to:</b>
+                                            </div>
+                                            <div class="col-sm-4 col-xs-8">
+                                                <select [(ngModel)]="selectedLimit"
+                                                    class="form-control">
+                                                    <option *ngFor="let limit of limitto"
+                                                        [value]="limit.value">
+                                                        {{ limit.desc }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2 col-xs-4">
+                                                <b>Aggregate:</b>
+                                            </div>
+                                            <div class="col-sm-4 col-xs-8">
+                                                <input type="text" placeholder="Type csv keywords"
+                                                    class="form-control"
+                                                    [(ngModel)]="selectedAggregation"
+                                                    [ngbTypeahead]="searchForAggregField"
+                                                    [resultFormatter]="formatter" />
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-2 col-xs-4">
+                                                <b>Order by:</b>
+                                            </div>
+                                            <div class="col-sm-4 col-xs-8">
+                                                <select *ngIf="fields != null"
+                                                class="form-control" [(ngModel)]="selectedOrderBy">
+                                                    <option *ngFor="let x of fields"
+                                                        [value]="x.name" [title]="x.hint">
+                                                        {{x.name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2 col-xs-4">
+                                                <b>Direction:</b>
+                                            </div>
+                                            <div class="col-sm-4 col-xs-8">
+                                                <select class="form-control"
+                                                    [(ngModel)]="selectedOrderDir">
+                                                    <option value="">
+                                                        Default
+                                                    </option>
+                                                    <option value="#asc">
+                                                        Ascending
+                                                    </option>
+                                                    <option value="#desc">
+                                                        Descending
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center">
+                                            <div class="col-sm-2 col-xs-4">
+                                                <b>Output:</b>
+                                            </div>
+                                            <div class="col-sm-4 col-xs-8">
+                                                <select class="form-control"
+                                                    [(ngModel)]="selectedOutputFmt">
+                                                    <option value="pretty">
+                                                        Pretty
+                                                    </option>
+                                                    <option value="csv">
+                                                        Csv
+                                                    </option>
+                                                    <option value="long">
+                                                        Long
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2 col-xs-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-sm-4 col-xs-8">
+                                                <label>
+                                                    <input type="checkbox" [(ngModel)]="nosummary">
+                                                    No summary
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        
+                        <ngb-tab title="Custom Options" id="CustomOptions">
+                            <ng-template ngbTabContent>
+                                <div class="card">
+                                    <div class="card-block">
+                                        <sc-dbqry-fdisthelp></sc-dbqry-fdisthelp>
+                                        <textarea class="form-control" rows="4" [(ngModel)]="customOpts">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                    </ngb-tabset>
+                    
+                    <div class="card-footer">                    
+                        <button [ngClass]="btnQuery.style" (click)="btnQueryClick($event)" type="submit">
+                            {{ btnQuery.label }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-footer">
+        <pre class="box" *ngIf="toPrint_command != null"> {{ toPrint_command }} </pre>
+
+        <div class="progress" *ngIf="timer != null && !btnQuery.querying">
+            <div class="progress-bar" role="progressbar" [ngStyle]="progressStyle"></div>
+        </div>
+        
+        <pre class="box" *ngIf="toPrint_stdout != null">{{ toPrint_stdout }}</pre>
+        <pre class="box" *ngIf="toPrint_stderr != null">{{ toPrint_stderr }}</pre>
+    </div>
 </div>

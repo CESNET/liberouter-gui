@@ -30,7 +30,15 @@ export class ProfileMap {
     private data;
 
     constructor(data: Object) {
-        this.data = data;
+        this.data = new Array<Object>();
+        for (let key in data) {
+            this.data[key] = new Profile();
+            this.data[key].name = data[key].name;
+            this.data[key].type = data[key].type;
+            this.data[key].path = data[key].path;
+            this.data[key].channels = data[key].channels;
+            this.data[key].subprofiles = new ProfileMap(data[key].subprofiles);
+        }
     }
 
     /**

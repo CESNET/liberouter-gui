@@ -1,7 +1,7 @@
 <div class="card">
     <h4 class="card-header card-primary card-inverse text-center">
         <!-- todo : thumbnails and varswap -->
-        {{ getRRDConstant().name }} on {{ profiles.getProfile(selectedProfile).name }}
+        {{ getRRDConstant().name }} on {{ selectedProfile }}
     </h4>
     
     <div class="card-block">
@@ -10,9 +10,11 @@
             [selectedProfile]="selectedProfile"
             [time]="time"
             (timeChange)="handleTimeChangePropagation($event)"
+            (resolutionChange)="updateResolutionPtr($event)"
             [selectedVar]="selectedVar"
             [renderSettings]="renderSettings"
-            [channels]="channels">
+            [channels]="channels"
+            [config]="config">
         </sc-graph-render>
     </div>
     
@@ -69,25 +71,25 @@
 					</div>
 				</form>
             </div>
-            
+
             <div class="col-md-2 text-center">
                 <select class="form-control" [ngModel]="selectedResolution"
-                    (ngModelChange)="resolutionChanged($event)">
+                    (ngModelChange)="renderComponent.changeResolution(true, $event)">
                     <option *ngFor="let x of resolutionTable; let i=index" [value]="i">
                         {{ x.label }}
                     </option>
                 </select>
             </div>
-			
-			<div class="col-md-5">
-				<!-- Selected time box -->
-				<div class="box">
-					{{ time.sel.bgn | date : 'y-MM-dd HH:mm' }}
-					<span *ngIf="time.sel.bgn != time.sel.end">
-						- {{ time.sel.end | date : 'y-MM-dd HH:mm' }}
-					</span>
-				</div>
-			</div>
+
+            <div class="col-md-5">
+                <!-- Selected time box -->
+                <div class="box">
+                    {{ time.sel.bgn | date : 'y-MM-dd HH:mm' }}
+                    <span *ngIf="time.sel.bgn != time.sel.end">
+                        - {{ time.sel.end | date : 'y-MM-dd HH:mm' }}
+                    </span>
+                </div>
+            </div>
 			
 			<div class="col">
 				<div class="btn-group btn-group-justified">
@@ -95,11 +97,11 @@
 						<i class="fa fa-backward"></i>
 					</button>
 					<button class="btn btn-secondary"
-                        (click)="renderComponent.changeResolution(false, 1)">
+                        (click)="renderComponent.changeResolution(false, '1')">
 						<i class="fa fa-search-minus"></i>
 					</button>
 					<button class="btn btn-secondary"
-                        (click)="renderComponent.changeResolution(false, -1)">
+                        (click)="renderComponent.changeResolution(false, '-1')">
 						<i class="fa fa-search-plus"></i>
 					</button>
 					<button class="btn btn-secondary" (click)="renderComponent.changeTimeWindow(1)">
