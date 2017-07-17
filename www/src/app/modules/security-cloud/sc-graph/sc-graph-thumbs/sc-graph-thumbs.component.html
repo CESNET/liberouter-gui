@@ -1,0 +1,33 @@
+<ng-template #GraphThumbsModal let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            Choose a graph variable to display
+        </h4>
+        
+        <button type="button" class="close" (click)="d('reason')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <div class="modal-body">
+        <div class="row" *ngIf="thumbnails != null">
+            <div class="col-md-4 mb-4" *ngFor="let x of thumbnails;let i=index">
+                <div class="card hand-cursor" (click)="changeSelectedVar(i); d('reason')">
+                    <h5 class="card-header">
+                        {{ x.label }}
+                    </h5>
+                    
+                    <div class="card-block" *ngIf="x.data != null">
+                        <sc-thumb-renderer [data]="x.data">
+                        </sc-thumb-renderer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<span class="hand-cursor text-white"
+    (click)="getThumbnails(); modalService.open(GraphThumbsModal, {size: 'lg'})">
+    {{ getRRDConstant().name }} on {{ selectedProfile }} <i class="fa fa-chevron-down"></i>
+</span>

@@ -11,6 +11,7 @@ import { Utility } from '../modules/Utility';
 import { ChannelSettings, ChannelSettingsBuilder } from '../modules/ChannelSettings';
 import { AppConfig } from '../modules/AppConfig';
 import { ScGraphRenderComponent } from './sc-graph-render/sc-graph-render.component';
+import { ScGraphThumbsComponent } from './sc-graph-thumbs/sc-graph-thumbs.component';
 
 @Component({
     selector: 'sc-graph',
@@ -24,6 +25,7 @@ export class ScGraphComponent implements OnInit, OnChanges {
     @Input() selectedProfile: string;
     @Input() config: AppConfig;
     @ViewChild('RenderComponent') renderComponent: ScGraphRenderComponent;
+    @ViewChild('ThumbsComponent') thumbsComponent: ScGraphThumbsComponent;
 
     /* 2-WAY DATA BINDING */
     @Input() time: TimeSpecs;
@@ -96,11 +98,14 @@ export class ScGraphComponent implements OnInit, OnChanges {
        this.renderComponent.changeSelectedTime(event);
     }
 
-    getRRDConstant() {
-        return RRDVariables[this.selectedVar];
-    }
-
     updateResolutionPtr(event: any) {
         this.selectedResolution = this.time.view.res.toString();
+    }
+
+    /**
+     *  @brief Handle for catching emitted event from sc-graph-thumbs
+     */
+    changeVar(index: number) {
+        this.selectedVar = index;
     }
 }

@@ -15,6 +15,8 @@ import { ScDbqryComponent } from './sc-dbqry/sc-dbqry.component';
 import { ScDbqryFdisthelpComponent } from './sc-dbqry/sc-dbqry-fdisthelp/sc-dbqry-fdisthelp.component';
 import { OutputVolumeConversionPipe } from './modules/OutputVolumeConversionPipe';
 import { ScGraphRenderComponent } from './sc-graph/sc-graph-render/sc-graph-render.component';
+import { ScGraphThumbsComponent } from './sc-graph/sc-graph-thumbs/sc-graph-thumbs.component';
+import { ScThumbRendererComponent } from './sc-graph/sc-graph-thumbs/sc-thumb-renderer/sc-thumb-renderer.component';
 
 const routes: Routes = [{
     path: 'security-cloud',
@@ -43,7 +45,9 @@ const routes: Routes = [{
         ScDbqryComponent,
         ScDbqryFdisthelpComponent,
         OutputVolumeConversionPipe,
-        ScGraphRenderComponent
+        ScGraphRenderComponent,
+        ScGraphThumbsComponent,
+        ScThumbRendererComponent
     ],
     providers: [
         SafePipe

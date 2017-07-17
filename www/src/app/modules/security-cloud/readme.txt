@@ -32,3 +32,14 @@ sc-stats:
 sc-dbqry:
     This module basically ignores rest of the GUI, silently using selected time as
     a delimiter for queried files.
+    
+Shadow profiles:
+    If a profile has type 'normal', user create a subprofile to it and a subprofile can be of type
+    'shadow'. Ipfixcol does not export nfcapd files for shadow profiles, it only saves rrdgraphs.
+    Querying shadow profile is still possible, though. The logic is following:
+    queried nfcapd files are files of the parent, with custom filter which is based on the following:
+    for each channel of the shadow profile:
+        take its filter and make a conjunction with disjunction of all source channel filters
+        then take this auxiliary filter and make a disjunction with a custom filter
+    
+    then pick all channels of parent profile and query them with custom filter

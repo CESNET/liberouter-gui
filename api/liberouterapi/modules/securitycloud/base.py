@@ -19,7 +19,7 @@ def getStatistics():
         stats = Statistics(req['profile'], req['bgn'], req['end'])
         return stats.getJSONString()
     except KeyError as e:
-        raise SCGUIException("Key error: " + str(e))
+        raise SCGUIException('Key error: ' + str(e))
     except ProfilesError as e:
         raise SCGUIException(str(e))
 
@@ -35,21 +35,21 @@ def getProfile():
             profile = profiles.getProfile(req['profile'])
             return json.dumps(profile)
     except KeyError as e:
-        raise SCGUIException("Key error: " + str(e))
+        raise SCGUIException('Key error: ' + str(e))
     except ProfilesError as e:
-        raise SCGUIException("Profiles error: " + str(e))
+        raise SCGUIException('Profiles error: ' + str(e))
 
 def fillChannel(channel, data):
-    """
+    '''
     Auxiliary function for createProfile(). This method parses part of url parameters and breaks
     them into a dictionary object representing single profile channel.
-    """
+    '''
     items = data.split(':')
-    channel["name"] = items[0]
-    channel["filter"] = items[1]
-    channel["sources"] = []
+    channel['name'] = items[0]
+    channel['filter'] = items[1]
+    channel['sources'] = []
     for i in range(2, len(items)):
-        channel["sources"].append(items[i])
+        channel['sources'].append(items[i])
 
 @auth.required(role.Role.user)
 def createProfile():
@@ -58,27 +58,27 @@ def createProfile():
 
     try:
         newp = {
-            "name": req["pname"],
-            "type": req["ptype"],
-            "channels": [],
-            "subprofiles": []
+            'name': req['pname'],
+            'type': req['ptype'],
+            'channels': [],
+            'subprofiles': []
         }
 
-        chnls = req["channels"]
+        chnls = req['channels']
         items = chnls.split(';')
         i = 0
         for item in items:
-            newp["channels"].append({})
-            fillChannel(newp["channels"][i], item)
+            newp['channels'].append({})
+            fillChannel(newp['channels'][i], item)
             i += 1
 
         if i == 0:
-            raise KeyError("Missing channels in arguments")
+            raise KeyError('Missing channels in arguments')
 
-        if not profiles.createSubprofile(req["profile"], newp):
-            raise ProfilesError("Cannot create subprofile")
+        if not profiles.createSubprofile(req['profile'], newp):
+            raise ProfilesError('Cannot create subprofile')
     except KeyError as e:
-        raise SCGUIException("KeyError:" + str(e))
+        raise SCGUIException('KeyError:' + str(e))
     except ProfilesError as e:
         raise SCGUIException(str(e))
 
@@ -87,13 +87,13 @@ def deleteProfile():
     req = request.args.to_dict()
     profiles = Profiles()
 
-    if "profile" not in req:
-        raise SCGUIException("Bad URL arguments")
+    if 'profile' not in req:
+        raise SCGUIException('Bad URL arguments')
 
-    if profiles.delete(req["profile"]):
-        return json.dumps({"success": True})
+    if profiles.delete(req['profile']):
+        return json.dumps({'success': True})
     else:
-        return json.dumps({"success": False})
+        return json.dumps({'success': False})
 
 def getQueryFields():
     try:
@@ -109,13 +109,13 @@ def getQuery():
 
     try:
         q = Dbqry()
-        return q.getResultJSONString(sessionID, req["instanceID"])
+        return q.getResultJSONString(sessionID, req['instanceID'])
     except DbqryError as e:
         raise SCGUIException(str(e))
     except KeyError as e:
-        raise SCGUIException("KeyError: " + str(e))
+        raise SCGUIException('KeyError: ' + str(e))
     except Exception as e:
-        raise SCGUIException("UnknownException: " + str(e))
+        raise SCGUIException('UnknownException: ' + str(e))
 
 @auth.required(role.Role.user)
 def startQuery():
@@ -123,18 +123,16 @@ def startQuery():
     sessionID = request.headers.get('Authorization', None)
     
     try:
-        p = Profiles()
-        cwdpath = p.getProfile(req["profile"])["path"]
         q = Dbqry()
-        return q.runQuery(sessionID, req["instanceID"], cwdpath, req["args"], req["filter"], req["channels"])
+        return q.runQuery(sessionID, req['instanceID'], req['profile'], req['args'], req['filter'], req['channels'])
     except ProfilesError as e:
         raise SCGUIException(str(e))
     except DbqryError as e:
         raise SCGUIException(str(e))
     except KeyError as e:
-        raise SCGUIException("KeyError: " + str(e))
+        raise SCGUIException('KeyError: ' + str(e))
     except Exception as e:
-        raise SCGUIException("UnknownException: " + str(e))
+        raise SCGUIException('UnknownException: ' + str(e))
 
 @auth.required(role.Role.user)
 def killQuery():
@@ -143,14 +141,14 @@ def killQuery():
     
     try:
         q = Dbqry()
-        q.killQuery(sessionID, req["instanceID"])
-        return json.dumps({"success": True})
+        q.killQuery(sessionID, req['instanceID'])
+        return json.dumps({'success': True})
     except DbqryError as e:
         raise SCGUIException(str(e))
     except KeyError as e:
-        raise SCGUIException("KeyError: " + str(e))
+        raise SCGUIException('KeyError: ' + str(e))
     except Exception as e:
-        raise SCGUIException("UnknownException: " + str(e))
+        raise SCGUIException('UnknownException: ' + str(e))
 
 @auth.required(role.Role.user)
 def getProgress():
@@ -159,18 +157,18 @@ def getProgress():
     
     try:
         q = Dbqry()
-        return q.getProgressJSONString(sessionID, req["instanceID"])
+        return q.getProgressJSONString(sessionID, req['instanceID'])
     except KeyError as e:
-        raise SCGUIException("KeyError: " + str(e))
+        raise SCGUIException('KeyError: ' + str(e))
     except Exception as e:
-        raise SCGUIException("UnknownException: " + str(e))
+        raise SCGUIException('UnknownException: ' + str(e))
 
 @auth.required()
 def getGraph():
     req = request.args.to_dict()
 
     try:
-        g = Graphs(req["profile"], req["bgn"], req["end"], req["var"], req["points"])
+        g = Graphs(req['profile'], req['bgn'], req['end'], req['var'], req['points'], req['mode'])
         return g.getJSONString()
     except KeyError as e:
         raise SCGUIException(str(e))
@@ -182,6 +180,6 @@ def getGraph():
 @auth.required(role.Role.user)
 def getConfForFrontend():
     result = {}
-    result["historicData"] = config.modules['scgui']['historic_data']
-    result["useLocalTime"] = config.modules['scgui']['use_local_time']
+    result['historicData'] = config.modules['scgui']['historic_data']
+    result['useLocalTime'] = config.modules['scgui']['use_local_time']
     return json.dumps(result)

@@ -19,14 +19,19 @@ class Dbqry():
     def __init__(self):
         self.cmd = '/mpiexec -n 2 fdistdump '
 
-    def runQuery(self, sessionID, instanceID, cwdpath, args, filter, channels):
+    def runQuery(self, sessionID, instanceID, profilePath, args, filter, channels):
+        p = Profiles()
+        profile = p.getProfile(profilePath)
+        cwdpath = profile['path']
+        parentPath = profilePath[:len(profilePath) - len(profile['name']) - 1]
+        parentProfile = p.getProfile()
         # !!! NOTE: Since the query is run and I wait until the progress file reports success and
         # then I read the buffers, may it happen that multiple parallel queries will fill all OS
         # buffers???
 
         # Sanitize channel names
         channels = channels.replace(':', ' ')
-
+        
         # Sanitize filter
         filter = shlex.quote(filter)
         # NOTE: Shadow profiles
@@ -34,7 +39,7 @@ class Dbqry():
         # Sanitize arguments
 
         # Create paths
-        cwdpath = IPFIXCOL_DATA + cwdpath + '/channels';
+        cwdpath = IPFIXCOL_DATA + profile['path'] + '/channels';
         progress = ' --progress-bar-type=json --progress-bar-dest=/tmp/' + sessionID + '.' + instanceID + '.json '
 
         # Create command
@@ -48,7 +53,7 @@ class Dbqry():
         db.insert(sessionID, instanceID, p)
 
         # Return backup command
-        return json.dumps({"command": cmdback});
+        return json.dumps({'command': cmdback});
 
     def killQuery(self, sessionID, instanceID):
         db = DbqryProcessDb()
@@ -56,24 +61,24 @@ class Dbqry():
         p.kill()
 
     def getProgressJSONString(self, sessionID, instanceID):
-        """
+        '''
         This method reads the progress json file asociated with the database query. Based on this
         progress file, the frontend gui is updated on status of the query itself and when it should
         request output texts.
-        """
+        '''
         # On startup error, fdistdump does not generate progress file. Following lines fix that
         db = DbqryProcessDb()
         p = db.read(sessionID, instanceID)
         if p.poll() is not None:
             if p.returncode != 0:
-                return json.dumps({"total": 100})
+                return json.dumps({'total': 100})
 
         path = '/tmp/' + sessionID + '.' + instanceID + '.json'
         try:
             with open(path, 'r') as fh:
                 return fh.read()
         except Exception:
-            return json.dumps({"total": 0});
+            return json.dumps({'total': 0});
 
     def getResultJSONString(self, sessionID, instanceID):
         db = DbqryProcessDb()
@@ -86,4 +91,4 @@ class Dbqry():
             os.remove(path)
 
         # TODO: Postprocess out
-        return json.dumps({"out": str(out), "err": str(err)})
+        return json.dumps({'out': str(out), 'err': str(err)})
