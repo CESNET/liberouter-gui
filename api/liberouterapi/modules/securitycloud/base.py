@@ -53,7 +53,7 @@ def fillChannel(channel, data):
 
 @auth.required(role.Role.user)
 def createProfile():
-    req = request.args.to_dict()
+    req = request.get_json()
     profiles = Profiles()
 
     try:
@@ -61,7 +61,7 @@ def createProfile():
             'name': req['pname'],
             'type': req['ptype'],
             'channels': [],
-            'subprofiles': []
+            'subprofiles': {}
         }
 
         chnls = req['channels']
@@ -75,10 +75,18 @@ def createProfile():
         if i == 0:
             raise KeyError('Missing channels in arguments')
 
-        if not profiles.createSubprofile(req['profile'], newp):
-            raise ProfilesError('Cannot create subprofile')
+        if profiles.createSubprofile(req['profile'], newp):
+            profiles.exportXML()
+            # TODO: Notify ipfixcol
+            return json.dumps({'success': True})
+
+        #raise ProfilesError('Cannot create subprofile')
+        return json.dumps({'success': False})
+
     except KeyError as e:
         raise SCGUIException('KeyError:' + str(e))
+    except TypeError as e:
+        raise SCGUIException('TypeError:' + str(e))
     except ProfilesError as e:
         raise SCGUIException(str(e))
 
@@ -91,9 +99,11 @@ def deleteProfile():
         raise SCGUIException('Bad URL arguments')
 
     if profiles.delete(req['profile']):
+        profiles.exportXML()
+        # TODO: Notify ipfixcol
         return json.dumps({'success': True})
-    else:
-        return json.dumps({'success': False})
+
+    return json.dumps({'success': False})
 
 def getQueryFields():
     try:

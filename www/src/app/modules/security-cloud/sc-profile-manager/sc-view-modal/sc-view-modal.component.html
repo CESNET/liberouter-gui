@@ -1,0 +1,83 @@
+<ng-template #ProfileViewModal let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            Viewing profile {{ profile.name }}
+        </h4>
+
+        <button type="button" class="close" (click)="d('reason')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row align-items-center mb-2">
+            <div class="col-sm-2">
+                <b>Name:</b>
+            </div>
+            <div class="col-sm-10">
+                <input type="text" [value]="profile.name" readonly class="form-control">
+            </div>
+        </div>
+        
+        <div class="row align-items-center mb-2">
+            <div class="col-sm-2">
+                <b>Type:</b>
+            </div>
+            <div class="col-sm-10">
+                <input type="text" [value]="profile.type" readonly class="form-control">
+            </div>
+        </div>
+        
+        <div class="row align-items-center mb-2">
+            <div class="col-sm-2">
+                <b>Parent:</b>
+            </div>
+            <div class="col-sm-10">
+                <input type="text" [value]="profile.path" readonly class="form-control">
+            </div>
+        </div>
+        
+        <h5>Channels:</h5>
+        <div class="channelBox">
+            <div *ngFor="let c of profile.channels">
+                <div class="row align-items-center mb-2">
+                    <div class="col-sm-2">
+                        <b>Name:</b>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" [value]="c.name" readonly class="form-control">
+                    </div>
+                </div>
+                
+                <div class="row align-items-center mb-2">
+                    <div class="col-sm-2">
+                        <b>Filter:</b>
+                    </div>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="4" [value]="c.filter"></textarea>
+                    </div>
+                </div>
+                
+                <div class="row align-items-center mb-2">
+                    <div class="col-sm-2">
+                        <b>Sources:</b>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="badge" *ngFor="let s of c.sources">
+                            {{ s }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-default" (click)="d('reason')">Close</button>
+    </div>
+</ng-template>
+
+<button type="button" class="btn btn-info btn-left"
+    (click)="modalService.open(ProfileViewModal, {size: 'lg'})">
+View profile
+</button>

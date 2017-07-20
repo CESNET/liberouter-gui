@@ -1,0 +1,33 @@
+<ng-template #ProfileDeleteModal let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            Deleting profile {{ profilePath }}
+        </h4>
+
+        <button type="button" class="close" (click)="d('reason')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <p>
+            <b>Are you sure?</b>
+        </p>
+        <ul>
+            <li>This action can only be performed by an administrator</li>
+            <li>Your settings for deleted profile will be lost forever</li>
+            <li>All subprofiles of this profile will be deleted too</li>
+            <li>You can't delete /live, deleting it will only delete its subprofiles</li>
+        </ul>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-danger" (click)="deleteProfile()">Delete profile</button>
+        <button class="btn btn-default" (click)="d('reason')">Cancel</button>
+    </div>
+</ng-template>
+
+<button type="button" class="btn btn-danger btn-right"
+    (click)="openModal()">
+Delete profile
+</button>

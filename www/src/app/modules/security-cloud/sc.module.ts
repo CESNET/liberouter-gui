@@ -8,7 +8,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AuthGuard } from 'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
-import { SecurityCloudComponent } from './sc.component';
+import { SecurityCloudComponent, ScWorkbenchComponent } from './sc.component';
 import { ScGraphComponent } from './sc-graph/sc-graph.component';
 import { ScStatsComponent } from './sc-stats/sc-stats.component';
 import { ScDbqryComponent } from './sc-dbqry/sc-dbqry.component';
@@ -17,6 +17,10 @@ import { OutputVolumeConversionPipe } from './modules/OutputVolumeConversionPipe
 import { ScGraphRenderComponent } from './sc-graph/sc-graph-render/sc-graph-render.component';
 import { ScGraphThumbsComponent } from './sc-graph/sc-graph-thumbs/sc-graph-thumbs.component';
 import { ScThumbRendererComponent } from './sc-graph/sc-graph-thumbs/sc-thumb-renderer/sc-thumb-renderer.component';
+import { ScProfileManagerComponent } from './sc-profile-manager/sc-profile-manager.component';
+import { ScViewModalComponent } from './sc-profile-manager/sc-view-modal/sc-view-modal.component';
+import { ScCreateModalComponent } from './sc-profile-manager/sc-create-modal/sc-create-modal.component';
+import { ScDeleteModalComponent } from './sc-profile-manager/sc-delete-modal/sc-delete-modal.component';
 
 const routes: Routes = [{
     path: 'security-cloud',
@@ -27,7 +31,25 @@ const routes: Routes = [{
         name: 'Security Cloud',
         description: 'Distributed, highly available IP flow record collector.',
         icon: 'fa-cloud'
-    }
+    },
+    children: [
+        {
+            path: 'workbench',
+            component: ScWorkbenchComponent,
+            canActivate : [AuthGuard],
+            data: {
+                role : 10
+            }
+        },
+        {
+            path: 'profileManager',
+            component: ScProfileManagerComponent,
+            canActivate : [AuthGuard],
+            data: {
+                role : 10
+            }
+        }
+    ]
 }]
 
 @NgModule({
@@ -40,6 +62,7 @@ const routes: Routes = [{
     ],
     declarations: [
         SecurityCloudComponent,
+        ScWorkbenchComponent,
         ScGraphComponent,
         ScStatsComponent,
         ScDbqryComponent,
@@ -47,7 +70,11 @@ const routes: Routes = [{
         OutputVolumeConversionPipe,
         ScGraphRenderComponent,
         ScGraphThumbsComponent,
-        ScThumbRendererComponent
+        ScThumbRendererComponent,
+        ScProfileManagerComponent,
+        ScViewModalComponent,
+        ScCreateModalComponent,
+        ScDeleteModalComponent
     ],
     providers: [
         SafePipe

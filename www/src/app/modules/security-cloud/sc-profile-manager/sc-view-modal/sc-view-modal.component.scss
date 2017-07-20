@@ -1,0 +1,21 @@
+.badge {
+    border-radius: 5px;
+    background: #696969;
+    color: #FFFFFF;
+    margin-right: 5px;
+    padding: 5px;
+}
+
+.channelBox {
+    height: 250px;
+    overflow: auto;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #DDDDDD;
+    overflow-x: hidden;
+}
+
+.btn-left {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}

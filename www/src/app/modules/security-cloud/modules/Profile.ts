@@ -51,12 +51,16 @@ export class ProfileMap {
         if (profilePath[0] === '/') {
             profilePath = profilePath.slice(1);
         }
-
-        const pname: string[] = profilePath.split('/', 1);
-        if (pname.length === 1) {
-            return this.data[pname[0]];
+        
+        const b = profilePath.search('/');
+        if (b === -1) {
+            return this.data[profilePath];
         }
-        return this.data[pname[0]].subprofiles.getProfile(pname[1]);
+        
+        const parentp: string = profilePath.substr(0, b);
+        const restp: string = profilePath.substr(b + 1);
+        
+        return this.data[parentp].subprofiles.getProfile(restp);
     }
 
     /**
@@ -71,8 +75,7 @@ export class ProfileMap {
         for (let k in this.data) {
             result.push(new ProfileLink((level + ' ' + k), this.data[k].path));
 
-            level += '-';
-            const aux: ProfileLink[] = this.data[k].subprofiles.getLinkList(level);
+            const aux: ProfileLink[] = this.data[k].subprofiles.getLinkList(level + '-');
 
             for (let p of aux) {
                 result.push(p);

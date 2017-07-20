@@ -15,12 +15,40 @@ import { AppConfig } from './modules/AppConfig';
 import { ScService } from './sc.service';
 
 @Component({
-    selector : 'app-security-cloud',
+    selector: 'security-cloud',
+    template : `
+<div class="container-fluid mb-4">
+    <div class="card">
+        <div class="card-block">
+            <div class="row">
+                <div class="col">
+                    <h2>SecurityCloud</h2>
+                </div>
+                <div class="col">
+                    <a routerLink='workbench' class="btn btn-secondary btn-block">
+                        Workbench
+                    </a>
+                </div>
+                <div class="col">
+                    <a routerLink='profileManager' class="btn btn-secondary btn-block">
+                        Profile manager
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>`
+})
+export class SecurityCloudComponent {}
+
+@Component({
+    selector : 'sc-workbench-cloud',
     templateUrl : './sc.component.html',
     styleUrls : ['./sc.component.scss'],
     providers : [ScService]
 })
-export class SecurityCloudComponent implements OnInit {
+export class ScWorkbenchComponent implements OnInit {
     profiles: ProfileMap = null;
     config: AppConfig = null;
     selectedProfile: string = null; ///< Identifier of currently selected profile(default: /live)
