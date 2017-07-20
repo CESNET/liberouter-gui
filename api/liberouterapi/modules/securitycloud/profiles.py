@@ -60,12 +60,12 @@ class Profiles(object):
             try:
                 for source in sourceList.children:
                     if isinstance(source, element.Tag):
-                        if source.name == "source":
+                        if source.name == 'source':
                             out['sources'].append(source.get_text().strip())
                         else:
-                            raise ProfilesError("Unexpected tag in sourcelist (%s)" % source.name)
+                            raise ProfilesError('Unexpected tag in sourcelist (%s)' % source.name)
             except TypeError:
-                raise ProfilesError("No sourcelist specified")
+                raise ProfilesError('No sourcelist specified')
 
             return out
 
@@ -78,8 +78,8 @@ class Profiles(object):
             over everything (including comments and extra newlines, couple of extra
             tests had to be included to prevent type errors.
             """
-            assert(isinstance(profile, element.Tag)),"Invalid object send to fillProfile."
-            assert(profile.name == "profile"), "Invalid tag send to fillProfile."
+            assert(isinstance(profile, element.Tag)),'Invalid object send to fillProfile.'
+            assert(profile.name == 'profile'), 'Invalid tag send to fillProfile.'
 
             out = {}
 
@@ -102,10 +102,10 @@ class Profiles(object):
                         out['channels'].append(self.__fillChannel(channel))
             except TypeError:
                 # User forgot channelList
-                raise ProfilesError("No channels found")
+                raise ProfilesError('No channels found')
 
             if not out['channels']:
-                raise ProfilesError("No channels found")
+                raise ProfilesError('No channels found')
 
             # Fill subprofiles
             out['subprofiles'] = {}
@@ -115,10 +115,10 @@ class Profiles(object):
                 for subprofile in subprofileList.children:
                     if isinstance(subprofile, element.Tag):
                         if subprofile.name != 'profile':
-                            raise ProfilesError("Invalid tag in subprofile list")
+                            raise ProfilesError('Invalid tag in subprofile list')
 
                         self.__fillProfile(subprofile, out['path'] + '/', out['subprofiles'])
-            outProfile[out["name"]] = out;
+            outProfile[out['name']] = out;
 
         def __parseTree(self, tree):
             """
@@ -137,33 +137,33 @@ class Profiles(object):
             """
             Auxiliary routing for exporting XML data of a single channel
             """
-            output = '<channel name="%s">' % data["name"]
-            output += "<sourceList>"
-            for source in data["sources"]:
-                output += "<source>%s</source>" % source
-            output += "</sourceList>"
-            output += "<filter>%s</filter>" % data["filter"]
-            output += "</channel>"
+            output = '<channel name="%s">' % data['name']
+            output += '<sourceList>'
+            for source in data['sources']:
+                output += '<source>%s</source>' % source
+            output += '</sourceList>'
+            output += '<filter>%s</filter>' % data['filter']
+            output += '</channel>'
             return output
 
         def __exportXMLProfile(self, data):
             """
             Auxiliary routine for exporting XML data of a single profile
             """
-            output = '<profile name="%s">' % data["name"]
-            output += "<type>%s</type>" % data["type"]
-            output += "<directory>%s</directory>" % (IPFIXCOL_DATA + data["path"])
-            output += "<channelList>"
-            for channel in data["channels"]:
+            output = '<profile name="%s">' % data['name']
+            output += '<type>%s</type>' % data['type']
+            output += '<directory>%s</directory>' % (IPFIXCOL_DATA + data['path'])
+            output += '<channelList>'
+            for channel in data['channels']:
                 output += self.__exportXMLChannel(channel)
-            output += "</channelList>"
+            output += '</channelList>'
 
-            if data["subprofiles"]:
-                output += "<subprofileList>"
-                for key in data["subprofiles"]:
-                    output += self.__exportXMLProfile(data["subprofiles"][key])
-                output += "</subprofileList>"
-            output += "</profile>"
+            if data['subprofiles']:
+                output += '<subprofileList>'
+                for key in data['subprofiles']:
+                    output += self.__exportXMLProfile(data['subprofiles'][key])
+                output += '</subprofileList>'
+            output += '</profile>'
             return output
 
         def getJSONString(self):
@@ -204,7 +204,7 @@ class Profiles(object):
             if toAppend is None:
                 return False
             data['path'] = os.path.join(toAppend['path'], data['name'])
-            toAppend['subprofiles'][data["name"]] = data;
+            toAppend['subprofiles'][data['name']] = data;
             return True
 
         def update(self, profile):
@@ -219,9 +219,9 @@ class Profiles(object):
             name = profilePath.split('/', 1)
             # This profile is direct parent of to-be-deleted one
             if len(name) == 1:
-                profileRoot["subprofiles"].pop(name[0])
+                profileRoot['subprofiles'].pop(name[0])
             else:
-                self.__deleteInternal(profileRoot["subprofiles"][name[0]], name[1])
+                self.__deleteInternal(profileRoot['subprofiles'][name[0]], name[1])
 
         def delete(self, profilePath):
             """
@@ -238,7 +238,7 @@ class Profiles(object):
             # Highest level profile cannot be deleted, instead wipe its children
             try:
                 if len(name) == 1:
-                    self.data[name[0]]["subprofiles"].clear()
+                    self.data[name[0]]['subprofiles'].clear()
                 else:
                     self.__deleteInternal(self.data[name[0]], name[1])
                 return True
