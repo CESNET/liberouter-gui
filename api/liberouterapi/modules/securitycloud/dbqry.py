@@ -6,6 +6,7 @@ import subprocess
 import shlex
 from liberouterapi import config
 from .dbqryProcessDb import DbqryProcessDb
+from .profiles import Profiles
 
 MPICH = config.modules['scgui']['mpich']
 SINGLE_MACHINE = config.modules['scgui']['single_machine']
@@ -32,7 +33,7 @@ class Dbqry():
         profile = p.getProfile(profilePath)
         cwdpath = profile['path']
         parentPath = profilePath[:len(profilePath) - len(profile['name']) - 1]
-        parentProfile = p.getProfile()
+        parentProfile = p.getProfile(parentPath)
 
         # Sanitize channel names
         channels = channels.replace(':', ' ')

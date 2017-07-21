@@ -72,19 +72,57 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
 
     constructor(private api: ScGraphService) {}
 
+    setDefaultTimeValues() {
+        this.time.view.res = 1;
+        this.time.view.end = this.getCurrentTimestamp();
+        this.time.view.bgn = this.time.view.end - ResolutionTable[this.time.view.res].value;
+        this.time.sel.bgn = this.time.view.end - ResolutionTable[this.time.view.res].value / 2;
+        this.time.sel.end = this.time.sel.bgn;
+    }
+    
     /**
      *  @brief Initializes the time windows and graph object
      *
      *  @details Details
      */
     ngOnInit() {
-        // TODO: Process init time
-        const debug = true;
-        if (debug) {
-            this.time.view.bgn = 1486428000000;
-            this.time.view.end = this.time.view.bgn + ResolutionTable[this.time.view.res].value;
-            this.time.sel.bgn = 1486428900000;
-            this.time.sel.end = 1486429500000;
+        // Default case: Time selection was not set by url
+        if (this.time.sel.bgn === - 1 && this.time.sel.end === -1) {
+            this.setDefaultTimeValues();
+        }
+        // Time selection (and maybe something more) was set by url
+        else {
+            // Check whether resolution is set to valid value
+            if (this.time.view.res < 0 || this.time.view.res >= ResolutionTable.length) {
+                // If not, use default one
+                this.time.view.res = 1;
+            }
+            
+            // Then check whether that resolution can fit selected area
+            if ((this.time.sel.end - this.time.sel.bgn) < ResolutionTable[this.time.view.res].value) {
+                // If not, expand it
+                let mindif: number = this.time.sel.end - this.time.sel.bgn;
+                for (let i = this.time.view.res + 1; i < ResolutionTable.length; i++) {
+                    if (mindif < ResolutionTable[i].value) {
+                        this.time.view.res = i;
+                        // Mark as success
+                        mindif = 1;
+                    }
+                }
+                
+                // No suitable resolution was found
+                if (mindif !== 1) {
+                    this.setDefaultTimeValues();
+                }
+            }
+            
+            // Finally check whether time window is ok (time selection is within it and resolution
+            // fits the time window range)
+            if ((this.time.view.end - this.time.view.bgn) != ResolutionTable[this.time.view.res].value
+                || this.time.sel.bgn < this.time.view.bgn || this.time.sel.end > this.time.view.end) {
+                // If it is not, centerize
+                this.centerizeTimeWindow();
+            }
         }
 
         // Initialize callback reference

@@ -21,6 +21,7 @@ import { ScProfileManagerComponent } from './sc-profile-manager/sc-profile-manag
 import { ScViewModalComponent } from './sc-profile-manager/sc-view-modal/sc-view-modal.component';
 import { ScCreateModalComponent } from './sc-profile-manager/sc-create-modal/sc-create-modal.component';
 import { ScDeleteModalComponent } from './sc-profile-manager/sc-delete-modal/sc-delete-modal.component';
+import { ScDbqryIplookupComponent } from './sc-dbqry/sc-dbqry-iplookup/sc-dbqry-iplookup.component';
 
 const routes: Routes = [{
     path: 'security-cloud',
@@ -74,7 +75,8 @@ const routes: Routes = [{
         ScProfileManagerComponent,
         ScViewModalComponent,
         ScCreateModalComponent,
-        ScDeleteModalComponent
+        ScDeleteModalComponent,
+        ScDbqryIplookupComponent
     ],
     providers: [
         SafePipe

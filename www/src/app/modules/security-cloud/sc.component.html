@@ -40,7 +40,7 @@
                 </div>
                 
                 <div class="card-footer">
-                    <button class="btn btn-secondary btn-block" type="submit">
+                    <button class="btn btn-secondary btn-block" (click)="openNewTab()">
                         New Tab
                     </button>
                 </div>
@@ -62,7 +62,8 @@
             <sc-dbqry [profiles]="profiles"
                 [selectedProfile]="selectedProfile"
                 [sel]="time.sel"
-                [config]="config">
+                [config]="config"
+                [filter]="filterOverride">
             </sc-dbqry>
 		</div>
 	</div>

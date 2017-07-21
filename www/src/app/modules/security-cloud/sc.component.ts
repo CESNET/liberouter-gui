@@ -1,6 +1,6 @@
 // Global modules
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
@@ -40,7 +40,15 @@ import { ScService } from './sc.service';
 </div>
 <router-outlet></router-outlet>`
 })
-export class SecurityCloudComponent {}
+export class SecurityCloudComponent implements OnInit {
+    constructor(private route: ActivatedRoute) {}
+    
+    ngOnInit() {
+        this.route.params.subscribe((params: Params) => {
+            // console.log(params);
+        });
+    }
+}
 
 @Component({
     selector : 'sc-workbench-cloud',
@@ -54,6 +62,7 @@ export class ScWorkbenchComponent implements OnInit {
     selectedProfile: string = null; ///< Identifier of currently selected profile(default: /live)
     linkList: ProfileLink[] = null;
     error: any = null;
+    filterOverride = ''; ///< In case filter is passed as a url parameter
 
     time: TimeSpecs = new TimeSpecs;
     /**
@@ -77,27 +86,35 @@ export class ScWorkbenchComponent implements OnInit {
       * Get URL params and prepare the advanced query field for FTAS iframe
       */
     ngOnInit() {
-        /*this.route.params.subscribe(params => {
-            if (params['eventtime'] == undefined)
-                this.url = this.baseUrl;
-            else {
-                console.log(+params['eventtime'] * 1000)
-                this.eventTime = new Date(+params['eventtime'] * 1000);
-                this.beginTime = new Date(+this.eventTime.getTime() - 12 * 60 * 60 * 1000);
-                this.endTime = new Date(+this.eventTime.getTime() + 12 * 60 * 60 * 1000);
-
-                this.url = this.baseUrl + '?'
-                    + this.generateQueryBase()
-                    + '&tbgn=' + Math.floor(this.beginTime.getTime() / 1000)
-                    + '&tend=' + Math.floor(this.endTime.getTime() / 1000)
-                    + '&start=' + Math.floor(this.eventTime.getTime() / 1000);
+        this.route.params.subscribe((params: Params) => {
+            this.time.view.bgn = -1;
+            this.time.view.end = -1;
+            this.time.view.res = -1;
+            this.time.sel.bgn = -1;
+            this.time.sel.end = -1;
+            this.selectedProfile = '/live';
+            
+            if (params['profile']) {
+                this.selectedProfile = params['profile'];
             }
-        });*/
+            
+            if (params['tbgn'] && params['tend'] && params['tres']) {
+                this.time.view.bgn = parseInt(params['tbgn']);
+                this.time.view.end = parseInt(params['tend']);
+                this.time.view.res = parseInt(params['tres']);
+            }
+            
+            if (params['start'] && params['end']) {
+                this.time.sel.bgn = parseInt(params['start']);
+            }
+            
+            if (params['filter']) {
+                this.filterOverride = params['filter'];
+            }
+        });
 
         this.getProfilesData();
         this.getConfigData();
-
-        this.selectedProfile = '/live';
     }
 
     getProfilesData() {
@@ -154,6 +171,20 @@ export class ScWorkbenchComponent implements OnInit {
      */
     changeProfile(profilePath: string) {
         this.selectedProfile = profilePath;
+    }
+    
+    /**
+     *  @brief Fires up new instance of the GUI in the new browser tab
+     */
+    openNewTab() {
+        let url = '/security-cloud/workbench';
+        url += '?profile=' + encodeURI(this.selectedProfile);
+        url += '&tbgn=' + this.time.view.bgn;
+        url += '&tend=' + this.time.view.end;
+        url += '&tres=' + this.time.view.res;
+        url += '&start=' + this.time.sel.bgn;
+        url += '&end=' + this.time.sel.end;
+        window.open(url, '_blank').focus();
     }
 }
 

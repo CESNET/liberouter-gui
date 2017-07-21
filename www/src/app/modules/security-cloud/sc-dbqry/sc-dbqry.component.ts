@@ -1,10 +1,10 @@
 // Global modules
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import {NgbTabChangeEvent} from '@ng-bootstrap/ng-bootstrap';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operator/map';
-import {debounceTime} from 'rxjs/operator/debounceTime';
-import {distinctUntilChanged} from 'rxjs/operator/distinctUntilChanged';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { NgbTabChangeEvent} from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operator/map';
+import { debounceTime } from 'rxjs/operator/debounceTime';
+import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
 
 // Local modules
 import { ProfileMap } from '../modules/Profile';
@@ -27,10 +27,11 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     @Input() selectedProfile: string;
     @Input() sel: TimeSelection;
     @Input() config: AppConfig;
+    @Input() filter: string; ///< Filter textarea model
+    @ViewChild('IPLookup') iplookupComponent;
 
     /* INTERNAL VARIABLES */
     channels: ChannelSettings[] = null; ///< Channel checkboxes model
-    filter = ''; ///< Filter textarea model
 
     limitto = [ ///< LimitTo dropdown model
         {value: '-l 10', desc: '10 records'},
