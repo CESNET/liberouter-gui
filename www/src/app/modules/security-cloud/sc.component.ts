@@ -42,12 +42,8 @@ import { ScService } from './sc.service';
 })
 export class SecurityCloudComponent implements OnInit {
     constructor(private route: ActivatedRoute) {}
-    
-    ngOnInit() {
-        this.route.params.subscribe((params: Params) => {
-            // console.log(params);
-        });
-    }
+
+    ngOnInit() {}
 }
 
 @Component({
@@ -86,32 +82,32 @@ export class ScWorkbenchComponent implements OnInit {
       * Get URL params and prepare the advanced query field for FTAS iframe
       */
     ngOnInit() {
-        this.route.params.subscribe((params: Params) => {
-            this.time.view.bgn = -1;
-            this.time.view.end = -1;
-            this.time.view.res = -1;
-            this.time.sel.bgn = -1;
-            this.time.sel.end = -1;
-            this.selectedProfile = '/live';
-            
-            if (params['profile']) {
-                this.selectedProfile = params['profile'];
-            }
-            
-            if (params['tbgn'] && params['tend'] && params['tres']) {
-                this.time.view.bgn = parseInt(params['tbgn']);
-                this.time.view.end = parseInt(params['tend']);
-                this.time.view.res = parseInt(params['tres']);
-            }
-            
-            if (params['start'] && params['end']) {
-                this.time.sel.bgn = parseInt(params['start']);
-            }
-            
-            if (params['filter']) {
-                this.filterOverride = params['filter'];
-            }
-        });
+        const params = this.route.snapshot.queryParamMap;
+        this.time.view.bgn = -1;
+        this.time.view.end = -1;
+        this.time.view.res = -1;
+        this.time.sel.bgn = -1;
+        this.time.sel.end = -1;
+        this.selectedProfile = '/live';
+
+        if (params.has('profile')) {
+            this.selectedProfile = params.get('profile');
+        }
+
+        if (params.has('tbgn') && params.has('tend') && params.has('tres')) {
+            this.time.view.bgn = parseInt(params.get('tbgn'), 10);
+            this.time.view.end = parseInt(params.get('tend'), 10);
+            this.time.view.res = parseInt(params.get('tres'), 10);
+        }
+
+        if (params.has('start') && params.has('end')) {
+            this.time.sel.bgn = parseInt(params.get('start'), 10);
+            this.time.sel.end = parseInt(params.get('end'), 10);
+        }
+
+        if (params.has('filter')) {
+            this.filterOverride = params.get('filter');
+        }
 
         this.getProfilesData();
         this.getConfigData();
@@ -145,6 +141,7 @@ export class ScWorkbenchComponent implements OnInit {
      */
     processAppConfigData(data: any) {
         this.config = data;
+        console.log(this.config);
     }
 
     /**
@@ -172,7 +169,7 @@ export class ScWorkbenchComponent implements OnInit {
     changeProfile(profilePath: string) {
         this.selectedProfile = profilePath;
     }
-    
+
     /**
      *  @brief Fires up new instance of the GUI in the new browser tab
      */

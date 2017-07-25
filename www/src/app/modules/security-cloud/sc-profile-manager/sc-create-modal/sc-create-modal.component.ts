@@ -41,14 +41,14 @@ export class ScCreateModalComponent implements OnInit {
     createProfile() {
         let channels = '';
 
-        for (let x of this.profile.channels) {
-            if (channels != '') {
+        for (const x of this.profile.channels) {
+            if (channels !== '') {
                 channels += ';'
             }
 
             channels += x.name + ':' + x.filter;
 
-            for (let s of x.sources) {
+            for (const s of x.sources) {
                 if (s.checked) {
                     channels += ':' + s.name;
                 }

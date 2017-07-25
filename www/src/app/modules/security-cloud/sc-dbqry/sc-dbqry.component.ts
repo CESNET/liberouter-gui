@@ -53,6 +53,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     selectedOutputFmt = 'pretty';
     nosummary = false; ///< No summary checkbox model
     customOpts: string = null;
+    fancy: boolean; ///< Whether output will be displayed as a table or simple text
 
     btnQuery = {
         label: 'Start query',
@@ -64,7 +65,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     timer = null; ///< Handle for setInterval trigger
 
     toPrint_command: string = null; ///< Result text model
-    toPrint_stdout: string = null; ///< Result text model
+    toPrint_stdout = null; ///< Result text model
     toPrint_stderr: string = null; ///< Result text model
 
     error: any = null;
@@ -94,7 +95,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        for (let x in changes) {
+        for (const x in changes) {
             if (x === 'selectedProfile') {
                 this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
             }
@@ -189,9 +190,9 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     asUnixTimestamp(time: number): string {
         const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
 
-        if (this.config.historicData) {
+        /*if (this.config.historicData) {
             time += MILLISECONDS_PER_HOUR;
-        }
+        }*/
 
         return (time / 1000).toString();
     }
@@ -203,6 +204,18 @@ export class ScDbqryComponent implements OnInit, OnChanges {
      *
      *  @details The options are specifying limit, time range, aggregation, orderBy, order direction,
      *  and output format.
+     *  
+     *  @note !!! IMPORTANT !!! fdistdump has three formatting options: pretty, long and csv. First
+     *  two have all kinds of output conversions enabled (with long not cutting IPv6 addresses).
+     *  Csv is the barbone option with all conversion disabled (but they can be enabled manually).
+     *  Since I need to break the fdistdump output down to render it within a table, to place down
+     *  buttons, etc, I needed a little hack which maybe can confuse advanced users.
+     *  First off, pretty/long was merged to a single option - pretty and second, flask backend tests
+     *  the arguments for presence of pretty/long option and if it is there, then it is replaced
+     *  with csv format and conversions enabled. When returned back to frontend, I can easily parse
+     *  this csv and display it. But there maybe will be users who want raw text output, that can
+     *  be copypasted somewhere. For that reason when the mode is set to csv, the output will be
+     *  as raw as possible.
      */
     getArgs(): string {
         let result: string;
@@ -242,16 +255,24 @@ export class ScDbqryComponent implements OnInit, OnChanges {
             }
         }
 
-        result += ' --output-format=' + this.selectedOutputFmt;
+        if (this.selectedOutputFmt === 'pretty') {
+            result += ' --output-format=pretty --output-ts-conv="%F %R"';
+        }
+        else {
+            result += ' --output-format=csv';
+        }
 
         result += ' --output-items=r';
         if (!this.nosummary) {
             result += ',m';
         }
 
+        /*
+        NOTE: Following code is deprecated. Local time on the server is not the same as the client's
+        local time so performing localtime conversion by fdistdump server-side makes no sense.
         if (this.config.useLocalTime) {
             result += ' --output-ts-localtime';
-        }
+        }*/
 
         return result;
     }
@@ -335,6 +356,32 @@ export class ScDbqryComponent implements OnInit, OnChanges {
      */
     processQueryResult(data: Object) {
         this.toPrint_stdout = data['out'];
+
+        // Test csv mode and set fancy flag
+        this.fancy = ((this.toPrint_command.indexOf('--output-format=pretty') !== -1)
+            || (this.toPrint_command.indexOf('--output-format=long') !== -1));
+
+        if (this.fancy && data['out'] !== '') {
+            const sections = data['out'].split('\n\n');
+
+            this.toPrint_stdout = new Array(sections.length);
+
+            for (let i = 0; i < sections.length; i++) {
+                const aux = sections[i].split('\n');
+                // First item is section identifier, we can strip it
+                this.toPrint_stdout[i] = { header: null, data: null };
+                this.toPrint_stdout[i].header = aux[0].split(',');
+                this.toPrint_stdout[i].data = new Array(aux.length - 1);
+
+                for (let p = 1; p < aux.length; p++) {
+                    this.toPrint_stdout[i].data[p - 1] = aux[p].split(',');
+                }
+            }
+        }
+        else {
+            this.toPrint_stdout = data['out'];
+        }
+
         this.toPrint_stderr = data['err'];
 
         if (this.toPrint_stdout === '') {
@@ -360,7 +407,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
             'width': data['total'] + '%'
         };
 
-        if (parseInt(data['total']) === 100) {
+        if (parseInt(data['total'], 10) === 100) {
             clearInterval(this.timer);
             this.timer = null;
             this.btnQueryChange();
@@ -473,4 +520,22 @@ export class ScDbqryComponent implements OnInit, OnChanges {
             return result;
         }
     );
+
+    /**
+     *  @brief Test whether given column label identifies IP address column
+     *  
+     *  @param [in] header Name of the column
+     *  @return TRUE if it is IP address field
+     *  
+     *  @details When displaying dbqry output, following test is used for proper placement of lookup
+     *  modal links
+     */
+    isIpField(header: string): boolean {
+        if (header === 'ip' || header === 'srcip' || header === 'dstip' || header === 'xsrcip'
+            || header === 'xdstip') {
+            return true;
+        }
+
+        return false;
+    }
 }

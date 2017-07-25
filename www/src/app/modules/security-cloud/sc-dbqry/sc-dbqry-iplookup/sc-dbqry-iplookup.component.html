@@ -10,20 +10,37 @@
     </div>
 
     <div class="modal-body">
-        <div class="box">
-            {{ lookupReverse }}
-        </div>
-        
-        <div class="ipinfo">
-            {{ lookupIpinfo }}
-        </div>
-        
-        <div class="geoinfo">
-            {{ lookupGeoinfo }}
-        </div>
+        <table class="table" *ngIf="lookupIpinfo != null && lookupGeoinfo != null">
+            <tr>
+                <th width="20%">
+                    reverse dns
+                </th>
+                <td>
+                    lookupRevdns
+                </td>
+            </tr>
+            <tr *ngFor="let k of lookupIpinfo">
+                <th width="20%">
+                    {{ k.name }}
+                </th>
+                <td>
+                    {{ k.value }}
+                </td>
+            </tr>
+            <tr *ngFor="let k of geoinfoKeys">
+                <th width="20%">
+                    {{ k }}
+                </th>
+                <td>
+                    {{ lookupGeoinfo[k] }}
+                </td>
+            </tr>
+        </table>
     </div>
     
     <div class="modal-footer">
+        <ng-template #Tooltip>Will open NERD in a new browser tab</ng-template>
+        <button class="btn btn-secondary" (click)="jumpToNERD()" [ngbTooltip]="Tooltip">Examine in NERD</button>
         <button class="btn btn-default" (click)="d('reason')">Close</button>
     </div>
 </ng-template>

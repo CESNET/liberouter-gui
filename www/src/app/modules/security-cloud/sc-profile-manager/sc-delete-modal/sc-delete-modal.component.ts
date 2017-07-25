@@ -29,19 +29,19 @@ export class ScDeleteModalComponent implements OnInit {
             (error: Object) => this.processError(error)
         );
     }
-    
+
     /**
      *  @brief Opens a modal and remembers its handle
      */
     openModal() {
         this.modalRef = this.modalService.open(this.modalElement, {size: 'lg'});
     }
-    
+
     /**
      *  @brief Processesresult of profile deletion
-     *  
+     *
      *  @param [in] data Object with boolean success attribute
-     *  
+     *
      *  @details If profile was succesfully deleted, modal is closed and parent component is forced
      *  to reload list of profiles. Otherwise warning is printed and window is not closed.
      */
@@ -54,7 +54,7 @@ export class ScDeleteModalComponent implements OnInit {
             // TODO: Print some warning box
         }
     }
-    
+
     processError(error: any) {
         if (error['status'] >= 404) {
             this.error = error;

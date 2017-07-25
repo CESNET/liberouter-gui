@@ -1,6 +1,11 @@
 #!/bin/python3
 
 class DbqryProcessDb(object):
+    """
+    This class defines a singleton dictionary of dictionaries. Primary key is sessionID identifying
+    the user and instanceID, identifying browser tab. This database contains references to Popen
+    objects that run fdistdump query.
+    """
     class __DbqryProcessDbInternal:
         def __init__(self):
             self.data = {}

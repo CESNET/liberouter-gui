@@ -3,6 +3,8 @@ from liberouterapi import role
 from liberouterapi import config
 from flask import request
 import json
+import socket
+import requests
 
 from .profiles import Profiles, ProfilesError
 from .graphs import Graphs, GraphsError
@@ -40,10 +42,10 @@ def getProfile():
         raise SCGUIException('Profiles error: ' + str(e))
 
 def fillChannel(channel, data):
-    '''
+    """
     Auxiliary function for createProfile(). This method parses part of url parameters and breaks
     them into a dictionary object representing single profile channel.
-    '''
+    """
     items = data.split(':')
     channel['name'] = items[0]
     channel['filter'] = items[1]
@@ -173,6 +175,18 @@ def getProgress():
     except Exception as e:
         raise SCGUIException('UnknownException: ' + str(e))
 
+@auth.required(role.Role.user)
+def getIpLookup():
+    req = request.args.to_dict()
+
+    try:
+        revdns = socket.gethostbyname(req['ip'])
+        ipinfo = requests.get('http://rest.db.ripe.net/search.json?query-string=' + req['ip'] + '&flags=no-filtering')
+        geoinfo = requests.get('http://ip-api.com/json/' + req['ip'])
+        return json.dumps({'revdns': revdns, 'ipinfo': json.loads(ipinfo.content.decode('utf-8')), 'geoinfo': json.loads(geoinfo.content.decode('utf-8'))})
+    except KeyError as e:
+        raise SCGUIException('KeyError: ' + str(e))
+
 @auth.required()
 def getGraph():
     req = request.args.to_dict()
@@ -189,6 +203,10 @@ def getGraph():
 
 @auth.required(role.Role.user)
 def getConfForFrontend():
+    """
+    Only some portion of the config.ini contents is really needed in the frontend and thus only
+    relevant keys are extracted and send.
+    """
     result = {}
     result['historicData'] = config.modules['scgui']['historic_data']
     result['useLocalTime'] = config.modules['scgui']['use_local_time']

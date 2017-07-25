@@ -79,7 +79,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
         this.time.sel.bgn = this.time.view.end - ResolutionTable[this.time.view.res].value / 2;
         this.time.sel.end = this.time.sel.bgn;
     }
-    
+
     /**
      *  @brief Initializes the time windows and graph object
      *
@@ -97,9 +97,9 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
                 // If not, use default one
                 this.time.view.res = 1;
             }
-            
+
             // Then check whether that resolution can fit selected area
-            if ((this.time.sel.end - this.time.sel.bgn) < ResolutionTable[this.time.view.res].value) {
+            if ((this.time.sel.end - this.time.sel.bgn) > ResolutionTable[this.time.view.res].value) {
                 // If not, expand it
                 let mindif: number = this.time.sel.end - this.time.sel.bgn;
                 for (let i = this.time.view.res + 1; i < ResolutionTable.length; i++) {
@@ -107,18 +107,19 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
                         this.time.view.res = i;
                         // Mark as success
                         mindif = 1;
+                        break;
                     }
                 }
-                
+
                 // No suitable resolution was found
                 if (mindif !== 1) {
                     this.setDefaultTimeValues();
                 }
             }
-            
+
             // Finally check whether time window is ok (time selection is within it and resolution
             // fits the time window range)
-            if ((this.time.view.end - this.time.view.bgn) != ResolutionTable[this.time.view.res].value
+            if ((this.time.view.end - this.time.view.bgn) !== ResolutionTable[this.time.view.res].value
                 || this.time.sel.bgn < this.time.view.bgn || this.time.sel.end > this.time.view.end) {
                 // If it is not, centerize
                 this.centerizeTimeWindow();
@@ -146,7 +147,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
 
         let reloadData = false;
 
-        for (let x in changes) {
+        for (const x in changes) {
             if (x === 'selectedProfile' || x === 'selectedVar') {
                 reloadData = true;
             }
@@ -219,7 +220,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
     sanitizeData(data: any) {
         // First item of each timeslot is UNIX timestamp
         // Convert it to JS timestamp
-        for (let i of data['data']) {
+        for (const i of data['data']) {
             i[0] = new Date(i[0] * 1000);
         }
 
@@ -297,7 +298,8 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
             stackedGraph: this.renderSettings === 'stacked',
             fillGraph: this.renderSettings === 'stacked',
             labelsKMG2: true,
-            labelsUTC: !this.config.useLocalTime,
+            // NOTE: labelsUTC: !this.config.useLocalTime,
+            labelsUTC: false,
             highlightCircleSize: 5,
             panEdgeFraction: 0.1,
             interactionModel: {},
@@ -329,9 +331,9 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
      *  @return Array with extracted colors
      */
     getChannelColors(): string[] {
-        let result: string[] = new Array<string>(this.channels.length);
+        const result: string[] = new Array<string>(this.channels.length);
 
-        for (let i in this.channels) {
+        for (const i in this.channels) {
             result[i] = this.channels[i].color;
         }
 
@@ -579,7 +581,7 @@ export class ScGraphRenderComponent implements OnInit, OnChanges {
      *  @note This method is supposed to be called from parent component
      */
     changeResolution(absolute: boolean, input: string) {
-        const value = parseInt(input);
+        const value = parseInt(input, 10);
 
         if (absolute) {
             this.time.view.res = value;

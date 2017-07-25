@@ -28,6 +28,9 @@ scgui_bp.add_url_rule('/query/instance', view_func = killQuery, methods = ['DELE
 # scgui/query/progress
 scgui_bp.add_url_rule('/query/progress', view_func = getProgress, methods = ['GET'])
 
+# scgui/query/lookup
+scgui_bp.add_url_rule('/query/lookup', view_func = getIpLookup, methods = ['GET'])
+
 # scgui/graph/
 scgui_bp.add_url_rule('/graph', view_func = getGraph, methods = ['GET'])
 

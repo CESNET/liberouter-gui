@@ -13,13 +13,13 @@ export class ScProfileManagerComponent implements OnInit {
     profiles: ProfileMap = null;
     linkList: ProfileLink[] = null;
     error = null;
-    
+
     constructor(private api: ScProfileManagerService) { }
 
     ngOnInit() {
         this.reloadData();
     }
-    
+
     /**
      *  @brief Retrieves the newest profile data
      */
@@ -29,7 +29,7 @@ export class ScProfileManagerComponent implements OnInit {
             (error: Object) => this.processError(error)
         );
     }
-    
+
     /**
      *  @brief Processes retrieved profile data
      */
@@ -37,7 +37,7 @@ export class ScProfileManagerComponent implements OnInit {
         this.profiles = new ProfileMap(data);
         this.linkList = this.profiles.getLinkList('');
     }
-    
+
     /**
      *  @brief Processes error during profile retrieval
      */

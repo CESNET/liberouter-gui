@@ -50,7 +50,7 @@ export class ScGraphComponent implements OnInit, OnChanges {
         // At this point, sc-graph-render component is not created yet and thus I can't do this via
         // this.changeResolution()
         this.selectedResolution = '1';
-        this.time.view.res = parseInt(this.selectedResolution);
+        this.time.view.res = parseInt(this.selectedResolution, 10);
     }
 
     /**
@@ -63,7 +63,7 @@ export class ScGraphComponent implements OnInit, OnChanges {
      *  them has to be updated. FrameTime changes are handled by graph-render.
      */
     ngOnChanges(changes: SimpleChanges) {
-        for (let x in changes) {
+        for (const x in changes) {
             if (x === 'selectedProfile') {
                 this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
             }

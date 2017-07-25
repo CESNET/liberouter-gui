@@ -31,7 +31,7 @@ export class ProfileMap {
 
     constructor(data: Object) {
         this.data = new Array<Object>();
-        for (let key in data) {
+        for (const key in data) {
             this.data[key] = new Profile();
             this.data[key].name = data[key].name;
             this.data[key].type = data[key].type;
@@ -51,15 +51,15 @@ export class ProfileMap {
         if (profilePath[0] === '/') {
             profilePath = profilePath.slice(1);
         }
-        
+
         const b = profilePath.search('/');
         if (b === -1) {
             return this.data[profilePath];
         }
-        
+
         const parentp: string = profilePath.substr(0, b);
         const restp: string = profilePath.substr(b + 1);
-        
+
         return this.data[parentp].subprofiles.getProfile(restp);
     }
 
@@ -72,12 +72,12 @@ export class ProfileMap {
     getLinkList(level: string): ProfileLink[] {
         const result: ProfileLink[] = [];
 
-        for (let k in this.data) {
+        for (const k in this.data) {
             result.push(new ProfileLink((level + ' ' + k), this.data[k].path));
 
             const aux: ProfileLink[] = this.data[k].subprofiles.getLinkList(level + '-');
 
-            for (let p of aux) {
+            for (const p of aux) {
                 result.push(p);
             }
         }

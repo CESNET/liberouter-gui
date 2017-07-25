@@ -49,8 +49,11 @@ class Dbqry():
         progress = ' --progress-bar-type=json --progress-bar-dest=/tmp/' + sessionID + '.' + instanceID + '.json '
 
         # Create command
-        cmd = MPICH + self.cmd + '-f ' + filter + ' ' + args + progress + channels
         cmdback = self.cmd + '-f ' + filter + ' ' + args + ' ' + channels
+        repl = '--output-format=csv --output-addr-conv=str --output-tcpflags-conv=str --output-proto-conv=str --output-duration-conv=str --output-volume-conv=metric-prefix'
+        args = args.replace('--output-format=pretty', repl)
+        args = args.replace('--output-format=long', repl)
+        cmd = MPICH + self.cmd + '-f ' + filter + ' ' + args + progress + channels
 
         # Run query and save it
         # universal_newlines will open streams in text mode instead of binary
@@ -85,7 +88,14 @@ class Dbqry():
         path = '/tmp/' + sessionID + '.' + instanceID + '.json'
         try:
             with open(path, 'r') as fh:
-                return fh.read()
+                progress = json.loads(fh.read())
+                # Fdistdump is on 100% when it reads all the files
+                if progress['total'] == 100:
+                    # But fdistdump probably still processes data
+                    if p.poll() is None:
+                        # So stall the gui for a while
+                        return json.dumps({'total': 99})
+                return json.dumps({'total': progress['total']})
         except Exception:
             return json.dumps({'total': 0});
 

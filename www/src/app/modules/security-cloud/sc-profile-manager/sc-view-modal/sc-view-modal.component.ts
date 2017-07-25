@@ -10,7 +10,7 @@ import { Profile } from '../../modules/Profile';
 })
 export class ScViewModalComponent implements OnInit {
     @Input() profile: Profile;
-    
+
     constructor(public modalService: NgbModal) { }
 
     ngOnInit() {}

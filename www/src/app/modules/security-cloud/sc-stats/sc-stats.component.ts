@@ -42,7 +42,7 @@ export class ScStatsComponent implements OnInit, OnChanges {
             return;
         }
 
-        for (let x in changes) {
+        for (const x in changes) {
             if (x === 'timeUpdated' || x === 'selectedProfile') {
                 this.getData();
             }
@@ -79,8 +79,8 @@ export class ScStatsComponent implements OnInit, OnChanges {
      *
      *  @details Data should look like this:
      *  {
-     *  	'Rate:' [[...],...],
-     *  	'Sum': [[...],...],
+     *      'Rate:' [[...],...],
+     *      'Sum': [[...],...],
      *  }
      *  Either rate and sum are arrays with the same number of subarrays. Each
      *  subarray have exactly fifteen numbers in them. Each five numbers

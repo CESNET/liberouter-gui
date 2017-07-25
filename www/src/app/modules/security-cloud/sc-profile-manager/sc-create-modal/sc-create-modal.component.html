@@ -1,7 +1,7 @@
 <ng-template #ProfileCreateModal let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">
-            Creating subprofile of {{ parentPath }}
+            Creating subprofile of {{ parentProfile.path }}
         </h4>
 
         <button type="button" class="close" (click)="d('reason')">
