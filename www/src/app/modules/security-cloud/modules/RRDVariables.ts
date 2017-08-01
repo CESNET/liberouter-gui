@@ -14,13 +14,13 @@ export const RRDVariables: RRDVariable[] = [
     {id: 'packets_udp', name: 'Packets/s UDP'},
     {id: 'packets_icmp', name: 'Packets/s ICMP'},
     {id: 'packets_other', name: 'Packets/s Other'},
-    {id: 'traffic', name: 'Bit/s Any'},
-    {id: 'traffic_tcp', name: 'Bit/s TCP'},
-    {id: 'traffic_udp', name: 'Bit/s UDP'},
-    {id: 'traffic_icmp', name: 'Bit/s ICMP'},
-    {id: 'traffic_other', name: 'Bit/s Other'},
+    {id: 'traffic', name: 'Byte/s Any'},
+    {id: 'traffic_tcp', name: 'Bytes/s TCP'},
+    {id: 'traffic_udp', name: 'Bytes/s UDP'},
+    {id: 'traffic_icmp', name: 'Bytes/s ICMP'},
+    {id: 'traffic_other', name: 'Bytes/s Other'},
     {id: 'packets_max', name: 'Max packets in one flow'},
-    {id: 'traffic_max', name: 'Max bits/s in one flow'},
+    {id: 'traffic_max', name: 'Max bytes/s in one flow'},
     {id: 'packets_avg', name: 'Average packets per flow'},
-    {id: 'traffic_avg', name: 'Average bits/s per flow'}
+    {id: 'traffic_avg', name: 'Average bytes/s per flow'}
 ];

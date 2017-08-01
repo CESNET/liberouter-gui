@@ -8,8 +8,11 @@ from liberouterapi import config
 from .dbqryProcessDb import DbqryProcessDb
 from .profiles import Profiles
 
-MPICH = config.modules['scgui']['mpich']
-SINGLE_MACHINE = config.modules['scgui']['single_machine']
+MPICH_CMD = config.modules['scgui']['mpich_cmd']
+MPICH_ARGS = config.modules['scgui']['mpich_args']
+FDISTDUMP_CMD = config.modules['scgui']['fdistdump_cmd']
+FDISTDUMP_HA_CMD = config.modules['scgui']['fdistdump_ha_cmd']
+SINGLE_MACHINE = True if config.modules['scgui']['single_machine'] == 'true' else False
 IPFIXCOL_DATA = config.modules['scgui']['ipfixcol_data']
 
 class DbqryError(Exception):
@@ -18,7 +21,7 @@ class DbqryError(Exception):
 
 class Dbqry():
     def __init__(self):
-        self.cmd = '/mpiexec -n 2 fdistdump '
+        pass
 
     def runQuery(self, sessionID, instanceID, profilePath, args, filter, channels):
         """
@@ -36,8 +39,9 @@ class Dbqry():
         parentProfile = p.getProfile(parentPath)
 
         # Sanitize channel names
+        chnls = channels.split(':')
         channels = channels.replace(':', ' ')
-        
+
         # Sanitize filter
         filter = shlex.quote(filter)
         # NOTE: Shadow profiles
@@ -48,12 +52,27 @@ class Dbqry():
         cwdpath = IPFIXCOL_DATA + profile['path'] + '/channels';
         progress = ' --progress-bar-type=json --progress-bar-dest=/tmp/' + sessionID + '.' + instanceID + '.json '
 
-        # Create command
-        cmdback = self.cmd + '-f ' + filter + ' ' + args + ' ' + channels
-        repl = '--output-format=csv --output-addr-conv=str --output-tcpflags-conv=str --output-proto-conv=str --output-duration-conv=str --output-volume-conv=metric-prefix'
-        args = args.replace('--output-format=pretty', repl)
-        args = args.replace('--output-format=long', repl)
-        cmd = MPICH + self.cmd + '-f ' + filter + ' ' + args + progress + channels
+        cmdback = ''
+        cmd = ''
+        if SINGLE_MACHINE:
+            for i in range(0, len(chnls)):
+                chnls[i] = IPFIXCOL_DATA + profile['path'] + '/channels/' + chnls[i]
+            channels = ' '.join(chnls)
+
+            # Create command
+            cmd = MPICH_CMD + ' ' + MPICH_ARGS + ' -env OMP_NUM_THREADS 4 ' + FDISTDUMP_CMD + ' '
+            cmdback = cmd + filter + ' ' + args + ' ' + channels
+            repl = '--output-format=csv --output-addr-conv=str --output-tcpflags-conv=str '
+            repl += '--output-proto-conv=str --output-duration-conv=str --output-volume-conv=metric-prefix'
+            args = args.replace('--output-format=pretty', repl)
+            args = args.replace('--output-format=long', repl)
+
+            cmd += filter + ' ' + args + ' --progress-bar-type=json --progress-bar-dest='
+            cmd += '/tmp/' + sessionID + '.' + instanceID + '.json '
+            cmd += channels
+        else:
+            cmdback = ''
+            cmd = ''
 
         # Run query and save it
         # universal_newlines will open streams in text mode instead of binary

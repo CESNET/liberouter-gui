@@ -79,7 +79,10 @@ def createProfile():
 
         if profiles.createSubprofile(req['profile'], newp):
             profiles.exportXML()
-            # TODO: Notify ipfixcol
+
+            n = Notifier()
+            n.notifyIpfixcol()
+
             return json.dumps({'success': True})
 
         #raise ProfilesError('Cannot create subprofile')
@@ -91,21 +94,33 @@ def createProfile():
         raise SCGUIException('TypeError:' + str(e))
     except ProfilesError as e:
         raise SCGUIException(str(e))
+    except NotifierError as e:
+        raise SCGUIException(str(e))
 
 @auth.required(role.Role.admin)
 def deleteProfile():
     req = request.args.to_dict()
     profiles = Profiles()
 
-    if 'profile' not in req:
-        raise SCGUIException('Bad URL arguments')
+    try:
+        if profiles.delete(req['profile']):
+            profiles.exportXML()
 
-    if profiles.delete(req['profile']):
-        profiles.exportXML()
-        # TODO: Notify ipfixcol
-        return json.dumps({'success': True})
+            n = Notifier()
+            n.notifyIpfixcol()
 
-    return json.dumps({'success': False})
+            return json.dumps({'success': True})
+
+        return json.dumps({'success': False})
+
+    except KeyError as e:
+        raise SCGUIException('KeyError:' + str(e))
+    except TypeError as e:
+        raise SCGUIException('TypeError:' + str(e))
+    except ProfilesError as e:
+        raise SCGUIException(str(e))
+    except NotifierError as e:
+        raise SCGUIException(str(e))
 
 def getQueryFields():
     try:

@@ -322,10 +322,10 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     processQueryStarted(data: Object) {
         this.btnQueryChange();
 
-        this.timer = setInterval(() => this.api.queryProgress(this.instanceID).subscribe(
-                (data2: Object) => this.processQueryProgress(data2),
-                (error: Object) => this.processError(error)
-            ), 1000);
+        this.api.queryProgress(this.instanceID).subscribe(
+            (data2: Object) => this.processQueryProgress(data2),
+            (error: Object) => this.processError(error)
+        );
 
         this.toPrint_command = data['command'];
         this.toPrint_stdout = null;
@@ -342,8 +342,6 @@ export class ScDbqryComponent implements OnInit, OnChanges {
      */
     processQueryKilled(data: Object) {
         this.btnQueryChange();
-        clearInterval(this.timer);
-        this.timer = null;
         this.getQueryData();
     }
 
@@ -408,11 +406,15 @@ export class ScDbqryComponent implements OnInit, OnChanges {
         };
 
         if (parseInt(data['total'], 10) === 100) {
-            clearInterval(this.timer);
-            this.timer = null;
             this.btnQueryChange();
             this.getQueryData();
         }
+		else {
+			this.api.queryProgress(this.instanceID).subscribe(
+                (data2: Object) => this.processQueryProgress(data2),
+                (error: Object) => this.processError(error)
+            );
+		}
     }
 
     /**

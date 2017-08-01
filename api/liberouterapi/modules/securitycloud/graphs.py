@@ -12,11 +12,11 @@ IPFIXCOL_DATA = config.modules['scgui']['ipfixcol_data']
 RRDTOOL = config.modules['scgui']['rrdtool']
 
 def grayscale(color):
-    '''
+    """
     Returns hexadecimal string with grayscale color definition. color argument
     defines overall intensity of output color and has to be somewhere between 0
     and 255.
-    '''
+    """
     return '#' + hex(color)[2:] + hex(color)[2:] + hex(color)[2:]
 
 class GraphsError(Exception):
@@ -44,33 +44,26 @@ class Graphs():
         self.__loadData();
 
     def __buildCdefs(self):
-        '''
+        """
         Returns a string containing rrdtool definitions necessary for loading
-        all channels in properly. These rules also take care of data conversions
-        since bytes (vars with traffic prefix) have to be converted to bits per second.
-        '''
+        all channels in properly.
+        """
         defs = ''
-        fooname = 'foo'
-        if self.var.startswith('traffic'):
-            fooname = 'bar'
 
         size = len(self.channels)
         for i in range(0, size):
-            defs += 'DEF:' + fooname + str(i + 1) + '=' + self.channels[i]['name'] + '.rrd:' + self.var + ':MAX '
-
-        if fooname is 'bar':
-            for i in range(0, size):
-                defs += 'CDEF:foo' + str(i + 1) + '=bar' + str(i + 1) + ',8,* '
+            defs += 'DEF:foo' + str(i + 1) + '=' + self.channels[i]['name'] + '.rrd:'
+            defs += self.var + ':MAX '
 
         return defs
 
     def __buildRenderRules(self):
-        '''
+        """
         Returns a string containing rrdtool render rules. Those rules will draw
         data sources as stacked grayscale areas. These rules are virtually useless
         right now, but they can be used as a fallback in case any of new gui
         designs will blow.
-        '''
+        """
         # base color black
         color = 0
         # no brighter than rgb(192, 192, 192)
@@ -79,15 +72,16 @@ class Graphs():
         rules = 'AREA:foo1' + grayscale(color) + ':"' + self.channels[0]['name'] + '" '
         for i in range(1, len(self.channels)):
             color += colorStep
-            rules += 'AREA:foo' + str(i + 1) + grayscale(color) + ':"' + self.channels[i]['name'] + '":STACK '
+            rules += 'AREA:foo' + str(i + 1) + grayscale(color) + ':"'
+            rules += self.channels[i]['name'] + '":STACK '
         return rules
 
     def __getRrdtoolData(self, args, path):
-        '''
+        """
         Execute command specified by args in path folder and return stdout
         output of executed command. Raises exception if command did not finished
         successfully.
-        '''
+        """
         p = subprocess.Popen(args, stdout=subprocess.PIPE, cwd=path, shell=True, universal_newlines=True)
 
         try:
@@ -100,7 +94,7 @@ class Graphs():
             raise GraphsError('Unknown exception: ' + str(e))
 
     def __loadData(self):
-        '''
+        """
         Command breakdown: RRDTOOL is path to rrdtool executable, 'graph' is
         mode for program to work in. Dash means we don't want to generate output
         file. -a JSONTIME will return string with JSON data with timestamp for each
@@ -109,14 +103,16 @@ class Graphs():
         Then cdefs and render rules are inserted. Width specifies pixel size of
         the graph. Hopefully this will force rrdtool to make data aggregation
         for me when requesting.
-        '''
+        """
         fmt = ''
         if self.mode == 'thumb':
             fmt = 'SVG --only-graph'
         else:
             fmt = 'JSONTIME'
-        cmd = RRDTOOL + ' graph - -a ' + fmt + ' -Z -S 300 --width ' + str(self.pxw) + ' --start ' + str(self.bgn) + ' --end ' + str(self.end) + ' ' + self.__buildCdefs() + ' ' + self.__buildRenderRules()
-        # NOTE: shlex.quote
+
+        cmd = RRDTOOL + ' graph - -a ' + fmt + ' -Z -S 300 --width ' + shlex.quote(str(self.pxw))
+        cmd += ' --start ' + shlex.quote(str(self.bgn)) + ' --end ' + shlex.quote(str(self.end))
+        cmd += ' ' + self.__buildCdefs() + ' ' + self.__buildRenderRules()
 
         if SINGLE_MACHINE:
             cwdpath = IPFIXCOL_DATA + self.profile['path'] + '/rrd/channels/'
