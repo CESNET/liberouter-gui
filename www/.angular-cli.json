@@ -28,8 +28,7 @@
 				"../node_modules/dygraphs/dist/dygraph.css"
 			],
 			"scripts": [
-				"../node_modules/dygraphs/dist/dygraph.js",
-				"../node_modules/ng-dygraphs/lib/index.js"
+				"../node_modules/dygraphs/dist/dygraph.js"
 			],
 			"environmentSource": "environments/environment.ts",
 			"environments": {
