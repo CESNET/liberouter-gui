@@ -23,6 +23,10 @@ class Dbqry():
     def __init__(self):
         pass
 
+    def __removeFile(self, path):
+        if os.path.isfile(path):
+            os.remove(path)
+
     def runQuery(self, sessionID, instanceID, profilePath, args, filter, channels):
         """
         Before the query can be started, filter has to be sanitized and modified based on the type
@@ -59,9 +63,11 @@ class Dbqry():
                 chnls[i] = IPFIXCOL_DATA + profile['path'] + '/channels/' + chnls[i]
             channels = ' '.join(chnls)
 
-            # Create command
+            # Create command and backup
             cmd = MPICH_CMD + ' ' + MPICH_ARGS + ' -env OMP_NUM_THREADS 4 ' + FDISTDUMP_CMD + ' '
             cmdback = cmd + filter + ' ' + args + ' ' + channels
+
+            # Following replacement ensures correct frontend view processing
             repl = '--output-format=csv --output-addr-conv=str --output-tcpflags-conv=str '
             repl += '--output-proto-conv=str --output-duration-conv=str --output-volume-conv=metric-prefix'
             args = args.replace('--output-format=pretty', repl)
@@ -71,14 +77,32 @@ class Dbqry():
             cmd += '/tmp/' + sessionID + '.' + instanceID + '.json '
             cmd += channels
         else:
-            cmdback = ''
-            cmd = ''
+            for i in range(0, len(chnls)):
+                chnls[i] = profile['path'] + '/channels/' + chnls[i]
+            channels = ' '.join(chnls)
+
+            # Create command and backup
+            cmd = FDISTDUMP_HA_CMD + ' ' + channels + ' ' + MPICH_CMD + ' -env OMP_NUM_THREADS 4 '
+            cmd += FDISTDUMP_CMD + ' '
+            cmdback = cmd + filter + ' ' + args
+
+            # Following replacement ensures correct frontend view processing
+            repl = '--output-format=csv --output-addr-conv=str --output-tcpflags-conv=str '
+            repl += '--output-proto-conv=str --output-duration-conv=str --output-volume-conv=metric-prefix'
+            args = args.replace('--output-format=pretty', repl)
+            args = args.replace('--output-format=long', repl)
+
+            cmd += filter + ' ' + args + ' --progress-bar-type=json --progress-bar-dest='
+            cmd += '/tmp/' + sessionID + '.' + instanceID + '.json'
+
+        # Open file for stdout and open with reading cabalities
+        outfile = open ('/tmp/fdistout.' + sessionID + '.' + instanceID + '.txt', 'w+')
 
         # Run query and save it
         # universal_newlines will open streams in text mode instead of binary
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, cwd=cwdpath, universal_newlines=True)
+        p = subprocess.Popen(cmd, stdout=outfile, stderr=subprocess.PIPE, shell=True, cwd=cwdpath, universal_newlines=True)
         db = DbqryProcessDb()
-        db.insert(sessionID, instanceID, p)
+        db.insert(sessionID, instanceID, {'ph': p, 'fh': outfile})
 
         # Return backup command
         return json.dumps({'command': cmdback});
@@ -88,7 +112,7 @@ class Dbqry():
         Popen object is retrieved from the process database and then the process is killed.
         """
         db = DbqryProcessDb()
-        p = db.read(sessionID, instanceID)
+        p = db.read(sessionID, instanceID)['ph']
         p.kill()
 
     def getProgressJSONString(self, sessionID, instanceID):
@@ -99,7 +123,7 @@ class Dbqry():
         """
         # On startup error, fdistdump does not generate progress file. Following lines fix that
         db = DbqryProcessDb()
-        p = db.read(sessionID, instanceID)
+        p = db.read(sessionID, instanceID)['ph']
         if p.poll() is not None:
             if p.returncode != 0:
                 return json.dumps({'total': 100})
@@ -126,11 +150,15 @@ class Dbqry():
         db = DbqryProcessDb()
         p  = db.read(sessionID, instanceID)
 
-        out, err = p.communicate()
+        out, err = p['ph'].communicate() # out will be None since it is not piped
+        p['fh'].flush() # Flush internal buffers to file
+        p['fh'].seek(0, 0) # Move back to beginning of a file
+        out = p['fh'].read() # And read it
         
-        path = '/tmp/' + sessionID + '.' + instanceID + '.json'
-        if os.path.isfile(path):
-            os.remove(path)
+        # Now close the filehandle and delete that file (and also progress file)
+        p['fh'].close()
+        
+        self.__removeFile('/tmp/fdistout.' + sessionID + '.' + instanceID + '.txt')
+        self.__removeFile('/tmp/' + sessionID + '.' + instanceID + '.json')
 
-        # TODO: Postprocess out
         return json.dumps({'out': str(out), 'err': str(err)})
