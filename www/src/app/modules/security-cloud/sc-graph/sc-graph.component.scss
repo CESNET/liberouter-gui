@@ -6,6 +6,18 @@
 	text-align: center;
 }
 
+.box .form-check {
+    margin-bottom: 0px !important;
+}
+
 .cursor-pointer {
     cursor: pointer;
+}
+
+.navig-group-justified {
+    width: 100%;
+}
+
+.navig-group-justified>button {
+    width: 20%;
 }

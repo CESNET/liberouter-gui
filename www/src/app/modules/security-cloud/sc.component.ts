@@ -1,5 +1,5 @@
 // Global modules
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { SafeResourceUrl } from '@angular/platform-browser';
@@ -8,6 +8,7 @@ import { environment } from 'environments/environment';
 
 // Local modules
 import { ProfileMap, Channel, ProfileLink } from './modules/Profile';
+import { ChannelSettings, ChannelSettingsBuilder } from './modules/ChannelSettings';
 import { TimeSpecs, TimeSelection, TimeView } from './modules/TimeSpecs';
 import { AppConfig } from './modules/AppConfig';
 
@@ -54,11 +55,13 @@ export class SecurityCloudComponent implements OnInit {
 })
 export class ScWorkbenchComponent implements OnInit {
     profiles: ProfileMap = null;
+    channels: ChannelSettings[] = null;
     config: AppConfig = null;
     selectedProfile: string = null; ///< Identifier of currently selected profile(default: /live)
     linkList: ProfileLink[] = null;
     error: any = null;
     filterOverride = ''; ///< In case filter is passed as a url parameter
+    @ViewChild('GraphComponent') graphComponent;
 
     time: TimeSpecs = new TimeSpecs;
     /**
@@ -132,7 +135,7 @@ export class ScWorkbenchComponent implements OnInit {
      */
     processProfilesData(data: any) {
         this.profiles = new ProfileMap(data);
-
+        this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
         this.linkList = this.profiles.getLinkList('');
     }
 
@@ -168,6 +171,7 @@ export class ScWorkbenchComponent implements OnInit {
      */
     changeProfile(profilePath: string) {
         this.selectedProfile = profilePath;
+        this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
     }
 
     /**
@@ -182,6 +186,15 @@ export class ScWorkbenchComponent implements OnInit {
         url += '&start=' + this.time.sel.bgn;
         url += '&end=' + this.time.sel.end;
         window.open(url, '_blank').focus();
+    }
+
+    setAllChannels(value: boolean) {
+        for (let i = 0; i < this.channels.length; i++) {
+            if (this.channels[i].checked !== value) {
+                this.graphComponent.changeChannelVisibility(i);
+                this.channels[i].checked = value;
+            }
+        }
     }
 }
 

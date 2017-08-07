@@ -24,9 +24,9 @@
     </div>
 
     <div class="card-footer">
-        <div class="row mb-4 align-items-center">
+        <div class="row align-items-center">
             <!-- Render settings -->
-            <div class="col-md-2 text-center">
+            <div class="col-xl-2 col-lg-6 col-md-6 text-center">
                 <div class="box">
                     <div class="form-check form-check-inline">
                         <label class="form-check-label">
@@ -43,30 +43,11 @@
                 </div>
             </div>
 
-            <div class="col-md-10">
-                <div class="box">
-                    <div class="form-check form-check-inline" *ngFor="let channel of channels;
-                        let i=index">
-                        <label class="form-check-label">
-                            <input class="form-check-input" value="channel.name" type="checkbox"
-                                [(ngModel)]="channel.checked"
-                                (click)="renderComponent.changeChannelVisibility(i)">
-                                <span [ngStyle]="{'background': channel.color}">
-                                    &nbsp;&nbsp;
-                                </span>
-                                &nbsp;{{ channel.name }}
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row align-items-center">
-            <div class="col-md-2">
+            <div class="col-xl-2 col-lg-6 col-md-6">
                 <form class="form-inline">
                     <div class="form-group">
                         <div class="input-group">
-                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                            <input class="form-control" placeholder="YYYY-MM-DD" name="dp"
                                 [(ngModel)]="pickerDate" ngbDatepicker #d="ngbDatepicker"
                                 (ngModelChange)="pickerChanged($event)">
                             <div class="input-group-addon cursor-pointer" (click)="d.toggle()">
@@ -77,16 +58,7 @@
                 </form>
             </div>
 
-            <div class="col-md-2 text-center">
-                <select class="form-control" [ngModel]="selectedResolution"
-                    (ngModelChange)="renderComponent.changeResolution(true, $event)">
-                    <option *ngFor="let x of resolutionTable; let i=index" [value]="i">
-                        {{ x.label }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="col-md-5">
+            <div class="col-xl-3 col-lg-6 col-md-12">
                 <!-- Selected time box -->
                 <div class="box">
                     {{ time.sel.bgn | date : 'y-MM-dd HH:mm' }}
@@ -95,9 +67,18 @@
                     </span>
                 </div>
             </div>
+            
+            <div class="col-xl-2 col-lg-5 col-md-5 text-center">
+                <select class="form-control" [ngModel]="selectedResolution"
+                    (ngModelChange)="renderComponent.changeResolution(true, $event)">
+                    <option *ngFor="let x of resolutionTable; let i=index" [value]="i">
+                        {{ x.label }}
+                    </option>
+                </select>
+            </div>
 
-            <div class="col">
-                <div class="btn-group btn-group-justified">
+            <div class="col-xl-3 col-lg-7 col-md-7">
+                <div class="btn-group navig-group-justified">
                     <button class="btn btn-secondary" (click)="renderComponent.changeTimeWindow(0)">
                         <i class="fa fa-backward"></i>
                     </button>

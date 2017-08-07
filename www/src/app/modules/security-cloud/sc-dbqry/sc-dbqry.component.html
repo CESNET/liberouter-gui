@@ -7,31 +7,8 @@
     
     <div class="card-block">
         <div class="row">
-            <div class="col-lg-2">
-                <!-- Channel picker -->
-                <div class="card card-outline-secondary">
-                    <h6 class="card-header text-center">
-                        Channels
-                    </h6>
-                    
-                    <div class="card-block">
-                        <div class="form-check form-check-inline" *ngFor="let channel of channels;
-                            let i=index">
-                            <label class="form-check-label">
-                                <input class="form-check-input" value="channel.name" type="checkbox"
-                                    [(ngModel)]="channel.checked">
-                                    <span [ngStyle]="{'background': channel.color}">
-                                        &nbsp;&nbsp;
-                                    </span>
-                                    &nbsp;{{ channel.name }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <!-- Filter textarea -->
+            <!-- Filter textarea -->
+            <div class="col-lg-6">
                 <div class="card card-outline-secondary">
                     <h6 class="card-header text-center">
                         Filter
@@ -43,9 +20,9 @@
                 </div>
             </div>
             
+            <!-- Options -->
             <div class="col-lg-6">
                 <div class="card card-outline-secondary">
-                <!-- Options -->
                     <ngb-tabset justify="center" (tabChange)="beforeTabChange($event)">
                         <ngb-tab id="custom-navbar" title="Fast Options" id="FastOptions">
                             <ng-template ngbTabContent>
@@ -160,6 +137,7 @@
         </div>
     </div>
     
+    <!-- Output processing -->
     <div class="card-footer">
         <pre class="box" *ngIf="toPrint_command != null"> {{ toPrint_command }} </pre>
 
@@ -167,32 +145,42 @@
             <div class="progress-bar" role="progressbar" [ngStyle]="progressStyle"></div>
         </div>
         
-        <div *ngIf="fancy && toPrint_stdout != null">
-            <div class="box mb-4" *ngFor="let section of toPrint_stdout">
-                <table class="table table-sm table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let item of section.header">
-                                {{ item }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let row of section.data">
-                            <td *ngFor="let item of row; let i=index">
-                                <a class="link-lookup" *ngIf="isIpField(section.header[i])"
-                                    (click)="iplookupComponent.openModal(item)">
-                                    {{ item }}
-                                </a>
-                                <span *ngIf="!isIpField(section.header[i])">
-                                    {{ item }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <ngb-tabset *ngIf="fancy && toPrint_stdout != null">
+            <ngb-tab title="Formatted Output">
+                <ng-template ngbTabContent>
+                    <div class="box mb-4" *ngFor="let section of toPrint_stdout">
+                        <table class="table table-sm table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let item of section.header">
+                                        {{ item }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of section.data">
+                                    <td *ngFor="let item of row; let i=index">
+                                        <a class="link-lookup" *ngIf="isIpField(section.header[i])"
+                                            (click)="iplookupComponent.openModal(item)">
+                                            {{ item }}
+                                        </a>
+                                        <span *ngIf="!isIpField(section.header[i])">
+                                            {{ item }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Raw Output">
+                <ng-template ngbTabContent>
+                    <pre class="box">{{ toPrint_stdoutRaw }}</pre>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+        
         <pre class="box" *ngIf="!fancy && toPrint_stdout != null">{{ toPrint_stdout }}</pre>
         
         <pre class="box" *ngIf="toPrint_stderr != null">{{ toPrint_stderr }}</pre>

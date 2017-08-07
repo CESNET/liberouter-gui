@@ -8,18 +8,20 @@
 
 <div class="container-fluid" *ngIf="profiles && config">
     <div class="row mb-4">
-        <div class="col-lg-10">
+        <div class="col-xl-10 col-lg-12">
             <!-- Graphs -->
-            <sc-graph [profiles]="profiles"
+            <sc-graph #GraphComponent [profiles]="profiles"
                 [selectedProfile]="selectedProfile"
                 [time]="time"
                 [config]="config"
-                (timeChange)="handleTimeChangePropagation($event)">
+                (timeChange)="handleTimeChangePropagation($event)"
+                [channels]="channels">
             </sc-graph>
         </div>
-        <div class="col-lg-2">
+        
+        <div class="col-xl-2">
             <!-- other actions -->
-            <div class="card">
+            <div class="card mb-4">
                 <h4 class="card-header card-primary card-inverse text-center">
                     Other Action
                 </h4>
@@ -45,6 +47,51 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- Channel picker -->
+            <div class="card">
+                <h4 class="card-header card-primary card-inverse text-center">
+                    Channels
+                </h4>
+                
+                <div class="card-block">
+                    <div class="form-check" *ngFor="let channel of channels;
+                        let i=index">
+                        <label class="form-check-label">
+                            <input class="form-check-input" value="channel.name" type="checkbox"
+                                [(ngModel)]="channel.checked"
+                                (click)="graphComponent.changeChannelVisibility(i)">
+                                <span [ngStyle]="{'background': channel.color}">
+                                    &nbsp;&nbsp;
+                                </span>
+                                &nbsp;{{ channel.name }}
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <!--div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <button class="btn btn-secondary btn-block" (click)="setAllChannels(true)">
+                                All
+                            </button>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <button class="btn btn-secondary btn-block" (click)="setAllChannels(false)">
+                                None
+                            </button>
+                        </div>
+                    </div-->
+                    <div class="btn-group chnls-btn-group">
+                        <button class="btn btn-secondary" (click)="setAllChannels(true)">
+                            All
+                        </button>
+                        <button class="btn btn-secondary" (click)="setAllChannels(false)">
+                            None
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 	
@@ -57,13 +104,15 @@
 		</sc-stats>
 	</div>
 	
+    <!-- Database query -->
 	<div class="row mb-4">
 		<div class="col-lg-12">
             <sc-dbqry [profiles]="profiles"
                 [selectedProfile]="selectedProfile"
                 [sel]="time.sel"
                 [config]="config"
-                [filter]="filterOverride">
+                [filter]="filterOverride"
+                [channels]="channels">
             </sc-dbqry>
 		</div>
 	</div>

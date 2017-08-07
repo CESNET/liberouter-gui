@@ -24,6 +24,7 @@ export class ScGraphComponent implements OnInit, OnChanges {
     @Input() profiles: ProfileMap;
     @Input() selectedProfile: string;
     @Input() config: AppConfig;
+    @Input() channels: ChannelSettings[] = null; ///< ngModel for channel checkboxes
     @ViewChild('RenderComponent') renderComponent: ScGraphRenderComponent;
     @ViewChild('ThumbsComponent') thumbsComponent: ScGraphThumbsComponent;
 
@@ -33,7 +34,6 @@ export class ScGraphComponent implements OnInit, OnChanges {
 
     /* INTERNAL VARIABLES */
     selectedVar = 0; ///< Index to RRDVariables
-    channels: ChannelSettings[] = null; ///< ngModel for channel checkboxes
     pickerDate; ///< ngModel for datepicker
     resolutionTable = ResolutionTable; ///< Make the table visible to template
     selectedResolution: string; ///< Auxiliary handle for ngModel. Only graph-render can modify view.res
@@ -62,13 +62,7 @@ export class ScGraphComponent implements OnInit, OnChanges {
      *  be rebuilt. If selected times were changed, then textbox for printing
      *  them has to be updated. FrameTime changes are handled by graph-render.
      */
-    ngOnChanges(changes: SimpleChanges) {
-        for (const x in changes) {
-            if (x === 'selectedProfile') {
-                this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
-            }
-        }
-    }
+    ngOnChanges(changes: SimpleChanges) {}
 
     /**
      *  @brief Method for ensuring 2-way data binding across the component tree
@@ -107,5 +101,9 @@ export class ScGraphComponent implements OnInit, OnChanges {
      */
     changeVar(index: number) {
         this.selectedVar = index;
+    }
+
+    changeChannelVisibility(i: number) {
+        this.renderComponent.changeChannelVisibility(i);
     }
 }

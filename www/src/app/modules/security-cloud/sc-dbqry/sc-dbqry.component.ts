@@ -28,10 +28,8 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     @Input() sel: TimeSelection;
     @Input() config: AppConfig;
     @Input() filter: string; ///< Filter textarea model
+    @Input() channels: ChannelSettings[] = null;
     @ViewChild('IPLookup') iplookupComponent;
-
-    /* INTERNAL VARIABLES */
-    channels: ChannelSettings[] = null; ///< Channel checkboxes model
 
     limitto = [ ///< LimitTo dropdown model
         {value: '-l 10', desc: '10 records'},
@@ -66,6 +64,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
 
     toPrint_command: string = null; ///< Result text model
     toPrint_stdout = null; ///< Result text model
+    toPrint_stdoutRaw = null; ///< Unformatted text model
     toPrint_stderr: string = null; ///< Result text model
 
     error: any = null;
@@ -94,13 +93,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
         this.instanceID = this.generateInstanceID();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        for (const x in changes) {
-            if (x === 'selectedProfile') {
-                this.channels = ChannelSettingsBuilder.init(this.profiles, this.selectedProfile);
-            }
-        }
-    }
+    ngOnChanges(changes: SimpleChanges) {}
 
     /**
      *  @brief Method for changing query button from Start query to Kill query and back with proper
@@ -204,7 +197,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
      *
      *  @details The options are specifying limit, time range, aggregation, orderBy, order direction,
      *  and output format.
-     *  
+     *
      *  @note !!! IMPORTANT !!! fdistdump has three formatting options: pretty, long and csv. First
      *  two have all kinds of output conversions enabled (with long not cutting IPv6 addresses).
      *  Csv is the barbone option with all conversion disabled (but they can be enabled manually).
@@ -360,6 +353,8 @@ export class ScDbqryComponent implements OnInit, OnChanges {
             || (this.toPrint_command.indexOf('--output-format=long') !== -1));
 
         if (this.fancy && data['out'] !== '') {
+            this.toPrint_stdoutRaw = data['out'];
+
             const sections = data['out'].split('\n\n');
 
             this.toPrint_stdout = new Array(sections.length);
@@ -409,12 +404,12 @@ export class ScDbqryComponent implements OnInit, OnChanges {
             this.btnQueryChange();
             this.getQueryData();
         }
-		else {
-			this.api.queryProgress(this.instanceID).subscribe(
+        else {
+            this.api.queryProgress(this.instanceID).subscribe(
                 (data2: Object) => this.processQueryProgress(data2),
                 (error: Object) => this.processError(error)
             );
-		}
+        }
     }
 
     /**
@@ -525,10 +520,10 @@ export class ScDbqryComponent implements OnInit, OnChanges {
 
     /**
      *  @brief Test whether given column label identifies IP address column
-     *  
+     *
      *  @param [in] header Name of the column
      *  @return TRUE if it is IP address field
-     *  
+     *
      *  @details When displaying dbqry output, following test is used for proper placement of lookup
      *  modal links
      */
