@@ -14,3 +14,4 @@ beautifulsoup4==4.6.0
 bs4==0.0.1
 lxml==3.8.0
 rrdtool==0.1.11
+PyYAML==3.12
