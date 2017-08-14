@@ -5,7 +5,7 @@
         Database Query
     </h4>
     
-    <div class="card-block">
+    <div class="card-body">
         <div class="row">
             <!-- Filter textarea -->
             <div class="col-lg-6">
@@ -14,7 +14,7 @@
                         Filter
                     </h6>
                     
-                    <div class="card-block">
+                    <div class="card-body">
                         <textarea class="form-control" rows="5" [(ngModel)]="filter"></textarea>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                         <ngb-tab id="custom-navbar" title="Fast Options" id="FastOptions">
                             <ng-template ngbTabContent>
                                 <div class="card" style="border-color: white">
-                                    <div class="card-block">
+                                    <div class="card-body">
                                         <div class="row align-items-center">
                                             <div class="col-sm-2 col-xs-4">
                                                 <b>Limit to:</b>
@@ -116,7 +116,7 @@
                         <ngb-tab title="Custom Options" id="CustomOptions">
                             <ng-template ngbTabContent>
                                 <div class="card">
-                                    <div class="card-block">
+                                    <div class="card-body">
                                         <sc-dbqry-fdisthelp></sc-dbqry-fdisthelp>
                                         <textarea class="form-control" rows="4"
                                             [(ngModel)]="customOpts">

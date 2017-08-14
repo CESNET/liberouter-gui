@@ -9,7 +9,7 @@
         </sc-graph-thumbs>
     </h4>
 
-    <div class="card-block">
+    <div class="card-body">
         <!-- active graph area -->
         <sc-graph-render #RenderComponent
             [selectedProfile]="selectedProfile"
@@ -79,21 +79,21 @@
 
             <div class="col-xl-3 col-lg-7 col-md-7">
                 <div class="btn-group navig-group-justified">
-                    <button class="btn btn-secondary" (click)="renderComponent.changeTimeWindow(0)">
+                    <button class="btn btn-outline-secondary" (click)="renderComponent.changeTimeWindow(0)">
                         <i class="fa fa-backward"></i>
                     </button>
-                    <button class="btn btn-secondary"
+                    <button class="btn btn-outline-secondary"
                         (click)="renderComponent.changeResolution(false, '1')">
                         <i class="fa fa-search-minus"></i>
                     </button>
-                    <button class="btn btn-secondary"
+                    <button class="btn btn-outline-secondary"
                         (click)="renderComponent.changeResolution(false, '-1')">
                         <i class="fa fa-search-plus"></i>
                     </button>
-                    <button class="btn btn-secondary" (click)="renderComponent.changeTimeWindow(1)">
+                    <button class="btn btn-outline-secondary" (click)="renderComponent.changeTimeWindow(1)">
                         <i class="fa fa-forward"></i>
                     </button>
-                    <button class="btn btn-secondary" (click)="renderComponent.changeTimeWindow(2)">
+                    <button class="btn btn-outline-secondary" (click)="renderComponent.changeTimeWindow(2)">
                         <i class="fa fa-step-forward"></i>
                     </button>
                 </div>

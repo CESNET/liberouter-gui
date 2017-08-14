@@ -17,7 +17,7 @@
                         {{ x.label }}
                     </h5>
                     
-                    <div class="card-block" *ngIf="x.data != null">
+                    <div class="card-body" *ngIf="x.data != null">
                         <sc-thumb-renderer [data]="x.data">
                         </sc-thumb-renderer>
                     </div>
@@ -27,7 +27,7 @@
     </div>
 </ng-template>
 
-<span class="hand-cursor text-white"
+<span class="hand-cursor"
     (click)="getThumbnails(); modalService.open(GraphThumbsModal, {size: 'lg'})">
     {{ getRRDConstant().name }} on {{ selectedProfile }} <i class="fa fa-chevron-down"></i>
 </span>

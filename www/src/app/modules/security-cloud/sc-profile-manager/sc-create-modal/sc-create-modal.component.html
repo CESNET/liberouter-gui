@@ -15,7 +15,8 @@
                 <b>Name:</b>
             </div>
             <div class="col-sm-10">
-                <input type="text" [(ngModel)]="profile.name" class="form-control">
+                <input type="text" [(ngModel)]="profile.name" class="form-control"
+                required pattern="[a-zA-Z_][a-zA-Z_\-0-9]*">
             </div>
         </div>
         
@@ -24,7 +25,7 @@
                 <b>Type:</b>
             </div>
             <div class="col-sm-10">
-                <input type="text" [(ngModel)]="profile.type" class="form-control">
+                <input type="text" [(ngModel)]="profile.type" class="form-control" readonly>
             </div>
         </div>
         
@@ -44,7 +45,7 @@
             <div class="col">
                  <div class="input-group">
                     <input type="number" class="form-control" placeholder="Enter number of channels"
-                        [(ngModel)]="channelCount">
+                        [(ngModel)]="channelCount" required pattern="[a-zA-Z_][a-zA-Z_\-0-9]*">
                     <span class="input-group-addon" (click)="setNofChannels()">Set channel count</span>
                 </div>
             </div>

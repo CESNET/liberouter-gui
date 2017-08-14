@@ -56,7 +56,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
     btnQuery = {
         label: 'Start query',
         querying: true,
-        style: 'btn btn-secondary btn-block'
+        style: 'btn btn-outline-secondary btn-block'
     };
     instanceID: string = null; ///< Identifier of the browser tab
     progressStyle; ///< Styler of progress bar
@@ -114,7 +114,7 @@ export class ScDbqryComponent implements OnInit, OnChanges {
             this.btnQuery = {
                 label: 'Start query',
                 querying: true,
-                style: 'btn btn-secondary btn-block'
+                style: 'btn btn-outline-secondary btn-block'
             };
         }
     }

@@ -20,18 +20,18 @@ import { ScService } from './sc.service';
     template : `
 <div class="container-fluid mb-4">
     <div class="card">
-        <div class="card-block">
+        <div class="card-body">
             <div class="row">
                 <div class="col">
                     <h2>SecurityCloud</h2>
                 </div>
                 <div class="col">
-                    <a routerLink='workbench' class="btn btn-secondary btn-block">
+                    <a routerLink='workbench' class="btn btn-outline-secondary btn-block">
                         Workbench
                     </a>
                 </div>
                 <div class="col">
-                    <a routerLink='profileManager' class="btn btn-secondary btn-block">
+                    <a routerLink='profileManager' class="btn btn-outline-secondary btn-block">
                         Profile manager
                     </a>
                 </div>
