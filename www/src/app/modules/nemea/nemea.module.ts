@@ -4,7 +4,7 @@ import { Routes, RouterModule} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { NgGridModule } from 'angular2-grid';
+import { NgGridModule } from 'angular2-grid/modules/NgGrid.module.js';
 
 import { CodemirrorModule } from 'ng2-codemirror';
 

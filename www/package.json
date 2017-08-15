@@ -23,17 +23,17 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.20",
+    "@ng-bootstrap/ng-bootstrap": "1.0.0-alpha.31",
     "@swimlane/ngx-charts": "^5.3.1",
-    "angular2-grid": "^2.0.2",
-    "bootstrap": "^4.0.0-alpha.6",
+    "angular2-grid": "^2.0.6",
+    "bootstrap": "4.0.0-alpha.6",
     "core-js": "^2.4.1",
     "d3": "^4.9.1",
     "dygraphs": "^2.0.0",
     "font-awesome": "^4.7.0",
     "ng2-codemirror": "^1.1.1",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.16"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^4.0.0",
