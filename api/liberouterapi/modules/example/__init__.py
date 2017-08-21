@@ -2,7 +2,7 @@ from liberouterapi import app
 from ..module import Module
 
 # Register a blueprint
-module_bp = Module('module', __name__, url_prefix = '/module')
+module_bp = Module('module', __name__, url_prefix = '/module', no_version=True)
 
 from .base import *
 
