@@ -158,7 +158,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthGuard } from 'app/utils/auth.guard';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
@@ -253,7 +253,7 @@ data.
 #### The real backend part
 
 Luckily for us, backend already contains an example module created for us, so let's just break it
-down to understand, what it does. First of all we'll look on __init__.py file:
+down to understand, what it does. First of all we'll look on \_\_init\_\_.py file:
 ```
 from liberouterapi import app
 from ..module import Module
@@ -301,7 +301,7 @@ def example_method():
     return json.dumps({'data': 'yeey, some data! '})
 ```
 
-And following method to __init__.py:
+And following method to \_\_init\_\_.py:
 ```
 module_bp.add_url_rule('/example', view_func = example_method, methods=['GET'])
 ```
