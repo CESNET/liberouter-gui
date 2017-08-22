@@ -12,6 +12,7 @@ from .queryFields import Fields, FieldsError
 from .dbqry import Dbqry, DbqryError
 from .stats import Stats as Statistics
 from .error import SCGUIException
+from .notify import Notifier, NotifierError
 
 @auth.required()
 def getStatistics():
