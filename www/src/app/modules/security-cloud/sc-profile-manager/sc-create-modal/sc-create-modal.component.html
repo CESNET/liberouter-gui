@@ -10,86 +10,101 @@
     </div>
 
     <div class="modal-body">
-        <div class="row align-items-center mb-2">
-            <div class="col-sm-2">
-                <b>Name:</b>
-            </div>
-            <div class="col-sm-10">
-                <input type="text" [(ngModel)]="profile.name" class="form-control"
-                required pattern="[a-zA-Z_][a-zA-Z_\-0-9]*">
-            </div>
-        </div>
-        
-        <div class="row align-items-center mb-2">
-            <div class="col-sm-2">
-                <b>Type:</b>
-            </div>
-            <div class="col-sm-10">
-                <input type="text" [(ngModel)]="profile.type" class="form-control" readonly>
-            </div>
-        </div>
-        
-        <div class="row align-items-center mb-2">
-            <div class="col-sm-2">
-                <b>Parent:</b>
-            </div>
-            <div class="col-sm-10">
-                <input type="text" [value]="profile.path" readonly class="form-control">
-            </div>
-        </div>
-        
-        <div class="row align-items-center mb-2">
-            <div class="col-sm-2">
-                <h5>Channels:</h5>
-            </div>
-            <div class="col">
-                 <div class="input-group">
-                    <input type="number" class="form-control" placeholder="Enter number of channels"
-                        [(ngModel)]="channelCount" required pattern="[a-zA-Z_][a-zA-Z_\-0-9]*">
-                    <span class="input-group-addon" (click)="setNofChannels()">Set channel count</span>
+        <form #f="ngForm" (ngSubmit)="createProfile()">
+            <div class="row align-items-center mb-2">
+                <div class="col-sm-2">
+                    <b>Name:</b>
+                </div>
+                <div class="col-sm-10">
+                    <input type="text" [(ngModel)]="profile.name" class="form-control"
+                    name="profileName" required pattern="[a-zA-Z_][a-zA-Z_\-0-9]*">
                 </div>
             </div>
-        </div>
+            
+            <div class="row align-items-center mb-2">
+                <div class="col-sm-2">
+                    <b>Type:</b>
+                </div>
+                <div class="col-sm-10">
+                    <input type="text" [(ngModel)]="profile.type" class="form-control" readonly
+                    name="profileType">
+                </div>
+            </div>
+            
+            <div class="row align-items-center mb-2">
+                <div class="col-sm-2">
+                    <b>Parent:</b>
+                </div>
+                <div class="col-sm-10">
+                    <input type="text" [value]="profile.path" readonly class="form-control">
+                </div>
+            </div>
+            
+            <div class="row align-items-center mb-2">
+                <div class="col-sm-2">
+                    <h5>Channels:</h5>
+                </div>
+                <div class="col">
+                     <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Enter number of channels"
+                            [(ngModel)]="channelCount" required pattern="[0-9]*"
+                            name="channelCount">
+                        <span class="input-group-addon" (click)="setNofChannels()">
+                            Set channel count
+                        </span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="channelBox">
-            <div *ngFor="let c of profile.channels">
-                <div class="row align-items-center mb-2">
-                    <div class="col-sm-2">
-                        <b>Name:</b>
+            <div class="channelBox">
+                <div *ngFor="let c of profile.channels">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-sm-2">
+                            <b>Name:</b>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="text" [(ngModel)]="c.name" class="form-control"><!--  required
+                            pattern="[a-zA-Z_][a-zA-Z_\-0-9]*" name="channelName" -->
+                        </div>
                     </div>
-                    <div class="col-sm-10">
-                        <input type="text" [value]="c.name" class="form-control">
+                    
+                    <div class="row align-items-center mb-2">
+                        <div class="col-sm-2">
+                            <b>Filter:</b>
+                        </div>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="4" [(ngModel)]="c.filter">
+                            </textarea>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="row align-items-center mb-2">
-                    <div class="col-sm-2">
-                        <b>Filter:</b>
-                    </div>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="4" [value]="c.filter"></textarea>
-                    </div>
-                </div>
-                
-                <div class="row align-items-center mb-2">
-                    <div class="col-sm-2">
-                        <b>Sources:</b>
-                    </div>
-                    <div class="col-sm-10">
-                        <label *ngFor="let s of c.sources">
-                            <input type="checkbox" [(ngModel)]="s.checked">
-                            {{ s.name }}
-                        </label>
+                    
+                    <div class="row align-items-center mb-2">
+                        <div class="col-sm-2">
+                            <b>Sources:</b>
+                        </div>
+                        <div class="col-sm-10">
+                            <label *ngFor="let s of c.sources">
+                                <input type="checkbox" [(ngModel)]="s.checked">
+                                {{ s.name }}
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <div>
+                <button class="btn btn-success" type="submit" [disabled]="!f.valid">
+                    Create profile
+                </button>
+                <button class="btn btn-default" (click)="d('reason')">Cancel</button>
+            </div>
+        </form>
     </div>
     
-    <div class="modal-footer">
+    <!--div class="modal-footer">
         <button class="btn btn-success" (click)="createProfile()">Create profile</button>
         <button class="btn btn-default" (click)="d('reason')">Cancel</button>
-    </div>
+    </div-->
 </ng-template>
 
 <button type="button" class="btn btn-success btn-middle"
