@@ -32,6 +32,10 @@ export class ScStatsComponent implements OnInit, OnChanges {
     ];
     labels = ['Channel', 'All', 'TCP', 'UDP', 'ICMP', 'Other']; ///< Column labels
     stats = null; ///< This object will be filled by http request to api
+    maxes = { ///< Index of row with max value within each section
+        'Rate': [0, 0, 0],
+        'Sum': [0, 0, 0]
+    };
 
     constructor(private api: ScStatService) {}
 
@@ -87,6 +91,20 @@ export class ScStatsComponent implements OnInit, OnChanges {
      *  represents a metric (Flow, Packets, Bits).
      */
     processData (data: any) {
+        // Find maxima
+        for (const x of ['Rate', 'Sum']) {
+            for (let i = 0; i < 3; i++) {
+                // First clear old value
+                this.maxes[x][i] = 0;
+
+                for (let r = 1; r < data[x].length - 1; r++) {
+                    if (data[x][r][i * 5] > data[x][this.maxes[x][i]][i * 5]) {
+                        this.maxes[x][i] = r;
+                    }
+                }
+            }
+        }
+
         this.stats = data;
     }
 
