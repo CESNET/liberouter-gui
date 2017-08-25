@@ -47,7 +47,7 @@
                 <div class="col">
                      <div class="input-group">
                         <input type="number" class="form-control" placeholder="Enter number of channels"
-                            [(ngModel)]="channelCount" required pattern="[0-9]*"
+                            [(ngModel)]="channelCount" required pattern="[1-9][0-9]*"
                             name="channelCount">
                         <span class="input-group-addon" (click)="setNofChannels()">
                             Set channel count
@@ -57,14 +57,14 @@
             </div>
 
             <div class="channelBox">
-                <div *ngFor="let c of profile.channels">
+                <div *ngFor="let c of profile.channels; let i=index">
                     <div class="row align-items-center mb-2">
                         <div class="col-sm-2">
                             <b>Name:</b>
                         </div>
                         <div class="col-sm-10">
-                            <input type="text" [(ngModel)]="c.name" class="form-control"><!--  required
-                            pattern="[a-zA-Z_][a-zA-Z_\-0-9]*" name="channelName" -->
+                            <input type="text" [(ngModel)]="c.name" class="form-control" required
+                            pattern="[a-zA-Z_][a-zA-Z_\-0-9]*" name="{{'channelName'+i}}">
                         </div>
                     </div>
                     
@@ -73,7 +73,8 @@
                             <b>Filter:</b>
                         </div>
                         <div class="col-sm-10">
-                            <textarea class="form-control" rows="4" [(ngModel)]="c.filter">
+                            <textarea class="form-control" rows="4" [(ngModel)]="c.filter"
+                            name="{{'channelFilter'+i}}">
                             </textarea>
                         </div>
                     </div>
@@ -84,7 +85,8 @@
                         </div>
                         <div class="col-sm-10">
                             <label *ngFor="let s of c.sources">
-                                <input type="checkbox" [(ngModel)]="s.checked">
+                                <input type="checkbox" [(ngModel)]="s.checked"
+                                name="{{'channelCheck'+i}}">
                                 {{ s.name }}
                             </label>
                         </div>
