@@ -15,10 +15,8 @@ class NotifierError(Exception):
 class Notifier():
     def __init__(self):
         self.pid = None
-        
-        try:
-            with open(IPFIXCOL_PIDFILE, 'r') as fh:
-                self.pid = fh.read()
+        with open(IPFIXCOL_PIDFILE, 'r') as fh:
+            self.pid = fh.read()
 
     def notifyIpfixcol(self):
         """

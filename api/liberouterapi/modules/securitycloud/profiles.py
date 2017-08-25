@@ -17,9 +17,11 @@ import re
 
 IPFIXCOL_DATA = ''
 IPFIXCOL_CONF = ''
+SINGLE_MACHINE = True
 try:
     IPFIXCOL_DATA = config.modules['scgui']['ipfixcol_data']
     IPFIXCOL_CONF = config.modules['scgui']['ipfixcol_conf']
+    SINGLE_MACHINE = True if config.modules['scgui']['single_machine'] == 'true' else False
 except:
     """
     This is only a fallback so unittests can do their job
@@ -152,7 +154,10 @@ class Profiles(object):
             """
             output = '<profile name="%s">' % data['name']
             output += '<type>%s</type>' % data['type']
-            output += '<directory>%s</directory>' % (IPFIXCOL_DATA + data['path'])
+            if SINGLE_MACHINE:
+                output += '<directory>%s</directory>' % (IPFIXCOL_DATA + data['path'])
+            else:
+                output += '<directory>%s</directory>' % (IPFIXCOL_DATA + '/%h' + data['path'])
             output += '<channelList>'
             for channel in data['channels']:
                 output += self.__exportXMLChannel(channel)
