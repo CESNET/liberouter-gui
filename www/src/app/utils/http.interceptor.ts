@@ -27,7 +27,6 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class HttpInterceptor extends Http {
     private currentUser: Object;
-    private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
     private configPath: string = environment.configPath;
     private prefixUrl: string;
     private api: Object = {};
@@ -53,18 +52,21 @@ export class HttpInterceptor extends Http {
         this.currentUser = this.getCurrentUser();
 
         if (this.currentUser !== null) {
-            this.headers.set('Authorization', this.currentUser['session_id']);
+            url.headers.set('Authorization', this.currentUser['session_id']);
         }
 
-        url.headers = this.headers;
-
-        if (!options) {
-            url.headers = this.headers;
-            return super.request(url).catch(this.catchErrors());
+        if (url.headers.has('specific-content-type')) {
+            url.headers.delete('specific-content-type')
+        } else {
+            url.headers.set('Content-Type', 'application/json')
         }
-
+        
         // Call the original Http
-        return super.request(url, options).catch(this.catchErrors());
+        if (!options) {
+            return super.request(url).catch(this.catchErrors());
+        } else {
+            return super.request(url, options).catch(this.catchErrors());
+        }
     }
 
     private catchErrors() {
