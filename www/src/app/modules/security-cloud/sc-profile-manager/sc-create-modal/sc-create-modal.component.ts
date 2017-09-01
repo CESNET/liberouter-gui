@@ -23,6 +23,7 @@ export class ScCreateModalComponent implements OnInit {
     error = null;
     channelCount = 1;
     modalRef = null;
+    alerts = null;
 
     constructor(public modalService: NgbModal, private api: ScProfileManagerService) { }
 
@@ -39,6 +40,8 @@ export class ScCreateModalComponent implements OnInit {
     }
 
     createProfile() {
+        this.alerts = []
+
         let channels = '';
 
         for (const x of this.profile.channels) {
@@ -108,7 +111,7 @@ export class ScCreateModalComponent implements OnInit {
             this.reloadProfiles.emit();
         }
         else {
-            // TODO: Print some warning box
+            this.alerts = data['alerts'];
         }
     }
 

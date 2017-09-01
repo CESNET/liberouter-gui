@@ -5,6 +5,8 @@ from flask import request
 import json
 import socket
 import requests
+import shlex
+import subprocess
 
 from .profiles import Profiles, ProfilesError
 from .graphs import Graphs, GraphsError
@@ -13,6 +15,8 @@ from .dbqry import Dbqry, DbqryError
 from .stats import Stats as Statistics
 from .error import SCGUIException
 from .notify import Notifier, NotifierError
+
+IPFIXCOL_CHECKER = config.modules['scgui']['ipfixcol_filter_check']
 
 @auth.required()
 def getStatistics():
@@ -54,6 +58,14 @@ def fillChannel(channel, data):
     for i in range(2, len(items)):
         channel['sources'].append(items[i])
 
+def validateFilter(filter):
+    cmd = IPFIXCOL_CHECKER + ' -x ' + shlex.quote(filter);
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
+    out, err = p.communicate() # Errors are printed to stdout for internal reasons
+    if p.returncode != 0:
+        return out
+    return None
+
 @auth.required(role.Role.user)
 def createProfile():
     req = request.get_json()
@@ -77,7 +89,18 @@ def createProfile():
 
         if i == 0:
             raise KeyError('Missing channels in arguments')
+        else:
+            alerts = []
+            # Validate filters
+            for c in newp['channels']:
+                result = validateFilter(c['filter'])
 
+                if result is not None:
+                    alerts.append({'name': c['name'], 'text': result})
+
+            if len(alerts) != 0:
+                return json.dumps({'success': False, 'alerts': alerts})
+ 
         if profiles.createSubprofile(req['profile'], newp):
             profiles.exportXML()
 
@@ -87,7 +110,7 @@ def createProfile():
             return json.dumps({'success': True})
 
         #raise ProfilesError('Cannot create subprofile')
-        return json.dumps({'success': False})
+        return json.dumps({'success': False, 'alerts': ['ERROR: Unknown error']})
 
     except KeyError as e:
         raise SCGUIException('KeyError:' + str(e))
