@@ -31,7 +31,23 @@ export function main() {
 
 // Fetch the config before bootstraping the app
 main().then((data: string) => {
-    platformBrowserDynamic().bootstrapModule(initApp(JSON.parse(data)));
+    console.info("Initializing application");
+
+    let mod;
+
+    try {
+        mod = initApp(JSON.parse(data));
+    } catch (e) {
+        console.log("Error");
+        console.log(e);
+        let el = document.getElementById("error");
+        el.innerText = "Failed to parse configuration file for front-end";
+        return;
+    }
+
+    console.log(mod)
+    platformBrowserDynamic().bootstrapModule(mod)
+        .catch(err => console.log(err));
+
+    //platformBrowserDynamic().bootstrapModule(initApp(JSON.parse(data)));
 });
-
-

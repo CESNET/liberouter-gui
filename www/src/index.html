@@ -7,8 +7,25 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <style>
+        .loader {
+            text-align: center;
+            padding-top: 2em;
+        }
+
+        .loader #error {
+            color: red;
+            font-size: 1.5em;
+        }
+    </style>
 </head>
 <body>
-  <app-root>Loading...</app-root>
+  <app-root>
+      <section class="loader">
+        <h1>Loading Liberouter GUI...</h1>
+        <div id="error"></div>
+      </section>
+  </app-root>
 </body>
 </html>
