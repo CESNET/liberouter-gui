@@ -70,13 +70,12 @@ class User(object):
                 return Role.guest
         except Exception:
             # Otherwise we'll try str representation
-            if isinstance(role, str):
-                if role == 'admin':
-                    return Role.admin
-                elif role == 'user':
-                    return Role.user
-                elif role == 'guest':
-                    return Role.guest
+            if role == 'admin':
+                return Role.admin
+            elif role == 'user':
+                return Role.user
+            elif role == 'guest':
+                return Role.guest
         # And when everything else fails...
         return Role.guest
 
