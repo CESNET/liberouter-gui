@@ -61,21 +61,24 @@ class User(object):
 
     @classmethod
     def parseRole(self, role):
-        # We have a number representation of the role
-        if isinstance(role, int):
-            if Role.has_role(role):
-                return role
+        try:
+            # We try number representation of role
+            r = int(role)
+            if Role.has_role(r):
+                return r
             else:
                 return Role.guest
-        elif isinstance(role, str):
-            if role == "admin":
+        except Exception:
+            # Otherwise we'll try str representation
+            if role == 'admin':
                 return Role.admin
-            elif role == "user":
+            elif role == 'user':
                 return Role.user
-            elif role == "guest":
+            elif role == 'guest':
                 return Role.guest
-        else:
-            return Role.guest
+        # And when everything else fails...
+        return Role.guest
+
     def setRole(self, role):
         self.role = self.parseRole(role)
 
