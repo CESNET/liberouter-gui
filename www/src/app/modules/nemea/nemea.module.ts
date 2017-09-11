@@ -6,7 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgGridModule } from 'angular2-grid';
 
-import { CodemirrorModule } from 'ng2-codemirror';
+//import { CodemirrorModule } from 'ng2-codemirror';
 
 /**
   * ngx charts
@@ -115,7 +115,6 @@ const nemeaRoutes: Routes = [
         CommonModule,
         FormsModule,
         SafePipeModule,
-        CodemirrorModule,
         NgGridModule,
         BrowserAnimationsModule,
         NgxChartsModule,
