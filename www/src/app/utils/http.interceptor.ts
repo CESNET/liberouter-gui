@@ -47,20 +47,24 @@ export class HttpInterceptor extends Http {
       */
     request(url: Request,
         options?: RequestOptionsArgs): Observable<Response> {
+
         // Prefix the URL with environment prefix if set
         url.url = this.buildUrl(url.url);
+
         this.currentUser = this.getCurrentUser();
 
+        // Set Authorization header
         if (this.currentUser !== null) {
             url.headers.set('Authorization', this.currentUser['session_id']);
         }
 
+        // Set specific content type if "specific-content-type" header is set
         if (url.headers.has('specific-content-type')) {
             url.headers.delete('specific-content-type')
         } else {
             url.headers.set('Content-Type', 'application/json')
         }
-        
+
         // Call the original Http
         if (!options) {
             return super.request(url).catch(this.catchErrors());
