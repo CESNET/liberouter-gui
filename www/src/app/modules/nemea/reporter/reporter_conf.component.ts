@@ -119,9 +119,18 @@ export class NemeaReporterConfComponent implements OnInit {
         this.config['custom_actions'].push(item);
     }
 
+    /**
+      * Display error and create an empty config
+      */
     private processError(error: Object) {
         console.log(error);
         this.success.success = false;
         this.error = JSON.parse(error['_body']);
+
+        this.config = {
+            'rules' : [],
+            'custom_actions' : [],
+            'addressgroups' : []
+        }
     }
 }
