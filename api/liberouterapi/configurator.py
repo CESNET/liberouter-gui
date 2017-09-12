@@ -8,8 +8,6 @@ import logging
 
 log = logging.getLogger(__name__)
 
-import unittest
-
 class Config(object):
     """
     @class Config
@@ -30,13 +28,13 @@ class Config(object):
         log.debug("Loading user configuration")
         self.config = configparser.ConfigParser()
 
-        self.config.read(args['config'])
+        res = self.config.read(args['config'])
 
         # Check if config was loaded successfully, api section must be there
-        if "api" not in self.config:
-            log.error("Missing config file")
+        if len(res) == 0:
+            log.error("No configuration file was read! Using default values.")
 
-        self.DEBUG = self.config["api"].getboolean("debug", True)
+        self.DEBUG = self.config["api"].getboolean("debug", False)
         self.HOST = self.config["api"].get("host", "localhost")
         self.PORT = self.config["api"].getint("port", 8000)
         self.THREADED = self.config["api"].getboolean("threaded", True)
@@ -46,9 +44,11 @@ class Config(object):
         if self.DEBUG:
             logging.basicConfig(level=logging.DEBUG)
 
-        self.version = self.config["api"].get("version", "v1")
+        self.version = self.config["api"].get("version", "1.0")
 
-        self.config.set("api", "module_path", os.path.dirname(__file__) + self.config["api"].get("modules", "/modules"))
+        # Create module path for module importing
+        self.config.set("api", "module_path",
+                os.path.dirname(__file__) + self.config["api"].get("modules", "/modules"))
 
         self.create_urls()
 
@@ -62,13 +62,16 @@ class Config(object):
         self.config.set("api", "users", '/' + self.version + '/users/')
         self.config.set("api", "db", '/' + self.version + '/db/')
 
-    def load(self, path='../../config.ini'):
+    def load(self, path):
         """
-        Load external configuration file and parse it
+        Load external configuration file and read it
+
+        WARNING: If the same section and values in sections are present they are overwritten
         """
-        tmp_config = configparser.ConfigParser()
-        tmp_config.read(path)
-        self.modules[tmp_config.sections()[0]] = tmp_config[tmp_config.sections()[0]]
+        res = self.config.read(path)
+
+        if len(res) == 0:
+            log.error("No configuration file was read.")
 
     def __getitem__(self, key):
         return self.config[key]
