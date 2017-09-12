@@ -77,7 +77,7 @@ class User(object):
             elif role == 'guest':
                 return Role.guest
         # And when everything else fails...
-        return Role.guest
+        return None
 
     def setRole(self, role):
         self.role = self.parseRole(role)
