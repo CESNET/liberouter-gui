@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import configparser
+from backports import configparser
 import argparse
 import sys
 import os

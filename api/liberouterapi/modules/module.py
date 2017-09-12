@@ -7,7 +7,7 @@ class Module(Blueprint):
 			self.url_prefix = '/' + config['api']['version'] + url_prefix
 		else:
 			self.url_prefix = url_prefix
-		super().__init__(name, import_name, url_prefix = self.url_prefix)
+		super(Module, self).__init__(name, import_name, url_prefix = self.url_prefix)
 
 	def prefix(p):
 		self.prefix = p
