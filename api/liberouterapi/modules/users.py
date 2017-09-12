@@ -48,7 +48,7 @@ def get_user(user_id):
     user.pop('password', None)
     return(json_util.dumps(user))
 
-def unprotected_add_user(user_data):
+def unprotected_add_user(user):
     """
     Create a user and add it to database
 
@@ -59,18 +59,6 @@ def unprotected_add_user(user_data):
 
     TODO: insert only needed fields
     """
-    user = User(user_data['username'], password=user_data['password'])
-
-    if 'email' in user_data:
-        user.email = user_data['email']
-
-    if 'config' in user_data:
-        user.config = user_data['config']
-
-    # Default role is guest
-    if 'role' in user_data:
-        user.setRole(user_data['role'])
-
     user.password = auth.create_hash(user.password)
 
     res = db.users.insert(user.to_dict())
@@ -86,7 +74,7 @@ def add_user():
     if user_exists(user):
         raise UserException("User '" + user.username + "' already exists", status_code = 400)
 
-    user.user_id = str(unprotected_add_user(user.to_dict()))
+    user.user_id = str(unprotected_add_user(user))
     user.password = None
 
     return(json_util.dumps(user.to_dict()))
