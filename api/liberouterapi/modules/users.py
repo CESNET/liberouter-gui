@@ -80,6 +80,7 @@ def unprotected_add_user(user_data):
 @auth.required(Role.admin)
 def add_user():
     r = request.get_json()
+
     user = User.from_dict(r)
 
     if user_exists(user):
@@ -111,13 +112,24 @@ def remove_user(user_id):
 
     return(json_util.dumps(user.to_dict()))
 
-@auth.required(Role.admin)
+@auth.required()
 def edit_user(user_id):
     """
     TODO: differentiate between PUT and PATCH -> PATCH partial update
     """
     user = User.from_dict(request.get_json())
     user.user_id = user_id
+
+    print(request.get_json())
+
+    session_id = request.headers.get('Authorization', None)
+    session = auth.lookup(session_id)
+
+    if session["user"].role != Role.admin:
+        # We must check if the user is editing themselves
+        if user_id != session["user"].user_id:
+            raise UserException("Insufficient privileges. Non-admin users can edit only themselves",
+                    status_code=401)
 
     # Create basic query for user updating
     query = {
@@ -134,7 +146,7 @@ def edit_user(user_id):
     if user.email and user.email != "":
         query["$set"]["email"] = user.email
 
-    if user.role >= 0:
+    if user.role != None and user.role >= 0:
         query["$set"]["role"] = user.role
 
     if user.settings and user.settings != {}:
