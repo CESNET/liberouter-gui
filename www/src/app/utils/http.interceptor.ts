@@ -35,9 +35,26 @@ export class HttpInterceptor extends Http {
     constructor(backend: XHRBackend,
         defaultOptions: RequestOptions,
         private router: Router,
-        private config: Object) {
+        ) {
         super(backend, defaultOptions);
-        this.api = this.config['api'];
+        //this.api = this.config['api'];
+
+        this.fetchConfig().then((data : string) => {
+            console.info("Initializing application");
+
+            let conf;
+
+            try {
+                conf = JSON.parse(data);
+                this.api = conf['api'];
+            } catch (e) {
+                console.log("Error");
+                console.log(e);
+                let el = document.getElementById("error");
+                el.innerText = "Failed to parse configuration file for front-end";
+                return;
+            }
+        });
     }
 
     /**
@@ -103,4 +120,25 @@ export class HttpInterceptor extends Http {
         urlString += this.api['url'] || environment.apiUrl || '';
         return urlString + url;
     }
+
+    /**
+      * Retrieve config.json from a path specified in environment
+      *
+      * This cannot use the Angular HTTP module, therefore uses good old XMLHttpRequest
+      */
+    private fetchConfig() {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', environment.configPath);
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject(xhr.statusText);
+            }
+        };
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send();
+    });
+}
 }

@@ -46,50 +46,40 @@ const appRoutes: Routes = [
     }
 ];
 
-/**
-  * Initialization function for the whole application
-  *
-  * Used because we need the config before HttpInterceptor is created
-  * Inspired by: https://stackoverflow.com/questions/40909822/how-to-use-httpinterceptor-and-configservice-both-at-the-same-time-in-angular2
-  */
-export function initApp(config: any) {
-    @NgModule({
-      declarations: [
-        AppComponent,
-        HomeComponent,
-        LoginComponent,
-        LogoutComponent,
-        SetupComponent,
-        NullComponent
-      ],
-      imports: [
-        modules,
-        SafePipeModule,
-        BrowserModule,
-        FormsModule,
-        HttpModule,
-        NgbModule.forRoot(),
-        RouterModule.forRoot(appRoutes)
-      ],
-      providers: [
-        AuthGuard,
-        SafePipe,
-        {
-            provide : config,
-            useValue : config
-        },
-        {
-            provide : Http,
-            useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions,
-                router: Router, configObject) => {
-                    return new HttpInterceptor(xhrBackend, requestOptions, router, configObject);
-                },
-            deps: [XHRBackend, RequestOptions, Router, config]
-        }
-      ],
-      bootstrap: [AppComponent]
-    })
-    class AppModule { }
-
-    return AppModule;
+export function httpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions, router: Router) : HttpInterceptor {
+    return new HttpInterceptor(xhrBackend, requestOptions, router);
 }
+
+/**
+  * Initialization class for the whole application
+  */
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    LogoutComponent,
+    SetupComponent,
+    NullComponent
+  ],
+  imports: [
+    modules,
+    SafePipeModule,
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    NgbModule.forRoot(),
+    RouterModule.forRoot(appRoutes)
+  ],
+  providers: [
+    AuthGuard,
+    SafePipe,
+    {
+        provide : Http,
+        useFactory: (httpFactory),
+        deps: [XHRBackend, RequestOptions, Router]
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
