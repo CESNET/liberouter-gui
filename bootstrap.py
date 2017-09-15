@@ -176,6 +176,7 @@ def bootstrapModules(basedeps, moduleList):
                 config = json.load(fh)
         except OSError:
             sys.stderr.write('ERROR: Cannot find ' + cfgpath + ', skipping module\n')
+            continue
 
         if not updateModuleList(moduleList, config, module):
             continue
