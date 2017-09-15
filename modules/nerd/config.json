@@ -1,0 +1,6 @@
+{
+    "module": {
+        "class": "NerdModule",
+        "file": "nerd.module.ts"
+    }
+}

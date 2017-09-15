@@ -1,0 +1,6 @@
+{
+    "module": {
+        "class": "SecurityCloudModule",
+        "file": "sc.module.ts"
+    }
+}
