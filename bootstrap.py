@@ -241,17 +241,17 @@ def saveDependencies(deps):
 # =====================
 # MAIN CODE STARTS HERE
 # =====================
+if __name__ == "__main__":
+    depsBase = loadBaseDeps()
+    moduleList = []
 
-depsBase = loadBaseDeps()
-moduleList = []
+    try:
+        bootstrapModules(depsBase, moduleList)
 
-try:
-    bootstrapModules(depsBase, moduleList)
+        # Users module is always present
+        moduleList.append({'folder': 'users', 'class': 'UsersModule', 'file': 'users.module.ts'})
 
-    # Users module is always present
-    moduleList.append({'folder': 'users', 'class': 'UsersModule', 'file': 'users.module.ts'})
-    
-    registerModules(moduleList)
-    saveDependencies(depsBase)
-except OSError as e:
-    sys.stderr.write("ERROR: " + str(e))
+        registerModules(moduleList)
+        saveDependencies(depsBase)
+    except (OSError, IOError) as e:
+        log.error(str(e))
