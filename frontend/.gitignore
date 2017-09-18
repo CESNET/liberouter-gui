@@ -41,3 +41,8 @@ Thumbs.db
 
 config.json
 ./.htaccess
+
+# Ignore generated file from bootstrap.py
+src/app/modules.ts
+package.json
+.angular-cli.json
