@@ -7,5 +7,7 @@
     "module": {
         "class": "ExampleModule",
         "file": "path/to/example.module.ts"
+        "frontend": "path/to/frontend",
+        "backend": "path/to/backend"
     }
 }

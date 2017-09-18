@@ -137,15 +137,19 @@ def updateModuleList(moduleList, config, modulename):
     Update moduleList with all info needed for module registration.
     """
     if not 'module' in config:
-        sys.stderr.write('ERROR: No "module" section in config, skipping module\n')
+        sys.stderr.write('ERROR(' + modulename + '): No "module" section in config, skipping module\n')
+        return False
+    
+    if not 'frontend' in config['module']:
+        sys.stderr.write('ERROR(' + modulename + '): No "frontend" key in config, skipping module\n')
         return False
 
     if not 'class' in config['module']:
-        sys.stderr.write('ERROR: No "class" key in config, skipping module\n')
+        sys.stderr.write('ERROR(' + modulename + '): No "class" key in config, skipping module\n')
         return False
 
     if not 'file' in config['module']:
-        sys.stderr.write('ERROR: No "file" key in config, skipping module\n')
+        sys.stderr.write('ERROR(' + modulename +  '): No "file" key in config, skipping module\n')
         return False
 
     moduleList.append({'folder': modulename, 'class': config['module']['class'], 'file': config['module']['file']})
@@ -175,7 +179,7 @@ def bootstrapModules(basedeps, moduleList):
             with open(cfgpath, 'r') as fh:
                 config = json.load(fh)
         except OSError:
-            sys.stderr.write('ERROR: Cannot find ' + cfgpath + ', skipping module\n')
+            sys.stderr.write('ERROR(' + module + '): Cannot find ' + cfgpath + ', skipping module\n')
             continue
 
         if not updateModuleList(moduleList, config, module):
@@ -185,11 +189,13 @@ def bootstrapModules(basedeps, moduleList):
         if 'dependencies' in config:
             updateDeps(basedeps, config['dependencies'], module)
 
-        src = os.path.join('../../../modules', module, 'backend')
-        dst = os.path.join('backend/liberouterapi/modules', module)
-        createSymlink(src, dst)
+        if 'backend' in config['module']:
+            src = os.path.join('../../../modules', module, config['module']['backend'])
+            dst = os.path.join('backend/liberouterapi/modules', module)
+            createSymlink(src, dst)
 
-        src = os.path.join('../../../../modules', module, 'frontend')
+        # Frontend key presence tested by updateModuleList
+        src = os.path.join('../../../../modules', module, config['module']['frontend'])
         dst = os.path.join('frontend/src/app/modules', module)
         createSymlink(src, dst)
 
@@ -235,6 +241,10 @@ moduleList = []
 
 try:
     bootstrapModules(depsBase, moduleList)
+
+    # Users module is always present
+    moduleList.append({'folder': 'users', 'class': 'UsersModule', 'file': 'users.module.ts'})
+    
     registerModules(moduleList)
     saveDependencies(depsBase)
 except OSError as e:
