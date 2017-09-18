@@ -1,10 +1,15 @@
 #!/bin/python3
 
 import json
-import sys
 from enum import Enum
 import os
 import re
+import logging
+
+logging.basicConfig()
+log = logging.getLogger("Bootstrap")
+
+BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 class Deps():
     """
@@ -53,10 +58,10 @@ def mergeNpmDeps(base, module, modulename):
         conflicts = Unify.dicts(base[item], module[item])
 
         if conflicts:
-            sys.stderr.write('WARNING: ' + modulename + ' has following NPM conflicts:\n')
+            log.warn('%s has following NPM conflicts:', modulename)
 
             for key in conflicts:
-                sys.stderr.write('\t' + key + ' with version ' + conflicts[key] + '\n')
+                log.warn('\t' + key + ' with version ' + conflicts[key])
 
 def mergeNgcDeps(base, module):
     """
@@ -76,10 +81,10 @@ def mergePipDeps(base, module, modulename):
     conflicts = Unify.dicts(base, module)
 
     if conflicts:
-        sys.stderr.write('WARNING: ' + modulename + ' has following PIP conflicts:\n')
+        log.warn(modulename + ' has following PIP conflicts:')
 
         for key in conflicts:
-            sys.stderr.write('\t' + key + ' with version ' + conflicts[key] + '\n')
+            log.warn('\t' + key + ' with version ' + conflicts[key])
 
 def loadReqs(path):
     """
@@ -137,19 +142,19 @@ def updateModuleList(moduleList, config, modulename):
     Update moduleList with all info needed for module registration.
     """
     if not 'module' in config:
-        sys.stderr.write('ERROR(' + modulename + '): No "module" section in config, skipping module\n')
+        log.error(modulename + ': No "module" section in config, skipping module')
         return False
-    
+
     if not 'frontend' in config['module']:
-        sys.stderr.write('ERROR(' + modulename + '): No "frontend" key in config, skipping module\n')
+        log.error(modulename + ': No "frontend" key in config, skipping module')
         return False
 
     if not 'class' in config['module']:
-        sys.stderr.write('ERROR(' + modulename + '): No "class" key in config, skipping module\n')
+        log.error(modulename + ': No "class" key in config, skipping module')
         return False
 
     if not 'file' in config['module']:
-        sys.stderr.write('ERROR(' + modulename +  '): No "file" key in config, skipping module\n')
+        log.error(modulename + ': No "file" key in config, skipping module')
         return False
 
     moduleList.append({'folder': modulename, 'class': config['module']['class'], 'file': config['module']['file']})
@@ -162,8 +167,8 @@ def createSymlink(src, dst):
         if os.path.lexists(dst):
             os.remove(dst)
         os.symlink(src, dst)
-    except OSError as e: # Insufficient privileges
-        sys.stderr.write('WARNING: ' + str(e) + '\n')
+    except (OSError, IOError) as e: # Insufficient privileges
+        log.warn(str(e))
 
 def bootstrapModules(basedeps, moduleList):
     """
@@ -178,8 +183,8 @@ def bootstrapModules(basedeps, moduleList):
         try:
             with open(cfgpath, 'r') as fh:
                 config = json.load(fh)
-        except OSError:
-            sys.stderr.write('ERROR(' + module + '): Cannot find ' + cfgpath + ', skipping module\n')
+        except (OSError, IOError):
+            log.error(module + ': Cannot find ' + cfgpath + ', skipping module')
             continue
 
         if not updateModuleList(moduleList, config, module):
