@@ -41,11 +41,7 @@ class Auth(object):
         return msg
 
     def login(self, user):
-        query = {
-            'username' : user.username
-        }
-
-        res = self.db.users.find_one(query)
+        res = self.db.get("users", "username", user.username)
 
         if not res:
             raise AuthException("User not found")
