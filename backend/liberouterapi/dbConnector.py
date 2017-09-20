@@ -17,8 +17,6 @@ class dbConnector(object):
 		server = ""
 		port = ""
 		dbName = ""
-		usersCollection = ""
-		users = None
 		db = None
 		socket = None
 		config = None
@@ -30,7 +28,6 @@ class dbConnector(object):
 					server = config.get("server", "localhost"),
 					port = config.getint("port", 27017),
 					db = config["database"],
-					users = config["users"],
 					config = config)
 
 		def __init__(self,
@@ -47,7 +44,6 @@ class dbConnector(object):
 			self.port = port
 			# Set up database name
 			self.dbName = db
-			self.users = users
 			self.config = config
 
 			if (provider == "mongodb"):
@@ -67,7 +63,6 @@ class dbConnector(object):
 			self.port = self.config.getint("port", 27017)
 			# Set up database name
 			self.dbName = self.config["database"]
-			self.users = self.config.get("users", "users")
 
 			if (self.provider == "mongodb"):
 				self.mongodb();
@@ -160,6 +155,4 @@ class dbConnector(object):
 					db = db,
 					users = users,
 					config = config)
-
-#END db
 
