@@ -72,7 +72,7 @@ def check_users():
     If there is no user set API to setup state
     """
     db = dbConnector()
-    if db.users.count() == 0:
+    if db.count("users") == 0:
         print("\033[1m" + "# Warning: * No users found *" + "\033[0m")
         app.add_url_rule('/setup', view_func = setup, methods=['POST'])
         config.setup = True
@@ -105,23 +105,26 @@ def setup():
     if config.setup == False:
         raise ApiException("API is already setup")
     settings = request.get_json()
+
     db = dbConnector()
 
     if len(settings['username']) == 0:
-        raise ApiException("Missing username")
+        raise ApiException("Missing username", status_code = 400)
 
-    if len(settings['password']) == 0:
-        raise ApiException("Missing password")
+    if len(settings['password']) == 0 or len(settings['password2']) == 0:
+        raise ApiException("Missing password", status_code = 400)
+
+    if settings['password'] != settings['password2']:
+        raise ApiException("Mismatching password fields")
 
     try:
         # Insert user to database via user module
         from .modules.users import unprotected_add_user
-        user_data = {
-                "username" : settings['username'],
-                "password" : settings['password'],
-                "role" : 0
-            }
-        res = unprotected_add_user(user_data)
+        from .user import User
+        from .role import Role
+
+        user = User(settings['username'], password=settings['password'], role = Role.admin)
+        res = unprotected_add_user(user)
 
         config.setup = False
         return(json_util.dumps({ "user_id" : res}))
