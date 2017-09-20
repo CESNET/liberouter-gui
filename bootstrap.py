@@ -236,7 +236,7 @@ def saveDependencies(deps):
 
     with open('backend/requirements.txt', 'w') as fh:
         for key, value in deps[Deps.PIP].items():
-            fh.write(key + '==' + value + '\n')
+            fh.write(key + '==' + value)
 
 # =====================
 # MAIN CODE STARTS HERE
