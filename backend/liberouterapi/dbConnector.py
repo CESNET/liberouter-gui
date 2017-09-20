@@ -86,20 +86,20 @@ class dbConnector(object):
 
 			# Connect to database and bind events and users collections
 			try:
-				self.socket = pymongo.MongoClient(self.server,
+				self.client = pymongo.MongoClient(self.server,
 						self.port,
 						serverSelectionTimeoutMS=100)
 
 				# Try to print out server info
 				# This raises ServerSelectionTimeoutError
-				self.socket.server_info()
+				self.client.admin.command('ismaster')
 
 				self.db = self.socket[self.dbName]
 				self.users = self.db[self.usersCollection]
 
 			# Small trick to catch exception for unavailable database
-			except pymongo.errors.ServerSelectionTimeoutError as err:
-				app.logger.error("Failed to connect to database: " + str(err))
+			except pymongo.errors.ConnectionFailure as e:
+				app.logger.error("Failed to connect to database: %s", str(e))
 
 		def sqlite(self):
 		    """
