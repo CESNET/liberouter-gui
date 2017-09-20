@@ -89,8 +89,7 @@ class dbConnector(object):
 				# This raises ServerSelectionTimeoutError
 				self.client.admin.command('ismaster')
 
-				self.db = self.socket[self.dbName]
-				self.users = self.db[self.usersCollection]
+				self.db = self.client[self.dbName]
 
 			# Small trick to catch exception for unavailable database
 			except pymongo.errors.ConnectionFailure as e:
@@ -130,6 +129,22 @@ class dbConnector(object):
 			app.config['SQLALCHEMY_DATABASE_URI'] = path
 			app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 			self.db = SQLAlchemy(app)
+
+		def isSQL():
+		    """
+		    Check type of database connection whether the provider is SQL-based or not.
+
+            :returns: bool
+		    """
+		    return False if self.provider == "mongodb" else True
+
+		def isNoSQL():
+		    """
+		    Check type of database connection whether the provider is NoSQL-based or not.
+
+            :returns: bool
+		    """
+		    return True if self.provider == "mongodb" else False
 
 	__instance = None
 
