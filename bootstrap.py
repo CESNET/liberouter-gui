@@ -242,6 +242,17 @@ def saveDependencies(deps):
 # MAIN CODE STARTS HERE
 # =====================
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Process dependencies in backend and frontend." \
+            "If you desire to install only SQL or MongoDB support (not both) use available args."
+            )
+
+    parser.add_argument('--with-sql', action='store_true', help="Install with SQL support only")
+    parser.add_argument('--with-mongo', action='store_true', help="Install with MongoDB support only")
+
+    args = vars(parser.parse_args())
+
     depsBase = loadBaseDeps()
     moduleList = []
 
@@ -251,7 +262,18 @@ if __name__ == "__main__":
         # Users module is always present
         moduleList.append({'folder': 'users', 'class': 'UsersModule', 'file': 'users.module.ts'})
 
+        if args["with_mongo"] or args["with_sql"]:
+            # Remove mongo or flask-sqlalchemy if one of the args is present
+            if args["with_mongo"] == False:
+                # Remove pymongo
+                del depsBase[Deps.PIP]["pymongo"]
+
+            if args["with_sql"] == False:
+                # Remove SQLAlchemy
+                del depsBase[Deps.PIP]["Flask-SQLAlchemy"]
+
         registerModules(moduleList)
         saveDependencies(depsBase)
+
     except (OSError, IOError) as e:
         log.error(str(e))
