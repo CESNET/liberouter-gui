@@ -2,6 +2,16 @@ from liberouterapi import app, config
 import sys
 
 class dbConnector(object):
+    """
+    Database connector singleton class
+
+    :param provider = "mongodb",
+	:param server = "localhost",
+	:param port = 27017,
+	:param db = "liberouter",
+	:param users = "users",
+	:param config = {}
+    """
 	class __dbConn:
 		provider = ""
 		server = ""
@@ -92,6 +102,13 @@ class dbConnector(object):
 				app.logger.error("Failed to connect to database: " + str(err))
 
 		def sqlite(self):
+		    """
+		    SQLite database initialization
+
+		    Uses SQLAlchemy package representing a database connection.
+		    SQLite is a single file database which is suited for devel and small deployments and
+		    is easily upgradable to MySQL or PostgreSQL.
+		    """
 			from flask_sqlalchemy import SQLAlchemy
 			path = "sqlite:////" + sys.path[0] + "/" + self.config['file']
 			app.config['SQLALCHEMY_DATABASE_URI'] = path
@@ -99,6 +116,9 @@ class dbConnector(object):
 			self.db = SQLAlchemy(app)
 
 		def mysql(self):
+		    """
+		    MySQL database initialization
+		    """
 			from flask_sqlalchemy import SQLAlchemy
 			path = "mysql://"
 
@@ -117,6 +137,7 @@ class dbConnector(object):
 			self.db = SQLAlchemy(app)
 
 	__instance = None
+
 	def __new__(cls):
 		if dbConnector.__instance is None:
 			dbConnector.__instance = dbConnector.__dbConn()
