@@ -22,7 +22,7 @@ class ConfError(ApiException):
 
 # Initialize connector to the configuration collection
 connector = dbConnector()
-conf_db = connector.db["configuration"]
+conf_db = None #connector.db["configuration"]
 
 conf = Module('configuration', __name__, url_prefix='/configuration', no_version = True)
 
