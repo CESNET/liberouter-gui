@@ -31,7 +31,7 @@ try:
 except KeyError as e:
 	import sys
 	print("Missing item in config %s" % e)
-	sys.exit()
+	sys.exit(1)
 
 from .dbConnector import dbConnector
 from .session import SessionManager
@@ -43,7 +43,7 @@ from .role import Role
 import ssl
 from bson import json_util
 
-if config["ssl"].getboolean("enabled"):
+if config["api"].getboolean("ssl", False):
 	context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
 	context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
 

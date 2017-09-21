@@ -33,6 +33,7 @@ class Config(object):
         # Check if config was loaded successfully, api section must be there
         if len(res) == 0:
             log.error("No configuration file was read! Using default values.")
+            self.config.add_section("api")
 
         self.DEBUG = self.config["api"].getboolean("debug", False)
         self.HOST = self.config["api"].get("host", "localhost")
