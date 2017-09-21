@@ -1,5 +1,8 @@
 from .error import ApiException
 from .role import Role
+from .dbConnector import dbConnector
+
+db = dbConnector()
 
 class UserException(ApiException):
     status_code = 401
@@ -87,14 +90,14 @@ class User(object):
         Return the internal data in dictionary
         """
         tmp = {
-            'username' : self.username,
-            'user_id' : self.user_id,
-            'first_name' : self.first_name,
-            'last_name' : self.last_name,
-            'email' : self.email,
-            'role' : int(self.role),
-            'settings' : self.settings,
-        }
+                'username' : self.username,
+                'user_id' : self.user_id,
+                'first_name' : self.first_name,
+                'last_name' : self.last_name,
+                'email' : self.email,
+                'role' : int(self.role),
+                'settings' : self.settings,
+                }
 
         if self.password:
             tmp['password'] = self.password
@@ -122,3 +125,97 @@ class User(object):
             role		= User.parseRole(user.get("role", None)),
             settings	= user.get("settings", {})
             ))
+
+        #class UserSQL(UserBase, db.db.Model):
+        #    __tablename__ = "users"
+        #    user_id = db.db.Column(db.db.Integer, primary_key=True)
+        #    username = db.db.Column(db.db.String(80), unique=True)
+        #    email = db.db.Column(db.db.String(120), unique=True)
+        #    first_name = db.db.Column(db.db.String(120), unique=False)
+        #    last_name = db.db.Column(db.db.String(120), unique=False)
+        #    password = db.db.Column(db.db.String(120), unique=False)
+        #    role = db.db.Column(db.db.Integer, unique=False)
+        #    settings = db.db.Column(db.db.String(10000), unique=False)
+        #
+        #    def __init__(self,  username,
+        #            user_id		= None,
+        #            first_name	= None,
+        #            last_name	= None,
+        #            email		= None,
+        #            password	= None,
+        #            role		= None,
+        #            settings	= None):
+        #        print("calling init")
+        #        super(UserSQL, self).__init__(username,
+        #                user_id		= user_id,
+        #                first_name	= first_name,
+        #                last_name	= last_name,
+        #                email		= email,
+        #                password	= password,
+        #                role		= role,
+        #                settings	= settings)
+        #
+        #class User(object):
+        #    def __new__(self,
+        #            username,
+        #            user_id		= None,
+        #            first_name	= None,
+        #            last_name	= None,
+        #            email		= None,
+        #            password	= None,
+        #            role		= None,
+        #            settings	= None):
+        #        if db.isSQL():
+        #            print("Creating SQL user")
+        #            return UserSQL(username,
+        #                user_id		= user_id,
+        #                first_name	= first_name,
+        #                last_name	= last_name,
+        #                email		= email,
+        #                password	= password,
+        #                role		= role,
+        #                settings	= settings)
+        #        else:
+        #            return UserBase(username,
+        #                user_id		= user_id,
+        #                first_name	= first_name,
+        #                last_name	= last_name,
+        #                email		= email,
+        #                password	= password,
+        #                role		= role,
+        #                settings	= settings)
+        #
+        #    @classmethod
+        #    def from_dict(self, user):
+        #        """
+        #        Create new user from dictionary
+        #        """
+        #        # First try MongoDB id field, otherwise use API defined field
+        #        if str(user.get("_id", None)):
+        #            user_id = str(user.get("_id", None))
+        #        else:
+        #            user_id = str(user.get("user_id", None))
+        #
+        #
+        #        if db.isSQL():
+        #            return UserSQL(
+        #                username	= user.get("username", None),
+        #                user_id		= user_id,
+        #                first_name	= user.get("first_name", None),
+        #                last_name	= user.get("last_name", None),
+        #                email		= user.get("email", None),
+        #                password	= user.get("password", None),
+        #                role		= User.parseRole(user.get("role", None)),
+        #                settings	= user.get("settings", {})
+        #                )
+        #        else:
+        #            return UserBase(
+        #                username	= user.get("username", None),
+        #                user_id		= user_id,
+        #                first_name	= user.get("first_name", None),
+        #                last_name	= user.get("last_name", None),
+        #                email		= user.get("email", None),
+        #                password	= user.get("password", None),
+        #                role		= User.parseRole(user.get("role", None)),
+        #                settings	= user.get("settings", {})
+        #                )

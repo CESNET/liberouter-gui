@@ -1,7 +1,8 @@
 {
 	"/libapi": {
-		"target": "https://localhost/",
-	  	"secure": false
+		"target": "http://localhost:5555/",
+	  	"secure": false,
+	  	"pathRewrite" : {"/libapi" : ""}
 	},
 	"/virt/*": {
 		"target": "http://localhost:15555/",

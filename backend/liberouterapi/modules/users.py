@@ -4,9 +4,12 @@ from bson import json_util, ObjectId
 import pymongo
 
 from liberouterapi import auth, db
+from liberouterapi.dbConnector import dbConnector
 from .module import Module
 from ..user import User, UserException
 from ..role import Role
+
+user_db = dbConnector()
 
 users = Module('users', __name__, url_prefix='/users', no_version=True)
 
@@ -61,7 +64,11 @@ def unprotected_add_user(user):
     """
     user.password = auth.create_hash(user.password)
 
-    res = db.users.insert(user.to_dict())
+    d_user = user.to_dict()
+
+    keys = list(d_user.keys())
+
+    res = user_db.insert("users", keys, [d_user[key] for key in keys])
     return(res)
 
 

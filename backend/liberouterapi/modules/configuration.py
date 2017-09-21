@@ -14,6 +14,7 @@ from liberouterapi import auth, dbConnector
 from liberouterapi.error import ApiException
 from liberouterapi.role import Role
 from .module import Module
+#from liberouterapi.ConfigurationDatabase import ConfigurationDatabase as ConfDB
 from bson import json_util as json
 from pymongo import ReturnDocument
 
