@@ -1,7 +1,6 @@
 #!/bin/python3
 
 import json
-from enum import Enum
 import os
 import re
 import logging
