@@ -31,7 +31,7 @@ try:
 except KeyError as e:
 	import sys
 	print("Missing item in config %s" % e)
-	sys.exit()
+	sys.exit(1)
 
 from .dbConnector import dbConnector
 from .session import SessionManager
