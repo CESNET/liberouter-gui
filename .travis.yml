@@ -36,7 +36,9 @@ script:
     # Frontend build procedure
     - cd $TRAVIS_BUILD_DIR/frontend
     - npm install
-    - npm list
+    # List will fail because of unmet peer dependencies from an outdated package which requires
+    # lower version of a package that is actually installed in higher version
+    - npm list || true
     - ng build --prod --bh="/" --aot=false
     # Backend build procedure
     - cd $TRAVIS_BUILD_DIR/backend
