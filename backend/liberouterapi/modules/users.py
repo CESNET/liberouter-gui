@@ -47,7 +47,7 @@ def get_users():
 
 @auth.required()
 def get_user(user_id):
-    user = dict(db.users.find_one({"_id" :ObjectId(user_id)}))
+    user = dict(db.get("users", "id", user_id))
     user.pop('password', None)
     return(json_util.dumps(user))
 

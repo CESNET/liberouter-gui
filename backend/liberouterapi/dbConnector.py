@@ -114,7 +114,7 @@ class dbConnector(object):
                 # No need for initialization for Mongo
                 return
             else:
-                self.db.execute("CREATE TABLE IF NOT EXISTS users (user_id TEXT, username TEXT, first_name TEXT, last_name TEXT, email TEXT, password TEXT, role INT, settings TEXT)")
+                self.db.execute("CREATE TABLE IF NOT EXISTS users (id TEXT, username TEXT, first_name TEXT, last_name TEXT, email TEXT, password TEXT, role INT, settings TEXT)")
                 self.db.execute("CREATE TABLE IF NOT EXISTS configuration (name TEXT, value TEXT)")
 
         def mysql(self):
@@ -165,9 +165,10 @@ class dbConnector(object):
                 res = self.db.fetchone()
                 return res if res == None else dict(res)
             else:
-                if key == "_id":
+                if key == "id":
                     from bson import ObjectId
                     value = ObjectId(value)
+                    key = "_" + key
                 return self.db[name].find_one({
                         key : value
                     })
