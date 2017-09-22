@@ -82,8 +82,7 @@ class dbConnector(object):
                         self.port,
                         serverSelectionTimeoutMS=100)
 
-                # Try to print out server info
-                # This raises ServerSelectionTimeoutError
+                # This raises ConnectionFailure if it can't do the command
                 self.client.admin.command('ismaster')
 
                 self.db = self.client[self.dbName]
@@ -102,9 +101,9 @@ class dbConnector(object):
             """
             import sqlite3
             path = os.getcwd() + "/" + self.config['file']
-            connection = sqlite3.connect(path)
-            connection.row_factory = sqlite3.Row
-            self.db = connection.cursor()
+            self.connection = sqlite3.connect(path)
+            self.connection.row_factory = sqlite3.Row
+            self.db = self.connection.cursor()
             self.init_tables()
 
         def init_tables(self):
@@ -115,8 +114,16 @@ class dbConnector(object):
                 # No need for initialization for Mongo
                 return
             else:
-                self.db.execute("CREATE TABLE IF NOT EXISTS users (id TEXT, username TEXT, first_name TEXT, last_name TEXT, email TEXT, password TEXT, role INT, settings TEXT)")
-                self.db.execute("CREATE TABLE IF NOT EXISTS configuration (name TEXT, value TEXT)")
+                self.db.execute("CREATE TABLE IF NOT EXISTS users ("\
+                        "id INTEGER PRIMARY KEY, "\
+                        "username TEXT, "\
+                        "first_name TEXT,"\
+                        "last_name TEXT, "\
+                        "email TEXT, "\
+                        "password BLOB, "\
+                        "role INT, "\
+                        "settings TEXT)")
+                self.db.execute("CREATE TABLE IF NOT EXISTS configuration (id PRIMARY KEY, name TEXT, value TEXT)")
 
         def mysql(self):
             """
@@ -179,7 +186,12 @@ class dbConnector(object):
             Fetch all records from given table/collection
             """
             if self.isSQL():
-                return self.db.execute("SELECT * FROM ?", (name,))
+                res = self.db.execute("SELECT * FROM {0}".format(name))
+                res = res.fetchall()
+                result = list()
+                for item in res:
+                    result.append(dict(item))
+                return result
             else:
                 return self.db[name].find()
 
@@ -189,8 +201,11 @@ class dbConnector(object):
 
             :data dict: Dictionary to insert
             """
+            if "id" in data.keys():
+                del data["id"]
             if self.isSQL():
                 keys = list(data.keys())
+
                 insert = "INSERT INTO " + name + "("
 
                 insert += ','.join(map(str, keys))
@@ -201,15 +216,23 @@ class dbConnector(object):
                 values = tuple()
 
                 for key in keys:
-                    values += (json.dumps(data[key]), )
+                    if not isinstance(data[key], str):
+                        try:
+                            data[key] = json.dumps(data[key])
+                        except Exception as e:
+                            pass
 
-                return self.db.execute(insert, values)
+                    values += (data[key], )
+
+                res = self.db.execute(insert, values)
+                self.connection.commit()
+                return res
             else:
-                return self.db[name].insert_one({data})
+                return self.db[name].insert_one(data)
 
         def update(self, name, key, value, data):
             if self.isSQL():
-                statement = "UPDATE " + name + "SET "
+                statement = "UPDATE " + name + " SET "
 
                 for k in data:
                     statement += k + " = ?,"
@@ -221,7 +244,13 @@ class dbConnector(object):
                     values += (data[k], )
 
                 values += (value, )
-                return self.db.execute(insert, values)
+                res = self.db.execute(statement, values)
+
+                if self.db.rowcount == 0:
+                    raise Exception("Update statement failed")
+
+
+                return self.get(name, key, value)
 
             else:
                 from pymongo import ReturnDocument
