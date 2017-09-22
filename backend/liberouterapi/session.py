@@ -46,13 +46,13 @@ class SessionManager(object):
 			raise SessionException("Session \"" + session_id +
 					"\" already exists")
 
-		if user.user_id in self.user_sessions:
-			if len(self.user_sessions[user.user_id]) > self.max_user_sessions:
+		if user.id in self.user_sessions:
+			if len(self.user_sessions[user.id]) > self.max_user_sessions:
 				raise SessionException("Reached maximum of allowed sessions "
 						"per user")
-			self.user_sessions[user.user_id].append(session_id)
+			self.user_sessions[user.id].append(session_id)
 		else:
-			self.user_sessions[user.user_id] = [session_id]
+			self.user_sessions[user.id] = [session_id]
 
 		self.sessions[session_id] = {
 			"user" : user,
@@ -69,7 +69,7 @@ class SessionManager(object):
 			raise SessionException("Missing session", payload=session_id)
 
 	def __delete(self, session_id):
-		self.user_sessions[self.sessions[session_id]['user'].user_id].remove(session_id)
+		self.user_sessions[self.sessions[session_id]['user'].id].remove(session_id)
 		del self.sessions[session_id]
 
 	def __update_expire_time(self, session):

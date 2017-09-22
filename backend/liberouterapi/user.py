@@ -15,7 +15,7 @@ class User(object):
     """
 
     username = None
-    user_id = None
+    id = None
     first_name = None
     last_name = None
     email = None
@@ -25,7 +25,7 @@ class User(object):
 
     def __init__(self,
             username,
-            user_id		= None,
+            id		= None,
             first_name	= None,
             last_name	= None,
             email		= None,
@@ -34,7 +34,7 @@ class User(object):
             settings	= None,
             ):
         self.username = username
-        self.user_id = user_id
+        self.id = id
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -45,8 +45,8 @@ class User(object):
     def get(self, key, default):
         if key == "username":
             return self.username
-        elif key == "user_id":
-            return self.user_id
+        elif key == "id":
+            return self.id
         elif key == "first_name":
             return self.first_name
         elif key == "last_name":
@@ -91,7 +91,7 @@ class User(object):
         """
         tmp = {
                 'username' : self.username,
-                'user_id' : self.user_id,
+                'id' : self.id,
                 'first_name' : self.first_name,
                 'last_name' : self.last_name,
                 'email' : self.email,
@@ -111,13 +111,13 @@ class User(object):
         """
         # First try MongoDB id field, otherwise use API defined field
         if str(user.get("_id", None)):
-            user_id = str(user.get("_id", None))
+            id = str(user.get("_id", None))
         else:
-            user_id = str(user.get("user_id", None))
+            id = str(user.get("id", None))
 
         return(self(
             username	= user.get("username", None),
-            user_id		= user_id,
+            id		    = id,
             first_name	= user.get("first_name", None),
             last_name	= user.get("last_name", None),
             email		= user.get("email", None),
