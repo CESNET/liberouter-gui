@@ -1,5 +1,6 @@
 from liberouterapi import app, config
 import os
+import json
 
 class dbConnector(object):
     """
@@ -182,28 +183,55 @@ class dbConnector(object):
             else:
                 return self.db[name].find()
 
-        def insert(self, name, keys, values):
+        def insert(self, name, data):
             """
             Insert a record to given table/collection
+
+            :data dict: Dictionary to insert
             """
             if self.isSQL():
+                keys = list(data.keys())
                 insert = "INSERT INTO " + name + "("
 
                 insert += ','.join(map(str, keys))
                 insert += ") VALUES ("
                 insert += "?," * (len(keys) - 1)
                 insert += "?)"
-                return self.db.execute(insert, tuple(values))
+
+                values = tuple()
+
+                for key in keys:
+                    values += (json.dumps(data[key]), )
+
+                return self.db.execute(insert, values)
             else:
-                record = dict()
+                return self.db[name].insert_one({data})
 
-                for i in range(0, len(keys)):
-                    record[keys[i]] = values[i]
+        def update(self, name, key, value, data):
+            if self.isSQL():
+                statement = "UPDATE " + name + "SET "
 
-                return self.db[name].insert_one({record})
+                for k in data:
+                    statement += k + " = ?,"
+                statement = statement[:-1] + " WHERE " + key + " = ?;"
 
-        def update():
-            pass
+                values = tuple()
+
+                for k in data:
+                    values += (data[k], )
+
+                values += (value, )
+                return self.db.execute(insert, values)
+
+            else:
+                from pymongo import ReturnDocument
+                res = self.db[name].find_one_and_update({
+                    key : value
+                    },
+                    {
+                        "$set" : data
+                    },
+                    return_document=ReturnDocument.AFTER)
 
         def delete():
             pass
