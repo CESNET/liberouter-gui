@@ -123,7 +123,10 @@ class dbConnector(object):
                         "password BLOB, "\
                         "role INT, "\
                         "settings TEXT)")
-                self.db.execute("CREATE TABLE IF NOT EXISTS configuration (id INTEGER PRIMARY KEY, name TEXT, value TEXT)")
+                self.db.execute("CREATE TABLE IF NOT EXISTS configuration ("\
+                        "id INTEGER PRIMARY KEY, "\
+                        "name TEXT, "\
+                        "value TEXT)")
 
         def mysql(self):
             """
@@ -173,6 +176,11 @@ class dbConnector(object):
                 cursor = self.connection.cursor()
                 cursor.execute(statement, (value,))
                 res = cursor.fetchone()
+
+                for key in res.keys():
+                    if isinstance(res[key], str):
+                        # Might be JSON, try to parse it
+                        res[key] = json.loads(res[key])
                 return res if res == None else dict(res)
             else:
                 if key == "id":
@@ -192,6 +200,10 @@ class dbConnector(object):
                 res = res.fetchall()
                 result = list()
                 for item in res:
+                    for key in item.keys():
+                        if isinstance(item[key], str):
+                            # Might be JSON, try to parse it
+                            item[key] = json.loads(item[key])
                     result.append(dict(item))
                 return result
             else:
@@ -243,9 +255,18 @@ class dbConnector(object):
                 values = tuple()
 
                 for k in data:
-                    values += (data[k], )
+                    safe_data = None
+                    if not isinstance(data[k], str):
+                        try:
+                            safe_data = json.dumps(data[k])
+                        except Exception as e:
+                            pass
+                    else:
+                        safe_data = data
+                    values += (safe_data, )
 
                 values += (value, )
+
                 res = self.db.execute(statement, values)
 
                 if self.db.rowcount == 0:
@@ -263,6 +284,7 @@ class dbConnector(object):
                         "$set" : data
                     },
                     return_document=ReturnDocument.AFTER)
+                return res
 
         def delete(self, name, key, value):
             """
