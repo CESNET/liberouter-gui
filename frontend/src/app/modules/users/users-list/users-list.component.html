@@ -19,7 +19,7 @@
             <td>{{ user.last_name }}</td>
             <td>{{ roles[user.role] }}</td>
             <td>
-                <button class="btn btn-secondary" routerLink="{{user.id.$oid}}">View user</button>
+                <button class="btn btn-secondary" routerLink="{{user.id}}">View user</button>
                 <button class="btn btn-danger"
                     title="Remove user"
                     *ngIf="currentUser.user.username != user.username"

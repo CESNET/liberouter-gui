@@ -47,8 +47,8 @@ export class UsersListComponent implements OnInit {
     }
 
     removeUser(user:Object) {
-        console.log(user['id']['$oid']);
-        this.usersService.remove(user['id']['$oid']).subscribe(
+        console.log(user['id']);
+        this.usersService.remove(user['id']).subscribe(
             data => {
                 console.log(data);
                 this.listUsers();
