@@ -71,17 +71,16 @@ def remove_user(user_id):
     """
     Remove the user
     """
-
-    user_dict = dict(db.users.find_one({"_id" :ObjectId(user_id)}))
-
-    if user_dict == {}:
+    res = None
+    try:
+        res = user_db.delete("users", "id", user_id)
+    except Exception as e:
         raise UserException("User not found", status_code = 404)
 
-    user = User.from_dict(user_dict)
-    res = db.users.delete_one({"_id" : ObjectId(user_id)})
-
-    if res.deleted_count == 0:
+    if res == None:
         raise UserException("User not deleted", status_code = 404)
+
+    user = User.from_dict(res)
 
     user.password = None
 

@@ -123,7 +123,7 @@ class dbConnector(object):
                         "password BLOB, "\
                         "role INT, "\
                         "settings TEXT)")
-                self.db.execute("CREATE TABLE IF NOT EXISTS configuration (id PRIMARY KEY, name TEXT, value TEXT)")
+                self.db.execute("CREATE TABLE IF NOT EXISTS configuration (id INTEGER PRIMARY KEY, name TEXT, value TEXT)")
 
         def mysql(self):
             """
@@ -169,8 +169,10 @@ class dbConnector(object):
             Fetch single record using the key value as column/key name and its value
             """
             if self.isSQL():
-                self.db.execute("SELECT * FROM {0} WHERE {1} = '{2}'".format(name, key, value))
-                res = self.db.fetchone()
+                statement = "SELECT * FROM {0} WHERE {1} = ?".format(name, key)
+                cursor = self.connection.cursor()
+                cursor.execute(statement, (value,))
+                res = cursor.fetchone()
                 return res if res == None else dict(res)
             else:
                 if key == "id":
@@ -262,8 +264,28 @@ class dbConnector(object):
                     },
                     return_document=ReturnDocument.AFTER)
 
-        def delete():
-            pass
+        def delete(self, name, key, value):
+            """
+            Remove a row from a database specified by its key and value from a named database
+            """
+            if self.isSQL():
+                statement = "DELETE FROM {0} WHERE {1} = ?".format(name, key)
+                before = self.get(name, key, value)
+
+                self.db.execute(statement, (value,))
+                self.connection.commit()
+
+                if self.db.rowcount == 0:
+                    raise Exception("No record to delete")
+
+                return before
+            else:
+                if key == "id":
+                    from bson import ObjectId
+                    key = "_id"
+                    value = ObjectId(value)
+
+                return self.db[name].delete_one({key : value})
 
         def count(self, name):
             """
