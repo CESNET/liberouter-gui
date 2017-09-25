@@ -19,136 +19,138 @@ from bson import json_util as json
 from pymongo import ReturnDocument
 
 class ConfError(ApiException):
-	status_code = 400
+    status_code = 400
 
 # Initialize connector to the configuration collection
-connector = dbConnector()
-conf_db = None #connector.db["configuration"]
+db = dbConnector()
 
 conf = Module('configuration', __name__, url_prefix='/configuration', no_version = True)
 
 @conf.route('', methods=['GET'])
 @auth.required()
 def get_conf():
-	res = list(conf_db.find())
-	return (json.dumps(res))
+    res = list(db.getAll("configuration"))
+
+    parsed = list()
+
+    for item in res:
+        parsed_item = json.loads(item['value'])
+        parsed_item['name'] = item['name']
+        parsed.append(parsed_item)
+    return (json.dumps(parsed))
 
 def unprotected_get_module_conf(module):
-	"""
-	Get module's configuration specified by the module's name
+    """
+    Get module's configuration specified by the module's name
 
-	Prevent from storing module liberoutergui (reserved for future use).
+    Prevent from storing module liberoutergui (reserved for future use).
 
-	Each module name is converted to lowercase
-	"""
-	if module == 'liberoutergui':
-		raise ConfError("'liberoutergui' module name is reserved", status_code=409)
+    Each module name is converted to lowercase
+    """
+    if module == 'liberoutergui':
+        raise ConfError("'liberoutergui' module name is reserved", status_code=409)
 
-	res = conf_db.find_one({
-		'name' : module.lower()
-		})
+    res = db.get("configuration", "name", module.lower())
 
-	if not res:
-		raise ConfError("Module '%s' not found" % module, status_code=404)
+    parsed = res['value']
+    parsed['name'] = res['name']
 
-	return(res)
+    if not res:
+        raise ConfError("Module '%s' not found" % module, status_code=404)
+
+    return(parsed)
 
 
 @conf.route('/<string:module>', methods=['GET'])
 @auth.required()
 def get_module_conf(module):
-	"""
-	Get module by its name using the unprotected function
-	"""
-	return (json.dumps(unprotected_get_module_conf(module)))
+    """
+    Get module by its name using the unprotected function
+    """
+    return (json.dumps(unprotected_get_module_conf(module)))
 
 @conf.route('/<string:module>', methods=['PUT'])
 @auth.required(Role.admin)
 def update_conf(module):
-	"""
-	Update a module's configuration specified by its name
+    """
+    Update a module's configuration specified by its name
 
-	'name' mustn't be specified in data and data must be non-empty
-	"""
+    'name' mustn't be specified in data and data must be non-empty
+    """
 
-	data = request.get_json()
+    data = request.get_json()
 
-	if not data:
-		raise ConfError("Nothing to update")
+    if not data:
+        raise ConfError("Nothing to update")
 
-	if "name" in data:
-		del data["name"]
+    if "name" in data:
+        del data["name"]
 
-	if "_id" in data:
-		del data["_id"]
+    if "_id" in data:
+        del data["_id"]
 
-	res = conf_db.find_one_and_update({
-		"name" : str(module).lower()
-		},
-		{
-			"$set" : data
-		},
-		return_document=ReturnDocument.AFTER)
+    res = db.update("configuration", "name", str(module).lower(), {'value' : data})
 
-	if not res:
-		raise ConfError("Can't update module '%s'" % str(module).lower())
+    if not res:
+        raise ConfError("Can't update module '%s'" % str(module).lower())
 
-	return(json.dumps(res))
+    parsed = res['value']
+    parsed['name'] = res['name']
+
+    return(json.dumps(parsed))
 
 @conf.route('', methods=['POST'])
 @auth.required(Role.admin)
 def insert_conf():
-	"""
-	Insert module's configuration, the configuration name mustn't be present in
-	the collection
+    """
+    Insert module's configuration, the configuration name mustn't be present in
+    the collection
 
-	'name' is a mandatory key
-	"""
+    'name' is a mandatory key
+    """
 
-	conf = request.get_json()
-	res = {}
+    conf_raw = request.get_json()
+    config = dict()
+    res = {}
 
-	if 'name' not in conf:
-		raise ConfError("'name' must be specified in configuration")
+    if 'name' not in conf_raw:
+        raise ConfError("'name' must be specified in configuration")
 
-	try:
-		# We expect it to raise ConfError (config not found)
-		res = unprotected_get_module_conf(conf['name'])
-	except ConfError:
-		# Name must be lowercase
-		conf['name'] = conf['name'].lower()
+    # First check if such configuration already exists
+    try:
+        unprotected_get_module_conf(conf_raw['name'])
+    except ConfError as e:
+        pass
+    else:
+        raise ConfError("Configuration with name '%s' already exists" % conf_raw['name'])
 
-		res = conf_db.insert_one(conf)
+    # Name must be lowercase
+    config['name'] = conf_raw['name'].lower()
+    del conf_raw['name']
+    config['value'] = conf_raw
 
-		try:
-			res = conf_db.find_one({
-				"_id" : res.inserted_id
-				})
-		except Exception as e:
-			raise ConfError(str(e))
-	else:
-		raise ConfError("Configuration with name '%s' already exists" % conf['name'])
+    res = db.insert("configuration", config)
 
-	return(json.dumps(res))
+    parsed = json.loads(res['value'])
+    parsed['name'] = res['name']
+
+    return(json.dumps(parsed))
 
 @conf.route('/<string:module>', methods=['DELETE'])
 @auth.required(Role.admin)
 def remove_conf(module):
-	"""
-	Remove specified module from db
+    """
+    Remove specified module from db
 
-	Module is identified by its name in lowercase
-	"""
+    Module is identified by its name in lowercase
+    """
 
-	# Get the original document
-	orig_config = unprotected_get_module_conf(module)
+    # Get the original document
 
-	res = conf_db.delete_one({
-		'name' : str(module).lower()
-		})
+    res = db.delete("configuration", 'name', str(module).lower())
 
-	if res.deleted_count != 1:
-		raise ConfError("Module '%s' wasn't deleted" % module, status_code=404)
+    if res == None:
+        raise ConfError("Module '%s' wasn't deleted" % module, status_code=404)
 
-	return(json.dumps(orig_config))
+    return(json.dumps(orig_config))
 
