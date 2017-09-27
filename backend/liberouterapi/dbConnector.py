@@ -1,6 +1,8 @@
-from liberouterapi import app, config
 import os
 import json
+import logging
+
+log = logging.getLogger(__name__)
 
 class dbConnector(object):
     """
@@ -76,8 +78,10 @@ class dbConnector(object):
                 self.config = config[self.provider]
 
             if (self.provider == "mongodb"):
+                log.info("Initializing MongoDB connector")
                 self.mongodb();
             elif (self.provider == "sqlite"):
+                log.info("Initializing SQLite connector")
                 self.sqlite()
             else:
                 raise Exception("Unknown database provider")
@@ -110,7 +114,21 @@ class dbConnector(object):
 
             # Small trick to catch exception for unavailable database
             except pymongo.errors.ConnectionFailure as e:
-                app.logger.error("Failed to connect to database: %s", str(e))
+                log.error("Failed to connect to database: %s", str(e))
+
+            log.info("Successfully connected to MongoDB")
+
+        def mongodb_normalize(self, record):
+            """
+            Normalize record from mongodb
+
+            Take out Object ID from the dictionary stored in _id.$oid and put it in "id"
+            """
+
+            record["id"] = str(record["_id"])
+            del record["_id"]
+
+            return record
 
         def sqlite(self):
             """
@@ -208,9 +226,16 @@ class dbConnector(object):
                     from bson import ObjectId
                     value = ObjectId(value)
                     key = "_" + key
-                return self.db[name].find_one({
+                record = self.db[name].find_one({
                         key : value
                     })
+
+                if record is None:
+                    return record
+
+                record = self.mongodb_normalize(record)
+
+                return(record)
 
         def getAll(self, name):
             """
@@ -228,7 +253,15 @@ class dbConnector(object):
                     result.append(dict(item))
                 return result
             else:
-                return self.db[name].find()
+                result = list(self.db[name].find())
+
+                if len(result) == 0:
+                    return result
+
+                for item in result:
+                    item = self.mongodb_normalize(item)
+
+                return result
 
         def insert(self, name, data):
             """
@@ -263,7 +296,9 @@ class dbConnector(object):
                 self.connection.commit()
                 return res
             else:
-                return self.db[name].insert_one(data)
+                result = self.db[name].insert_one(data)
+
+                return self.get(name, "id", str(result.inserted_id))
 
         def update(self, name, key, value, data):
             if self.isSQL():
@@ -298,6 +333,10 @@ class dbConnector(object):
 
             else:
                 from pymongo import ReturnDocument
+                if key == "id":
+                    from bson import ObjectId
+                    value = ObjectId(value)
+                    key = "_" + key
                 res = self.db[name].find_one_and_update({
                     key : value
                     },
@@ -305,6 +344,9 @@ class dbConnector(object):
                         "$set" : data
                     },
                     return_document=ReturnDocument.AFTER)
+
+                if res == None:
+                    raise Exception("No record found")
                 return res
 
         def delete(self, name, key, value):
@@ -328,7 +370,13 @@ class dbConnector(object):
                     key = "_id"
                     value = ObjectId(value)
 
-                return self.db[name].delete_one({key : value})
+                before = self.get(name, key, value)
+
+                res = self.db[name].delete_one({key : value})
+
+                if res.deleted_count == 0:
+                    raise Exception("No record to delete")
+                return before
 
         def count(self, name):
             """
