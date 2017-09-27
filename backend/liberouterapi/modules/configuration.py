@@ -52,11 +52,11 @@ def unprotected_get_module_conf(module):
 
     res = db.get("configuration", "name", module.lower())
 
-    parsed = res['value']
-    parsed['name'] = res['name']
-
     if not res:
         raise ConfError("Module '%s' not found" % module, status_code=404)
+
+    parsed = res['value']
+    parsed['name'] = res['name']
 
     return(parsed)
 
@@ -131,7 +131,7 @@ def insert_conf():
 
     res = db.insert("configuration", config)
 
-    parsed = json.loads(res['value'])
+    parsed = res['value']
     parsed['name'] = res['name']
 
     return(json.dumps(parsed))
