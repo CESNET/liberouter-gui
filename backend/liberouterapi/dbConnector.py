@@ -143,17 +143,18 @@ class dbConnector(object):
             self.connection = sqlite3.connect(path, check_same_thread=False)
             self.connection.row_factory = sqlite3.Row
             self.db = self.connection.cursor()
+            log.info("Successfully connected to SQLite")
             self.init_tables()
+            log.info("Successfully initialized SQLite tables")
 
         def init_tables(self):
             """
             Initialize users and configuration tables
             """
-            if self.isNoSQL():
+            if self.isSQL():
+                cursor = self.connection.cursor()
                 # No need for initialization for Mongo
-                return
-            else:
-                self.db.execute("CREATE TABLE IF NOT EXISTS users ("\
+                cursor.execute("CREATE TABLE IF NOT EXISTS {} ("\
                         "id INTEGER PRIMARY KEY, "\
                         "username TEXT, "\
                         "first_name TEXT,"\
@@ -161,34 +162,14 @@ class dbConnector(object):
                         "email TEXT, "\
                         "password BLOB, "\
                         "role INT, "\
-                        "settings TEXT)")
-                self.db.execute("CREATE TABLE IF NOT EXISTS configuration ("\
+                        "settings TEXT)".format(self.users))
+                cursor.execute("CREATE TABLE IF NOT EXISTS {} ("\
                         "id INTEGER PRIMARY KEY, "\
                         "name TEXT, "\
-                        "value TEXT)")
+                        "value TEXT)".format(self.configuration))
 
-        def mysql(self):
-            """
-            MySQL database initialization
-
-            TODO: drop sqlalchemy module
-            """
-            from flask_sqlalchemy import SQLAlchemy
-            path = "mysql://"
-
-            if self.config["user"]:
-                path = path + self.config["user"]
-
-            if self.config["password"]:
-                path = path + ":" + self.config["password"]
-
-            try:
-                path = path + "@" + self.server + "/" + self.dbName
-            except KeyError:
-                raise Exception("Missing configuration properties for MySQL 'server' or 'database'")
-            app.config['SQLALCHEMY_DATABASE_URI'] = path
-            app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-            self.db = SQLAlchemy(app)
+                self.connection.commit()
+                cursor.close()
 
         def isSQL(self):
             """
@@ -214,13 +195,26 @@ class dbConnector(object):
                 statement = "SELECT * FROM {0} WHERE {1} = ?".format(name, key)
                 cursor = self.connection.cursor()
                 cursor.execute(statement, (value,))
-                res = cursor.fetchone()
+                cres = cursor.fetchall()
 
-                for key in res.keys():
-                    if isinstance(res[key], str):
+                if len(cres) == 0:
+                    cursor.close()
+                    return None
+
+                cres = dict(cres[0])
+
+                for key in cres.keys():
+                    if isinstance(cres[key], str):
                         # Might be JSON, try to parse it
-                        res[key] = json.loads(res[key])
-                return res if res == None else dict(res)
+                        try:
+                            cres[key] = json.loads(cres[key])
+                        except Exception as e:
+                            log.error("%s : %s " + str(e), key, cres[key])
+                            pass
+
+                self.connection.commit()
+                cursor.close()
+                return cres
             else:
                 if key == "id":
                     from bson import ObjectId
@@ -242,15 +236,22 @@ class dbConnector(object):
             Fetch all records from given table/collection
             """
             if self.isSQL():
-                res = self.db.execute("SELECT * FROM {0}".format(name))
+                cursor = self.connection.cursor()
+                res = cursor.execute("SELECT * FROM {0}".format(name))
                 res = res.fetchall()
                 result = list()
                 for item in res:
                     for key in item.keys():
                         if isinstance(item[key], str):
                             # Might be JSON, try to parse it
-                            item[key] = json.loads(item[key])
+                            try:
+                                item[key] = json.loads(item[key])
+                            except Exception as e:
+                                pass
                     result.append(dict(item))
+
+                cursor.close()
+
                 return result
             else:
                 result = list(self.db[name].find())
@@ -272,10 +273,11 @@ class dbConnector(object):
             if "id" in data.keys():
                 del data["id"]
             if self.isSQL():
+                cursor = self.connection.cursor()
+
                 keys = list(data.keys())
 
                 insert = "INSERT INTO " + name + "("
-
                 insert += ','.join(map(str, keys))
                 insert += ") VALUES ("
                 insert += "?," * (len(keys) - 1)
@@ -284,7 +286,7 @@ class dbConnector(object):
                 values = tuple()
 
                 for key in keys:
-                    if not isinstance(data[key], str):
+                    if not isinstance(data[key], bytes) and not isinstance(data[key], str):
                         try:
                             data[key] = json.dumps(data[key])
                         except Exception as e:
@@ -292,9 +294,10 @@ class dbConnector(object):
 
                     values += (data[key], )
 
-                res = self.db.execute(insert, values)
+                res = cursor.execute(insert, values)
                 self.connection.commit()
-                return res
+                cursor.close()
+                return self.get(name, "id", cursor.lastrowid)
             else:
                 result = self.db[name].insert_one(data)
 
@@ -302,6 +305,7 @@ class dbConnector(object):
 
         def update(self, name, key, value, data):
             if self.isSQL():
+                cursor = self.connection.cursor()
                 statement = "UPDATE " + name + " SET "
 
                 for k in data:
@@ -312,22 +316,25 @@ class dbConnector(object):
 
                 for k in data:
                     safe_data = None
-                    if not isinstance(data[k], str):
+                    if not isinstance(data[k], bytes) and not isinstance(data[k], str):
                         try:
                             safe_data = json.dumps(data[k])
                         except Exception as e:
                             pass
                     else:
-                        safe_data = data
+                        safe_data = data[k]
                     values += (safe_data, )
 
                 values += (value, )
 
-                res = self.db.execute(statement, values)
+                res = cursor.execute(statement, values)
 
-                if self.db.rowcount == 0:
+                self.connection.commit()
+
+                if cursor.rowcount == 0:
                     raise Exception("Update statement failed")
 
+                cursor.close()
 
                 return self.get(name, key, value)
 
