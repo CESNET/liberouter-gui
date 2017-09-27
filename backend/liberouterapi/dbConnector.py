@@ -31,61 +31,82 @@ class dbConnector(object):
                     db = config["database"],
                     config = config)
 
-        def __init__(self,
-                provider = "mongodb",
-                server = "localhost",
-                port = 27017,
-                db = "liberouter",
-                users = "users",
-                config = {}):
+        def __init__(self, **kwargs):
+            """
+            Initialize database connection
 
-            self.provider = provider
+            Base kwargs are:
+                * config            Configuration object containing database-specifig config
+                * provider          Database provider
+                * users             Users' table/collection name
+                * configuration     Configuration's table/collection name
 
-            # Setup host and port for DB
-            self.server = server
-            self.port = port
-            # Set up database name
-            self.dbName = db
-            self.config = config
+            Possible providers:
+                * SQLite
+                    The SQLite is a lightweight database using a single-file storage. Works like
+                    any other large SQL-based database and can be easily deployed
 
-            if (provider == "mongodb"):
-                self.mongodb();
-            elif (provider == "sqlite"):
-                self.sqlite()
+                    Configuration object:
+                    {
+                        "file",  Path to database file
+                    }
+
+                * MongoDB
+                    NoSQL database used for storing incostinent data. pymongo is used as a connector
+
+                    Configuration object:
+                    {
+                        "server",   Server address
+                        "port",     Server port
+                        "database"  Database name
+                    }
+            """
+            if len(kwargs.keys()) == 6:
+                self.config = kwargs["config"]
+                self.provider = kwargs["provider"]
+                self.users = kwargs["users"]
+                self.configuration = kwargs["configuration"]
+
             else:
-                raise Exception("Unknown database provider")
-
-        def __init__(self):
-            self.config = config["database"]
-            self.provider = self.config.get("provider", "mongodb")
-            # Setup host and port for DB
-            self.server = self.config.get("server", "localhost")
-            self.port = self.config.getint("port", 27017)
-            # Set up database name
-            self.dbName = self.config["database"]
+                # No kwargs were provided, try to load everything from a config object of libapi
+                from liberouterapi import config
+                self.provider = config["database"].get("provider", "mongodb")
+                self.users = config["database"].get("users", "users")
+                self.configuration = config["database"].get("configuration", "configuration")
+                self.config = config[self.provider]
 
             if (self.provider == "mongodb"):
                 self.mongodb();
             elif (self.provider == "sqlite"):
                 self.sqlite()
-            elif (self.provider == "mysql"):
-                self.mysql()
             else:
                 raise Exception("Unknown database provider")
 
-
         def mongodb(self):
             import pymongo
-            # Connect to database and bind events and users collections
+            server = self.config.get("server", "localhost")
+            port = self.config.get("port", 27017)
+            dbName = self.config.get("database", "liberouter")
+            user = self.config.get("user", None)
+            password = self.config.get("password", None)
+
+            # Connect to database and ensure the connection is alive
             try:
-                self.client = pymongo.MongoClient(self.server,
-                        self.port,
-                        serverSelectionTimeoutMS=100)
+                if user is None:
+                    self.client = pymongo.MongoClient(server,
+                            port,
+                            serverSelectionTimeoutMS = 100)
+                else:
+                    self.client = pymongo.MongoClient(server,
+                            port,
+                            user = user,
+                            password = password,
+                            serverSelectionTimeoutMS = 100)
 
                 # This raises ConnectionFailure if it can't do the command
                 self.client.admin.command('ismaster')
 
-                self.db = self.client[self.dbName]
+                self.db = self.client[dbName]
 
             # Small trick to catch exception for unavailable database
             except pymongo.errors.ConnectionFailure as e:
@@ -100,8 +121,8 @@ class dbConnector(object):
             is easily upgradeable to MySQL or PostgreSQL.
             """
             import sqlite3
-            path = os.getcwd() + "/" + self.config['file']
-            self.connection = sqlite3.connect(path)
+            path = os.getcwd() + "/" + self.config.get('file', 'database.sq3')
+            self.connection = sqlite3.connect(path, check_same_thread=False)
             self.connection.row_factory = sqlite3.Row
             self.db = self.connection.cursor()
             self.init_tables()
@@ -320,12 +341,30 @@ class dbConnector(object):
             else:
                 return self.db[name].find().count()
 
+    # Singleton instantiation
+    # It provides a default instance
     __instance = None
+    __instance_named = dict()
 
-    def __new__(cls):
-        if dbConnector.__instance is None:
+    def __new__(self, *args, **kwargs):
+        if len(args) > 0:
+            if args[0] in dbConnector.__instance_named and \
+                dbConnector.__instance_named[args[0]] is not None:
+                return dbConnector.__instance_named[args[0]]
+            else:
+                dbConnector.__instance_named[args[0]] = dbConnector.__dbConn(
+                        provider = kwargs.get("provider", "mongodb"),
+                        server = kwargs.get("server", "localhost"),
+                        port = kwargs.get("port", 27017),
+                        db = kwargs.get("db", "liberouter"),
+                        users = kwargs.get("users", "users"),
+                        config = kwargs.get("config", dict()))
+            return dbConnector.__instance_named[args[0]]
+
+        elif dbConnector.__instance is None:
             dbConnector.__instance = dbConnector.__dbConn()
         return dbConnector.__instance
+
     def __init__(self):
         if not dbConnector.__instance:
             dbConnector.__instance = dbConnector.__dbConn()
