@@ -26,7 +26,7 @@ def get_users():
 
     # Remove password hash from the resulting query
     for user in res:
-        user.pop("password", None)
+        del user["password"]
     return(json_util.dumps(res))
 
 @auth.required()
