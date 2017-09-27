@@ -70,6 +70,8 @@ def add_user():
 def remove_user(user_id):
     """
     Remove the user
+
+    TODO: remove all sessions from the deleted user
     """
     res = None
     try:
