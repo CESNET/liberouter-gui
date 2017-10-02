@@ -22,7 +22,7 @@
                 <button class="btn btn-secondary" routerLink="{{user.id}}">View user</button>
                 <button class="btn btn-danger"
                     title="Remove user"
-                    *ngIf="currentUser.user.username != user.username"
+                    *ngIf="currentUser.username != user.username"
                     [ngbPopover]="deleteConfirmation"
                     popoverTitle="Are you sure?"
                     #popover="ngbPopover"

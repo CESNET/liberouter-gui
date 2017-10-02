@@ -10,7 +10,7 @@ import { AuthService, ConfigService } from './services';
 })
 export class AppComponent implements OnInit {
     isLoginPage = false;
-    user =  { user : {username : ''}};
+    user =  {};
     modules: Array<Object> = [];
     children: Array<Object>= [];
 
@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
                 private config: ConfigService) {}
 
     ngOnInit() {
+        this.user = JSON.parse(localStorage.getItem('user'))
         this.router.events.subscribe(val => {
             /* the router will fire multiple events */
             /* we only want to react if it's the final active route */
@@ -31,7 +32,13 @@ export class AppComponent implements OnInit {
                     this.isLoginPage = true;
                     this.logout();
                 } else {
-                    this.checkSession();
+                    this.auth.checkSession().subscribe(
+                        data => {},
+                        error => {
+                            console.log(error.status)
+                            console.error('The session "' + this.user['session_id'] + '" is invalid');
+                            this.logout();
+                        });
                     this.isLoginPage = false;
                     this.children = this.route.children[0].routeConfig.children;
                 }
@@ -54,26 +61,9 @@ export class AppComponent implements OnInit {
         this.router.navigate(path);
     }
 
-    private checkSession() {
-        this.user = JSON.parse(localStorage.getItem('currentUser'));
-
-        if (!this.user) {
-            this.logout();
-            return;
-        }
-
-        this.auth.checkSession().subscribe(
-            data => {},
-            error => {
-                console.log(error.status)
-                console.error('The session "' + this.user['session_id'] + '" is invalid');
-                this.logout();
-            }
-        )
-    }
-
     private logout() {
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('user');
+        localStorage.removeItem('session');
         this.user = { user : {username : ''}};
         this.router.navigate(['/login']);
     }

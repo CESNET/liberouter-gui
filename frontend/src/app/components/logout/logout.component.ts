@@ -20,12 +20,14 @@ export class LogoutComponent implements OnInit {
             .subscribe(
                 data => {
                     console.log('Success logging out.');
-                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('session');
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
                     console.log('Error logging out.');
-                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('session');
                     this.router.navigate([this.returnUrl]);
                 }
             );
