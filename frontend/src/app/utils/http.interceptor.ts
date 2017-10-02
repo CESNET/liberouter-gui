@@ -68,11 +68,11 @@ export class HttpInterceptor extends Http {
         // Prefix the URL with environment prefix if set
         url.url = this.buildUrl(url.url);
 
-        this.currentUser = this.getCurrentUser();
+        const session = localStorage.getItem('session');
 
         // Set Authorization header
-        if (this.currentUser !== null) {
-            url.headers.set('Authorization', this.currentUser['session_id']);
+        if (session !== null) {
+            url.headers.set('Authorization', session);
         }
 
         // Set specific content type if "specific-content-type" header is set
@@ -93,19 +93,16 @@ export class HttpInterceptor extends Http {
     private catchErrors() {
         return (res: Response) => {
             if (res.status === 401) {
-                localStorage.removeItem('currentUser');
+                localStorage.removeItem('user');
+                localStorage.removeItem('session');
                 this.router.navigate(['/login']);
             } else if (res.status === 442) {
-            // SETUP is required
-            // Maybe you ask why 442. Well, 42 is answer to everything, right?
+                // SETUP is required
+                // Maybe you ask why 442. Well, 42 is answer to everything, right?
                 this.router.navigate(['/setup']);
             }
             return Observable.throw(res);
         };
-    }
-
-    private getCurrentUser(): Object {
-        return JSON.parse(localStorage.getItem('currentUser'));
     }
 
     /**
@@ -127,18 +124,18 @@ export class HttpInterceptor extends Http {
       * This cannot use the Angular HTTP module, therefore uses good old XMLHttpRequest
       */
     private fetchConfig() {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', environment.configPath);
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(xhr.response);
-            } else {
-                reject(xhr.statusText);
-            }
-        };
-        xhr.onerror = () => reject(xhr.statusText);
-        xhr.send();
-    });
-}
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', environment.configPath);
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(xhr.response);
+                } else {
+                    reject(xhr.statusText);
+                }
+            };
+            xhr.onerror = () => reject(xhr.statusText);
+            xhr.send();
+        });
+    }
 }
