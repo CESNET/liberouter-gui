@@ -54,7 +54,7 @@ print("# Session manager setting up")
 session_manager = SessionManager.from_object(config)
 
 print("# Authorization module setting up")
-auth = Auth(db, session_manager, config['api']['secret_key'])
+auth = Auth(db, session_manager)
 
 check_users()
 
