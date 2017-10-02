@@ -1,0 +1,7 @@
+{
+    "module": {
+        "class": "FtasModule",
+        "file": "ftas.module.ts",
+        "frontend": "frontend"
+    }
+}
