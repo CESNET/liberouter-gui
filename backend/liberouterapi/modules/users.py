@@ -1,13 +1,14 @@
-import bcrypt
 from flask import request
-from bson import json_util, ObjectId
-import pymongo
+from bson import json_util
+import logging
 
 from liberouterapi import auth, db
 from liberouterapi.dbConnector import dbConnector
 from .module import Module
 from ..user import User, UserException
 from ..role import Role
+
+log = logging.getLogger(__name__)
 
 user_db = dbConnector()
 
@@ -46,7 +47,9 @@ def unprotected_add_user(user):
 
     TODO: insert only needed fields
     """
-    user.password = auth.create_hash(user.password)
+    log.debug("Adding user %s" % user.username)
+    if user.provider == "db":
+        user.password = auth.create_hash(user.password)
 
     res = user_db.insert("users", user.to_dict())
     return(res)

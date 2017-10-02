@@ -162,7 +162,8 @@ class dbConnector(object):
                         "email TEXT, "\
                         "password BLOB, "\
                         "role INT, "\
-                        "settings TEXT)".format(self.users))
+                        "settings TEXT, "\
+                        "provider TEXT)".format(self.users))
                 cursor.execute("CREATE TABLE IF NOT EXISTS {} ("\
                         "id INTEGER PRIMARY KEY, "\
                         "name TEXT, "\
