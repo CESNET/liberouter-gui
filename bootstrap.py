@@ -92,7 +92,7 @@ def loadReqs(path):
     result = {}
     with open(path, 'r') as fh:
         for line in fh:
-            spl = line.split('==')
+            spl = line.strip().split('==')
             result[spl[0]] = spl[1]
     return result
 
@@ -239,7 +239,7 @@ def saveDependencies(deps):
 
     with open(os.path.join(BASE_PATH, 'backend/requirements.txt'), 'w') as fh:
         for key, value in deps[Deps.PIP].items():
-            fh.write(key + '==' + value)
+            fh.write(key + '==' + value + '\n')
 
 # =====================
 # MAIN CODE STARTS HERE
