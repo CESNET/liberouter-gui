@@ -63,7 +63,7 @@ class dbConnector(object):
                         "database"  Database name
                     }
             """
-            if len(kwargs.keys()) == 6:
+            if len(kwargs.keys()) == 7:
                 self.config = kwargs["config"]
                 self.provider = kwargs["provider"]
                 self.users = kwargs["users"]
@@ -404,17 +404,21 @@ class dbConnector(object):
 
     def __new__(self, *args, **kwargs):
         if len(args) > 0:
+            log.debug("Initializing named instance")
             if args[0] in dbConnector.__instance_named and \
                 dbConnector.__instance_named[args[0]] is not None:
                 return dbConnector.__instance_named[args[0]]
             else:
+                log.debug("New named instance '%s'" % args[0])
                 dbConnector.__instance_named[args[0]] = dbConnector.__dbConn(
                         provider = kwargs.get("provider", "mongodb"),
                         server = kwargs.get("server", "localhost"),
                         port = kwargs.get("port", 27017),
                         db = kwargs.get("db", "liberouter"),
                         users = kwargs.get("users", "users"),
-                        config = kwargs.get("config", dict()))
+                        configuration = kwargs.get("configuration", "configuration"),
+                        config = kwargs.get("config", dict())
+                        )
             return dbConnector.__instance_named[args[0]]
 
         elif dbConnector.__instance is None:
