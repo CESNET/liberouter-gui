@@ -89,7 +89,7 @@ class dbConnector(object):
         def mongodb(self):
             import pymongo
             server = self.config.get("server", "localhost")
-            port = self.config.get("port", 27017)
+            port = int(self.config.get("port", 27017))
             dbName = self.config.get("database", "liberouter")
             user = self.config.get("user", None)
             password = self.config.get("password", None)
