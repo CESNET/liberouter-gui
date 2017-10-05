@@ -1,10 +1,15 @@
 .home {
 	.card {
-		margin: 1em;
-		width: 25em;
+		position: relative;
+		padding-bottom: 1.5em;
 
 		&:hover {
 			background-color: darken(#FFF, 1%);
+		}
+
+		.goto {
+	        position: absolute;
+            bottom: 10px;
 		}
 	}
 }
