@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "npm": "path/to/package.json",
+        "ngc": "path/to/.angular-cli.json",
+        "pip": "path/to/requirements.txt"
+    },
+    "module": {
+        "class": "ExampleModule",
+        "file": "path/to/example.module.ts"
+        "frontend": "path/to/frontend",
+        "backend": "path/to/backend"
+    }
+}
