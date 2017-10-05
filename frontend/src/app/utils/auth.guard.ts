@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate, CanLoad {
     constructor(private router: Router) { }
 
     isLoggedIn(): boolean {
-        if (localStorage.getItem('currentUser')) {
+        if (localStorage.getItem('session')) {
             // logged in so return true
             return true;
         }
@@ -24,13 +24,17 @@ export class AuthGuard implements CanActivate, CanLoad {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         if (this.isLoggedIn()) {
             // logged in so return true
-            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            console.log(user)
+            console.log(route)
+
             if (route.data['role'] === undefined) {
                 console.warn('No role is set for route \'' + route.data['path'] + '\'');
                 return true;
             }
 
-            if (user.user.role <= route.data['role']) {
+            if (user['role'] <= route.data['role']) {
                 return true;
             }
 

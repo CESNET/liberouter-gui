@@ -32,11 +32,14 @@ export class LoginComponent implements OnInit {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
         // check if the user is logged in and if so redirect them to HP
-        const lsUser = JSON.parse(localStorage.getItem('currentUser'));
+        const session = localStorage.getItem('session');
+        console.log(session)
 
-        if (lsUser != null && lsUser['session_id']) {
-            this.user = lsUser;
-            this.router.navigate([this.returnUrl]);
+        if (session != null) {
+            this.authService.checkSession().subscribe(
+                data => { this.router.navigate([this.returnUrl]) },
+                error => { console.error("Invalid session") }
+            )
         }
     }
 

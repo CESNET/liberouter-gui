@@ -8,10 +8,10 @@
 		<div class="user-area ">
 			<div ngbDropdown class="d-flex flex-column align-content-center">
 				<a class="user" id="dropdownMenu1" ngbDropdownToggle>
-					{{ user?.user?.username }}
+					{{ user?.username }}
 				</a>
-				<div class="dropdown-menu" aria-labelledby="userActions">
-					<button class="dropdown-item" routerLink="logout">
+				<div ngbDropdownMenu class="dropdown-menu" aria-labelledby="userActions">
+					<button class="dropdown-item" routerLink="/logout">
 						Logout
 					</button>
 				</div>
@@ -49,8 +49,7 @@
 					</div>
 				</div> -->
 			</li>
-
-			</ul>
+            </ul>
 		</div>
 	  <!--button md-button #closeStartButton (click)="start.close()">Close</button-->
 	</div>

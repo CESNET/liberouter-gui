@@ -2,6 +2,7 @@
 
 from backports import configparser
 import argparse
+from argparse import RawTextHelpFormatter
 import sys
 import os
 import logging
@@ -39,7 +40,6 @@ class Config(object):
         self.HOST = self.config["api"].get("host", "localhost")
         self.PORT = self.config["api"].getint("port", 8000)
         self.THREADED = self.config["api"].getboolean("threaded", True)
-        self.SECRET_KEY = self.config["api"].get("secret_key", "")
 
         # If in debug mode we want all logging messages
         if self.DEBUG:
@@ -81,20 +81,19 @@ class Config(object):
         """
         Handle arguments
         """
-        parser = argparse.ArgumentParser(description="""REST API CESNET 2016.\n\n
-                Authors: Petr Stehlik <stehlik@cesnet.cz>""", add_help=False)
+        parser = argparse.ArgumentParser(description="Liberouter GUI REST API\n"\
+                "CESNET 2016 - 2017.\n\n"\
+                "Authors: Petr Stehlik, Jakub Neruda, Petr Velan, Radek Krejci\n"
+                "GitHub: https://github.com/CESNET/liberouter-gui"
+                , formatter_class=RawTextHelpFormatter)
 
-        parser.add_argument('--config', '-c',
+        parser.add_argument('-c', '--config',
                 default=os.path.join(os.path.dirname(__file__), '../config.ini'),
                 dest='config', help='Load given configuration file')
-        parser.add_argument('--help', '-h', help="Print this help", dest='help')
+        #parser.add_argument('--help', '-h', help="Print this help", dest='help')
 
         try:
             args = vars(parser.parse_args())
-
-            if args['help']:
-                parser.print_help()
-                exit(0)
 
         except Exception as e:
             print(e)

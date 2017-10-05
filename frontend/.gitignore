@@ -46,3 +46,5 @@ config.json
 src/app/modules.ts
 package.json
 .angular-cli.json
+src/app/modules/*
+!src/app/modules/users

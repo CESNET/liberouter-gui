@@ -18,7 +18,7 @@ enum Roles {
 export class UsersListComponent implements OnInit {
 
     users: Array<Object> = [];
-    currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    currentUser = JSON.parse(localStorage.getItem('user'));
     roles = Roles;
     user = {};
     deleteBtn = ['Delete', 'Cancel'];
@@ -47,10 +47,8 @@ export class UsersListComponent implements OnInit {
     }
 
     removeUser(user:Object) {
-        console.log(user['id']);
         this.usersService.remove(user['id']).subscribe(
             data => {
-                console.log(data);
                 this.listUsers();
             },
             error => {

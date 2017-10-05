@@ -23,7 +23,8 @@ export class AuthService {
 
                 if (resp) {
                     // store user details and token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(resp));
+                    localStorage.setItem('session', resp['session_id']);
+                    localStorage.setItem('user', JSON.stringify(resp['user']));
                 }
             })
             .catch(this.handleError);
@@ -31,7 +32,7 @@ export class AuthService {
 
     logout() {
         // remove user from local storage to log user out
-        const user = JSON.parse(localStorage.getItem('currentUser'));
+        const user = JSON.parse(localStorage.getItem('user'));
         console.log(user);
         return this.http.delete('/authorization')
             .map((response: Response) => {});

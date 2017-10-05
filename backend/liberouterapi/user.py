@@ -22,16 +22,18 @@ class User(object):
     password = None
     role = None
     settings = {}
+    provider = "db"
 
     def __init__(self,
             username,
-            id		= None,
+            id		    = None,
             first_name	= None,
             last_name	= None,
             email		= None,
             password	= None,
             role		= None,
             settings	= None,
+            provider    = "db"
             ):
         self.username = username
         self.id = id
@@ -41,6 +43,7 @@ class User(object):
         self.password = password
         self.role = self.parseRole(role)
         self.settings = settings
+        self.provider = provider
 
     def get(self, key, default):
         if key == "username":
@@ -97,6 +100,7 @@ class User(object):
                 'email' : self.email,
                 'role' : int(self.role),
                 'settings' : self.settings,
+                'provider' : self.provider
                 }
 
         if self.password:
@@ -123,7 +127,8 @@ class User(object):
             email		= user.get("email", None),
             password	= user.get("password", None),
             role		= User.parseRole(user.get("role", None)),
-            settings	= user.get("settings", {})
+            settings	= user.get("settings", {}),
+            provider    = user.get("provider", "db")
             ))
 
         #class UserSQL(UserBase, db.db.Model):
