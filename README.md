@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/CESNET/liberouter-gui.svg?branch=master)](https://travis-ci.org/CESNET/liberouter-gui)
 ![Liberouter Logo](http://dmon100.liberouter.org/img/lr_logo_2.png "Liberouter logo")
 # Liberouter GUI
 

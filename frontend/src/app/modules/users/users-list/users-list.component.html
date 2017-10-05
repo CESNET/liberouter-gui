@@ -1,0 +1,57 @@
+<h2>Users management</h2>
+<section class="box d-flex flex-row">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>E-mail</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of users; let i = '0'">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ roles[user.role] }}</td>
+            <td>
+                <button class="btn btn-secondary" routerLink="{{user.id}}">View user</button>
+                <button class="btn btn-danger"
+                    title="Remove user"
+                    *ngIf="currentUser.username != user.username"
+                    [ngbPopover]="deleteConfirmation"
+                    popoverTitle="Are you sure?"
+                    #popover="ngbPopover"
+                    (click)="confirmDelete(user)">
+                    {{ deleteBtn[popover.isOpen() ? 1 : 0] }}
+                </button>
+                <ng-template #deleteConfirmation>
+                    <p>Delete user <strong>{{ user.username }}</strong>? This action can't be taken back.</p>
+                    <button class="btn btn-danger btn-block"
+                        title="Remove user"
+                        (click)="removeUser(user)">
+                        Yes, delete them!
+                    </button>
+                </ng-template>
+
+            </td>
+
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <button class="btn btn-primary"
+                        routerLink="add"
+                        routerLinkActive="active-link">
+                        Add new user
+                    </button>
+                <td>
+            </tr>
+        </tfoot>
+    </table>
+</section>

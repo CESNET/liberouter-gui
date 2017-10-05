@@ -1,0 +1,76 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+    - "8"
+python:
+    - "3.4"
+    - "3.5"
+
+git:
+    submodules: false
+    depth : 1
+
+addons:
+    apt:
+    sources:
+        - ubuntu-toolchain-r-test
+    packages:
+        # nodejs >v4 compiler requirements
+        - g++-4.8
+        - openjdk-7-jdk
+
+before_install:
+    - sudo apt-get -y install python3-pip python-dev
+    - sudo pip3 install -U setuptools
+    - sudo pip3 install -U virtualenvwrapper
+    - sudo apt-get -y install sqlite3
+    - python3 -V
+    - pip3 -V
+
+before_script:
+    - python3 bootstrap.py
+    - npm install @angular/cli -g
+
+script:
+    # Frontend build procedure
+    - cd $TRAVIS_BUILD_DIR/frontend
+    - npm install
+    # List will fail because of unmet peer dependencies from an outdated package which requires
+    # lower version of a package that is actually installed in higher version
+    - npm list || true
+    - ng build --prod --bh="/" --aot=false
+    # Backend build procedure
+    - cd $TRAVIS_BUILD_DIR/backend
+    - virtualenv venv -p python3
+    - source venv/bin/activate
+    - pip3 install -r requirements.txt
+    - pip3 freeze
+    - |
+        echo "[api]
+        debug = false
+        secret_key = super-secret
+        ;host =
+        port = 5555
+        threaded = true
+        version = 1.0
+        modules = /modules
+        ssl = false
+
+        [database]
+        ; possible values: sqlite, mysql, mongodb
+        ;	sqlite:	file must be specified, the server and port are ignored
+        ;	mysql:	server, port and database must be specified, user and password
+        ;			are for authentication to the db
+        ;	mongodb: server, port and database must be set
+        provider = sqlite
+        database = liberouter
+        users = users
+
+        [sqlite]
+        file = db.sq3
+        " > config.ini
+    # Run backend server and kill it after 5 seconds
+    - cd $TRAVIS_BUILD_DIR
+    - python3 backend &
+    - t=$! && sleep 5 && kill $t
