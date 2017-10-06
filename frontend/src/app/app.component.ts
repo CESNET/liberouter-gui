@@ -11,6 +11,7 @@ import { AuthService, ConfigService } from './services';
 export class AppComponent implements OnInit {
     isLoginPage = false;
     user =  {};
+    session_id = null;
     modules: Array<Object> = [];
     children: Array<Object>= [];
 
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.user = JSON.parse(localStorage.getItem('user'))
+        this.session_id = localStorage.getItem('session_id')
         this.router.events.subscribe(val => {
             /* the router will fire multiple events */
             /* we only want to react if it's the final active route */
@@ -36,7 +38,7 @@ export class AppComponent implements OnInit {
                         data => {},
                         error => {
                             console.log(error.status)
-                            console.error('The session "' + this.user['session_id'] + '" is invalid');
+                            console.error('The session "' + this.session_id + '" is invalid');
                             this.logout();
                         });
                     this.isLoginPage = false;
