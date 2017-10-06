@@ -14,7 +14,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.0.0",
-    "@angular/cli": "^1.4.1",
+    "@angular/cli": "^1.4.0",
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",
     "@angular/core": "^4.0.0",
@@ -23,12 +23,10 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.20",
+    "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
     "@swimlane/ngx-charts": "^5.3.1",
-    "angular2-grid": "^2.0.2",
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "^2.4.1",
-    "d3": "^4.9.1",
     "font-awesome": "^4.7.0",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
@@ -50,7 +48,7 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
-    "typescript": "^2.2.2"
+    "typescript": "~2.3.0"
   },
   "description": "Web interface for Liberouter GUI. Built using webpack.",
   "repository": {
