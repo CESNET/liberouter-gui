@@ -54,7 +54,11 @@ def mergeNpmDeps(base, module, modulename):
     items = ['dependencies', 'devDependencies']
 
     for item in items:
-        conflicts = Unify.dicts(base[item], module[item])
+        base_dep = base.get(item, None)
+        module_dep = module.get(item, None)
+        conflicts = None
+        if base_dep and module_dep:
+            conflicts = Unify.dicts(base_dep, module_dep)
 
         if conflicts:
             log.warn('%s has following NPM conflicts:', modulename)
