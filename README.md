@@ -5,8 +5,8 @@
 # Liberouter GUI
 
 Liberouter GUI provides unified interface to a couple of services developed in CESNET. Namely:
-* NEMEA Dashboard
-* SecurityCloud
+* [NEMEA Dashboard](https://github.com/CESNET/Nemea-Dashboard/tree/liberouter-gui)
+* [SecurityCloud](https://github.com/CESNET/liberouter-gui/tree/scgui)
 * NERD
 * FTAS
 
