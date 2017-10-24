@@ -9,8 +9,7 @@
 			"root": "src",
 			"outDir": "dist",
 			"assets": [
-                "assets/config-sample.json",
-                "assets/img",
+			    "assets",
 				"favicon.ico",
 				".htaccess",
 				"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"

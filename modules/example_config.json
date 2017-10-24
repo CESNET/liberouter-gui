@@ -6,8 +6,10 @@
     },
     "module": {
         "class": "ExampleModule",
-        "file": "path/to/example.module.ts"
+        "file": "path/to/example.module.ts",
         "frontend": "path/to/frontend",
-        "backend": "path/to/backend"
+        "backend": "path/to/backend",
+        "assets" : "path/to/assets",
+        "name" : "example-module"
     }
 }

@@ -206,6 +206,19 @@ def bootstrapModules(basedeps, moduleList):
             dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', module)
             createSymlink(src, dst)
 
+        if 'assets' in config['module']:
+            """
+            Link assets for frontend to frontend/src/assets folder
+            Each module must contain key 'name' and 'assets', after importing assets are available
+            via /name/ path on frontend
+            """
+            if not 'name' in config['module']:
+                log.warn("No 'name' specified, skipping inclusion of assets.")
+                break
+            src = os.path.join(BASE_PATH, 'modules', module, config['module']['assets'])
+            dst = os.path.join(BASE_PATH, 'frontend/src/assets', config['module']['name'])
+            createSymlink(src, dst)
+
         # Frontend key presence tested by updateModuleList
         src = os.path.join(BASE_PATH, 'modules', module, config['module']['frontend'])
         dst = os.path.join(BASE_PATH, 'frontend/src/app/modules', module)
