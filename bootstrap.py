@@ -145,19 +145,19 @@ def updateModuleList(moduleList, config, modulename):
     Update moduleList with all info needed for module registration.
     """
     if not 'module' in config:
-        log.error(modulename + ': No "module" section in config, skipping module')
+        log.warn(modulename + ': No "module" section in config, skipping module')
         return False
 
     if not 'frontend' in config['module']:
-        log.error(modulename + ': No "frontend" key in config, skipping module')
+        log.warn(modulename + ': No "frontend" key in config, skipping module')
         return False
 
     if not 'class' in config['module']:
-        log.error(modulename + ': No "class" key in config, skipping module')
+        log.warn(modulename + ': No "class" key in config, skipping module')
         return False
 
     if not 'file' in config['module']:
-        log.error(modulename + ': No "file" key in config, skipping module')
+        log.warn(modulename + ': No "file" key in config, skipping module')
         return False
 
     moduleList.append({
@@ -191,7 +191,7 @@ def bootstrapModules(basedeps, moduleList):
             with open(cfgpath, 'r') as fh:
                 config = json.load(fh)
         except (OSError, IOError):
-            log.error(module + ': Cannot find ' + cfgpath + ', skipping module')
+            log.warn(module + ': Cannot find ' + cfgpath + ', skipping module')
             continue
 
         if not updateModuleList(moduleList, config, module):
