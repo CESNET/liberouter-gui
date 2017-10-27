@@ -9,7 +9,11 @@
 			"root": "src",
 			"outDir": "dist",
 			"assets": [
-			    "assets",
+			    {
+			        "glob": "**/**/*",
+			        "input": "./assets/",
+			        "output": "./assets/"
+			    },
 				"favicon.ico",
 				".htaccess",
 				"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
