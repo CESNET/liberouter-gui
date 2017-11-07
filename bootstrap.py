@@ -54,7 +54,11 @@ def mergeNpmDeps(base, module, modulename):
     items = ['dependencies', 'devDependencies']
 
     for item in items:
-        conflicts = Unify.dicts(base[item], module[item])
+        base_dep = base.get(item, None)
+        module_dep = module.get(item, None)
+        conflicts = None
+        if base_dep and module_dep:
+            conflicts = Unify.dicts(base_dep, module_dep)
 
         if conflicts:
             log.warn('%s has following NPM conflicts:', modulename)
@@ -141,19 +145,19 @@ def updateModuleList(moduleList, config, modulename):
     Update moduleList with all info needed for module registration.
     """
     if not 'module' in config:
-        log.error(modulename + ': No "module" section in config, skipping module')
+        log.warn(modulename + ': No "module" section in config, skipping module')
         return False
 
     if not 'frontend' in config['module']:
-        log.error(modulename + ': No "frontend" key in config, skipping module')
+        log.warn(modulename + ': No "frontend" key in config, skipping module')
         return False
 
     if not 'class' in config['module']:
-        log.error(modulename + ': No "class" key in config, skipping module')
+        log.warn(modulename + ': No "class" key in config, skipping module')
         return False
 
     if not 'file' in config['module']:
-        log.error(modulename + ': No "file" key in config, skipping module')
+        log.warn(modulename + ': No "file" key in config, skipping module')
         return False
 
     moduleList.append({
@@ -187,7 +191,7 @@ def bootstrapModules(basedeps, moduleList):
             with open(cfgpath, 'r') as fh:
                 config = json.load(fh)
         except (OSError, IOError):
-            log.error(module + ': Cannot find ' + cfgpath + ', skipping module')
+            log.warn(module + ': Cannot find ' + cfgpath + ', skipping module')
             continue
 
         if not updateModuleList(moduleList, config, module):
@@ -200,6 +204,19 @@ def bootstrapModules(basedeps, moduleList):
         if 'backend' in config['module']:
             src = os.path.join(BASE_PATH, 'modules', module, config['module']['backend'])
             dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', module)
+            createSymlink(src, dst)
+
+        if 'assets' in config['module']:
+            """
+            Link assets for frontend to frontend/src/assets folder
+            Each module must contain key 'name' and 'assets', after importing assets are available
+            via /name/ path on frontend
+            """
+            if not 'name' in config['module']:
+                log.warn("No 'name' specified, skipping inclusion of assets.")
+                break
+            src = os.path.join(BASE_PATH, 'modules', module, config['module']['assets'])
+            dst = os.path.join(BASE_PATH, 'frontend/src/assets', config['module']['name'])
             createSymlink(src, dst)
 
         # Frontend key presence tested by updateModuleList

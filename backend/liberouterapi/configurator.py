@@ -38,7 +38,7 @@ class Config(object):
 
         self.DEBUG = self.config["api"].getboolean("debug", False)
         self.HOST = self.config["api"].get("host", "localhost")
-        self.PORT = self.config["api"].getint("port", 8000)
+        self.PORT = self.config["api"].getint("port", 5555)
         self.THREADED = self.config["api"].getboolean("threaded", True)
 
         # If in debug mode we want all logging messages

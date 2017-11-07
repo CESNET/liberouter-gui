@@ -48,3 +48,7 @@ package.json
 .angular-cli.json
 src/app/modules/*
 !src/app/modules/users
+
+src/assets
+!src/assets/img
+!src/assets/config-sample.json

@@ -1,20 +1,19 @@
 [![Build Status](https://travis-ci.org/CESNET/liberouter-gui.svg?branch=master)](https://travis-ci.org/CESNET/liberouter-gui)
+
 ![Liberouter Logo](http://dmon100.liberouter.org/img/lr_logo_2.png "Liberouter logo")
+
 # Liberouter GUI
 
-Wrapper for our applications. Currently preparing for Nemea Dashboard and SecurityCloud GUI.
+Liberouter GUI provides unified interface to a couple of services developed in CESNET. Namely:
+* [NEMEA Dashboard](https://github.com/CESNET/Nemea-Dashboard/tree/liberouter-gui)
+* [SecurityCloud](https://github.com/CESNET/SecurityCloudGUIv2/tree/devel)
+* NERD
+* FTAS
 
-The wrapper encapsulates all modules visually and logically. On the backend it takes care of user and session management and authorization.
+Liberouter GUI encapsulates all modules visually and logically. On the backend it takes care of user, session and configuration management and authorization.
 
-# Running the wrapper
-In order to run the REST API you need working MongoDB database, python3 and dependencies in requirements.txt installed.
+Frontend utilizes Angular 4 to create modular frontend environment.
 
-# Testing the REST API
-You can run tests as follows:
-```
-$ python testrunner.py
-```
+# More info
+For more information visit our [Wiki](https://github.com/CESNET/liberouter-gui/wiki)
 
-The testrunner assumes that API is running on port 5555 and there is an admin account with username `admin` and password `admin`.
-
-Stay tuned!

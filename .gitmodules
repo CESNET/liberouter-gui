@@ -1,4 +1,3 @@
-[submodule "modules/Nemea-Dashboard"]
-	path = modules/Nemea-Dashboard
-	url = https://github.com/CESNET/Nemea-Dashboard
-	branch = liberouter-gui
+[submodule "modules"]
+	path = modules
+	url = git@github.com:CESNET/STaaS-GUI.git
