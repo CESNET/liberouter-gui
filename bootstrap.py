@@ -4,7 +4,7 @@ import json
 import os
 import re
 import logging
-import glob
+import fnmatch
 
 logging.basicConfig()
 log = logging.getLogger("Bootstrap")
@@ -47,6 +47,19 @@ class Unify():
                 conflicts[key] = add[key]
             dst[key] = add[key]
         return conflicts
+
+def recursive_glob(rootdir='.', pattern='*'):
+	"""Search recursively for files matching a specified pattern.
+	Adapted from http://stackoverflow.com/questions/2186525/use-a-glob-to-find-files-recursively-in-python
+	"""
+
+	matches = []
+	for root, dirnames, filenames in os.walk(rootdir):
+	  for filename in fnmatch.filter(filenames, pattern):
+		  matches.append(os.path.join(root, filename))
+
+	return matches
+
 
 def mergeNpmDeps(base, module, modulename):
     """
@@ -184,48 +197,55 @@ def bootstrapModules(basedeps, moduleList):
     module folders of both backend and frontend.
     """
     #modules = getImmediateSubdirs('modules')
-    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules', '*.config.json'))
+    cfgfiles = recursive_glob(rootdir = os.path.join(BASE_PATH, 'modules'), pattern = "config.json")
+    print(cfgfiles)
     for cfgpath in cfgfiles:
-        #cfgpath = os.path.join(BASE_PATH, 'modules', module, 'config.json')
-
-        config = None
-
         try:
-            with open(cfgpath, 'r') as fh:
-                config = json.load(fh)
-        except (OSError, IOError):
-            log.warn(module + ': Cannot find ' + cfgpath + ', skipping module')
-            continue
+            #cfgpath = os.path.join(BASE_PATH, 'modules', module, 'config.json')
 
-        if not updateModuleList(moduleList, config, config['name']):
-            continue
+            config = None
 
-        # Module might not have dependencies, their absence is not an error
-        if 'dependencies' in config:
-            updateDeps(basedeps, config['dependencies'], config['name'])
+            try:
+                with open(cfgpath, 'r') as fh:
+                    config = json.load(fh)
+            except (OSError, IOError):
+                log.warn(module + ': Cannot find ' + cfgpath + ', skipping module')
+                continue
 
-        if 'backend' in config['module']:
-            src = os.path.join(BASE_PATH, 'modules', config['module']['backend'])
-            dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', config['name'])
+            name = config['module']['name']
+
+            if not updateModuleList(moduleList, config, name):
+                continue
+
+            # Module might not have dependencies, their absence is not an error
+            if 'dependencies' in config:
+                updateDeps(basedeps, config['dependencies'], name)
+
+            if 'backend' in config['module']:
+                src = os.path.join(BASE_PATH, 'modules', config['module']['backend'])
+                dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', name)
+                createSymlink(src, dst)
+
+            if 'assets' in config['module']:
+                """
+                Link assets for frontend to frontend/src/assets folder
+                Each module must contain key 'name' and 'assets', after importing assets are available
+                via /name/ path on frontend
+                """
+                if not 'name' in config['module']:
+                    log.warn("No 'name' specified, skipping inclusion of assets.")
+                    break
+                src = os.path.join(BASE_PATH, 'modules', name, config['module']['assets'])
+                dst = os.path.join(BASE_PATH, 'frontend/src/assets', name)
+                createSymlink(src, dst)
+
+            # Frontend key presence tested by updateModuleList
+            src = os.path.join(BASE_PATH, 'modules', name, config['module']['frontend'])
+            dst = os.path.join(BASE_PATH, 'frontend/src/app/modules', name)
             createSymlink(src, dst)
-
-        if 'assets' in config['module']:
-            """
-            Link assets for frontend to frontend/src/assets folder
-            Each module must contain key 'name' and 'assets', after importing assets are available
-            via /name/ path on frontend
-            """
-            if not 'name' in config['module']:
-                log.warn("No 'name' specified, skipping inclusion of assets.")
-                break
-            src = os.path.join(BASE_PATH, 'modules', config['name'], config['module']['assets'])
-            dst = os.path.join(BASE_PATH, 'frontend/src/assets', config['module']['name'])
-            createSymlink(src, dst)
-
-        # Frontend key presence tested by updateModuleList
-        src = os.path.join(BASE_PATH, 'modules', config['name'], config['module']['frontend'])
-        dst = os.path.join(BASE_PATH, 'frontend/src/app/modules', config['name'])
-        createSymlink(src, dst)
+        except Exception as e:
+            log.warn("Skipping configuration in {0}. Reason: {1}".format(cfgpath, str(e)))
+            continue
 
 def registerModules(modules):
     """
