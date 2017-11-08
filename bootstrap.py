@@ -4,6 +4,7 @@ import json
 import os
 import re
 import logging
+import glob
 
 logging.basicConfig()
 log = logging.getLogger("Bootstrap")
@@ -182,9 +183,11 @@ def bootstrapModules(basedeps, moduleList):
     Build moduleList, update basedeps with module specific dependencies and create symlinks into
     module folders of both backend and frontend.
     """
-    modules = getImmediateSubdirs('modules')
-    for module in modules:
-        cfgpath = os.path.join(BASE_PATH, 'modules', module, 'config.json')
+    #modules = getImmediateSubdirs('modules')
+    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules', '*.config.json'))
+    for cfgpath in cfgfiles:
+        #cfgpath = os.path.join(BASE_PATH, 'modules', module, 'config.json')
+
         config = None
 
         try:
@@ -194,16 +197,16 @@ def bootstrapModules(basedeps, moduleList):
             log.warn(module + ': Cannot find ' + cfgpath + ', skipping module')
             continue
 
-        if not updateModuleList(moduleList, config, module):
+        if not updateModuleList(moduleList, config, config['name']):
             continue
 
         # Module might not have dependencies, their absence is not an error
         if 'dependencies' in config:
-            updateDeps(basedeps, config['dependencies'], module)
+            updateDeps(basedeps, config['dependencies'], config['name'])
 
         if 'backend' in config['module']:
-            src = os.path.join(BASE_PATH, 'modules', module, config['module']['backend'])
-            dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', module)
+            src = os.path.join(BASE_PATH, 'modules', config['module']['backend'])
+            dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', config['name'])
             createSymlink(src, dst)
 
         if 'assets' in config['module']:
@@ -215,13 +218,13 @@ def bootstrapModules(basedeps, moduleList):
             if not 'name' in config['module']:
                 log.warn("No 'name' specified, skipping inclusion of assets.")
                 break
-            src = os.path.join(BASE_PATH, 'modules', module, config['module']['assets'])
+            src = os.path.join(BASE_PATH, 'modules', config['name'], config['module']['assets'])
             dst = os.path.join(BASE_PATH, 'frontend/src/assets', config['module']['name'])
             createSymlink(src, dst)
 
         # Frontend key presence tested by updateModuleList
-        src = os.path.join(BASE_PATH, 'modules', module, config['module']['frontend'])
-        dst = os.path.join(BASE_PATH, 'frontend/src/app/modules', module)
+        src = os.path.join(BASE_PATH, 'modules', config['name'], config['module']['frontend'])
+        dst = os.path.join(BASE_PATH, 'frontend/src/app/modules', config['name'])
         createSymlink(src, dst)
 
 def registerModules(modules):
