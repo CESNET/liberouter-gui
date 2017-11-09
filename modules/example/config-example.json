@@ -1,5 +1,4 @@
 {
-    "name" : "example",
     "dependencies": {
         "npm": "frontend/package.json",
         "ngc": "frontend/.angular-cli.json",
@@ -9,6 +8,7 @@
         "class": "ExampleModule",
         "file": "frontend/example.module.ts",
         "frontend": "frontend/",
-        "backend": "backend/"
+        "backend": "backend/",
+        "name" : "example"
     }
 }
