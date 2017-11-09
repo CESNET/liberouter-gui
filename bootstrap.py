@@ -5,6 +5,7 @@ import os
 import re
 import logging
 import fnmatch
+import glob
 
 logging.basicConfig()
 log = logging.getLogger("Bootstrap")
@@ -182,6 +183,7 @@ def updateModuleList(moduleList, config, modulename):
     return True
 
 def createSymlink(src, dst):
+    log.debug("Symlinking src: %s, dst: %s" % (src, dst))
     try:
         # Using lexists to detect and remove broken symlinks as well as removing symlinks that
         # will be overwritten.
@@ -189,7 +191,7 @@ def createSymlink(src, dst):
             os.remove(dst)
         os.symlink(src, dst)
     except (OSError, IOError) as e: # Insufficient privileges
-        log.warn(str(e))
+        log.warn("Cannot create symlink (target: %s) %s" % (src, str(e)))
 
 def bootstrapModules(basedeps, moduleList):
     """
@@ -197,12 +199,10 @@ def bootstrapModules(basedeps, moduleList):
     module folders of both backend and frontend.
     """
     #modules = getImmediateSubdirs('modules')
-    cfgfiles = recursive_glob(rootdir = os.path.join(BASE_PATH, 'modules'), pattern = "config.json")
-    print(cfgfiles)
+    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules', '*/*config.json'))
+
     for cfgpath in cfgfiles:
         try:
-            #cfgpath = os.path.join(BASE_PATH, 'modules', module, 'config.json')
-
             config = None
 
             try:
@@ -212,17 +212,22 @@ def bootstrapModules(basedeps, moduleList):
                 log.warn(module + ': Cannot find ' + cfgpath + ', skipping module')
                 continue
 
-            name = config['module']['name']
+            try:
+                name = config['module']['name']
+            except KeyError as e:
+                log.warn("Cannot find name in module, skipping config %s" % cfgpath)
 
             if not updateModuleList(moduleList, config, name):
                 continue
+
+            module_dir = os.path.dirname(cfgpath)
 
             # Module might not have dependencies, their absence is not an error
             if 'dependencies' in config:
                 updateDeps(basedeps, config['dependencies'], name)
 
             if 'backend' in config['module']:
-                src = os.path.join(BASE_PATH, 'modules', config['module']['backend'])
+                src = os.path.join(module_dir, config['module']['backend'])
                 dst = os.path.join(BASE_PATH, 'backend/liberouterapi/modules', name)
                 createSymlink(src, dst)
 
@@ -235,16 +240,18 @@ def bootstrapModules(basedeps, moduleList):
                 if not 'name' in config['module']:
                     log.warn("No 'name' specified, skipping inclusion of assets.")
                     break
-                src = os.path.join(BASE_PATH, 'modules', name, config['module']['assets'])
+                src = os.path.join(module_dir, config['module']['assets'])
                 dst = os.path.join(BASE_PATH, 'frontend/src/assets', name)
                 createSymlink(src, dst)
 
             # Frontend key presence tested by updateModuleList
-            src = os.path.join(BASE_PATH, 'modules', name, config['module']['frontend'])
+            src = os.path.join(module_dir, config['module']['frontend'])
             dst = os.path.join(BASE_PATH, 'frontend/src/app/modules', name)
+
             createSymlink(src, dst)
         except Exception as e:
-            log.warn("Skipping configuration in {0}. Reason: {1}".format(cfgpath, str(e)))
+            log.warn("Skipping configuration in {0}. Reason: {1} ({2})"
+                    .format(cfgpath, str(e), type(e)))
             continue
 
 def registerModules(modules):
