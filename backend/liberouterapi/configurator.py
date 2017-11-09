@@ -20,6 +20,8 @@ class Config(object):
     version = '1.0'
     modules = dict()
 
+    DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "../config-default.ini")
+
     def __init__(self):
         args = self.parse_arguments()
 
@@ -29,12 +31,12 @@ class Config(object):
         log.debug("Loading user configuration")
         self.config = configparser.ConfigParser()
 
-        res = self.config.read(args['config'])
+        res = self.config.read([self.DEFAULT_CONFIG, args['config']])
 
         # Check if config was loaded successfully, api section must be there
         if len(res) == 0:
-            log.error("No configuration file was read! Using default values.")
-            self.config.add_section("api")
+            log.error("No configuration file was read! At least config-default.ini must be provided.")
+            sys.exit(1)
 
         self.DEBUG = self.config["api"].getboolean("debug", False)
         self.HOST = self.config["api"].get("host", "localhost")
