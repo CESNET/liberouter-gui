@@ -31,7 +31,7 @@ class Config(object):
         log.debug("Loading user configuration")
         self.config = configparser.ConfigParser()
 
-        res = self.config.read([self.DEFAULT_CONFIG, args['config']])
+        res = self.config.read([self.DEFAULT_CONFIG, 'config.ini', args['config']])
 
         # Check if config was loaded successfully, api section must be there
         if len(res) == 0:
