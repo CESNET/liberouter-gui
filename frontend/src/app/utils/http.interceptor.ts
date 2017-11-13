@@ -21,39 +21,26 @@ import { Request,
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Injectable()
 export class HttpInterceptor extends Http {
     private currentUser: Object;
-    private configPath: string = environment.configPath;
     private prefixUrl: string;
     private api: Object = {};
-    private promise;
 
     constructor(backend: XHRBackend,
         defaultOptions: RequestOptions,
         private router: Router,
+        private appconfig : AppConfigService
         ) {
         super(backend, defaultOptions);
-        //this.api = this.config['api'];
-
-        this.fetchConfig().then((data : string) => {
-            console.info("Initializing application");
-
-            let conf;
-
-            try {
-                conf = JSON.parse(data);
-                this.api = conf['api'];
-            } catch (e) {
-                console.log("Error");
-                console.log(e);
-                let el = document.getElementById("error");
-                el.innerText = "Failed to parse configuration file for front-end";
-                return;
-            }
+        // Obtain config from app config service
+        // We must fetch once more because Observables somehow don't work properly
+        this.appconfig.fetch().subscribe((data : string) => {
+            let conf = JSON.parse(data);
+            this.api = conf['api'];
         });
     }
 
@@ -93,6 +80,7 @@ export class HttpInterceptor extends Http {
     private catchErrors() {
         return (res: Response) => {
             if (res.status === 401) {
+                console.info("Unauthorized access, remove session and user and redirect to /login");
                 localStorage.removeItem('user');
                 localStorage.removeItem('session');
                 this.router.navigate(['/login']);
@@ -118,24 +106,4 @@ export class HttpInterceptor extends Http {
         return urlString + url;
     }
 
-    /**
-      * Retrieve config.json from a path specified in environment
-      *
-      * This cannot use the Angular HTTP module, therefore uses good old XMLHttpRequest
-      */
-    private fetchConfig() {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', environment.configPath);
-            xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(xhr.response);
-                } else {
-                    reject(xhr.statusText);
-                }
-            };
-            xhr.onerror = () => reject(xhr.statusText);
-            xhr.send();
-        });
-    }
 }
