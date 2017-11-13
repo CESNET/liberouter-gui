@@ -33,13 +33,13 @@ export class HttpInterceptor extends Http {
     constructor(backend: XHRBackend,
         defaultOptions: RequestOptions,
         private router: Router,
-        private appconfig : AppConfigService
+        private appconfig: AppConfigService
         ) {
         super(backend, defaultOptions);
         // Obtain config from app config service
         // We must fetch once more because Observables somehow don't work properly
-        this.appconfig.fetch().subscribe((data : string) => {
-            let conf = JSON.parse(data);
+        this.appconfig.fetch().subscribe((data: string) => {
+            const conf = JSON.parse(data);
             this.api = conf['api'];
         });
     }
@@ -80,7 +80,7 @@ export class HttpInterceptor extends Http {
     private catchErrors() {
         return (res: Response) => {
             if (res.status === 401) {
-                console.info("Unauthorized access, remove session and user and redirect to /login");
+                console.warn('Unauthorized access, remove session and user and redirect to /login');
                 localStorage.removeItem('user');
                 localStorage.removeItem('session');
                 this.router.navigate(['/login']);

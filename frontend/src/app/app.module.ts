@@ -48,7 +48,10 @@ const appRoutes: Routes = [
     }
 ];
 
-export function httpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions, router: Router, appconfig : AppConfigService) : HttpInterceptor {
+export function httpFactory(xhrBackend: XHRBackend,
+                            requestOptions: RequestOptions,
+                            router: Router,
+                            appconfig: AppConfigService): HttpInterceptor {
     return new HttpInterceptor(xhrBackend, requestOptions, router, appconfig);
 }
 

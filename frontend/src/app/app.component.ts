@@ -10,14 +10,14 @@ import { AuthService, ConfigService } from './services';
 })
 export class AppComponent implements OnInit {
     isLoginPage = false;
-    isOpen : Boolean = JSON.parse(localStorage.getItem("isOpen"));
+    isOpen: Boolean = JSON.parse(localStorage.getItem('isOpen'));
     user =  {};
     session_id = null;
     modules: Array<Object> = [];
     children: Array<Object>= [];
 
     constructor(private router: Router,
-                private route:ActivatedRoute,
+                private route: ActivatedRoute,
                 private auth: AuthService,
                 private config: ConfigService) {}
 
@@ -26,10 +26,9 @@ export class AppComponent implements OnInit {
         this.user = JSON.parse(localStorage.getItem('user'))
         this.session_id = localStorage.getItem('session_id')
         this.router.events.subscribe(val => {
-            /* the router will fire multiple events */
-            /* we only want to react if it's the final active route */
+            // the router will fire multiple events, we need NavigationEnd
+            // we only want to react if it's the final active route
             if (val instanceof NavigationEnd) {
-                /* the variable curUrlTree holds all params, queryParams, segments and fragments from the current (active) route */
                 if (this.router.url === '/setup') {
                     this.isLoginPage = true;
                 } else if (this.router.url === '/login') {
@@ -53,7 +52,7 @@ export class AppComponent implements OnInit {
     }
 
     getModules() {
-        for(const route of this.router.config ) {
+        for (const route of this.router.config ) {
             if (route.data && route.data['name']) {
                 route.data['path'] = route.path;
                 this.modules.push(route.data);
@@ -74,7 +73,6 @@ export class AppComponent implements OnInit {
     }
 
     toggleSidebar() {
-        console.log("click")
         this.isOpen = !this.isOpen;
         localStorage.setItem('isOpen', JSON.stringify(this.isOpen));
     }

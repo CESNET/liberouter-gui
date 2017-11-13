@@ -16,13 +16,13 @@ export class AppConfigService {
     public obs;
 
     constructor() {
-        this.fetch().subscribe((data : string) => {
+        this.fetch().subscribe((data: string) => {
             try {
                 this.config = JSON.parse(data);
             } catch (e) {
-                console.log("Error", e);
-                let el = document.getElementById("error");
-                el.innerText = "Failed to parse configuration file for front-end";
+                console.log('Error', e);
+                const el = document.getElementById('error');
+                el.innerText = 'Failed to parse configuration file for front-end';
                 return;
             }
         });

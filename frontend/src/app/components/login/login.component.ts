@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
         this.authService.checkSession().subscribe(
             data => { this.router.navigate([this.returnUrl]) },
-            error => { console.error("Invalid session") }
+            error => { console.error('Invalid session') }
         )
     }
 
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
                     try {
                         const body = JSON.parse(error['_body']);
                         this.setError(body['message']);
-                    } catch(err) {
+                    } catch (err) {
                         this.setError('Error logging in.');
                     }
                 }

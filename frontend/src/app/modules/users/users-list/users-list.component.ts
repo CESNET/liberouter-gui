@@ -46,7 +46,7 @@ export class UsersListComponent implements OnInit {
         this.user = user;
     }
 
-    removeUser(user:Object) {
+    removeUser(user: Object) {
         this.usersService.remove(user['id']).subscribe(
             data => {
                 this.listUsers();
