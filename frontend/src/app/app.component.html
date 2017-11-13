@@ -1,60 +1,54 @@
 <section class="main">
-	<div class="sidebar" *ngIf="!isLoginPage">
+	<div class="sidebar"
+        *ngIf="!isLoginPage"
+        [ngClass]="{'hidden' : !isOpen}"
+        >
 
 		<h1 class="user-area">
 			<img src="assets/img/logo.png" alt="Liberouter GUI">
 		</h1>
 
-		<div class="user-area ">
-			<div ngbDropdown class="d-flex flex-column align-content-center">
-				<a class="user" id="dropdownMenu1" ngbDropdownToggle>
-					{{ user?.username }}
-				</a>
-				<div ngbDropdownMenu class="dropdown-menu" aria-labelledby="userActions">
-					<button class="dropdown-item" routerLink="/logout">
-						Logout
-					</button>
-				</div>
-			</div>
-		</div> <!-- /user-area -->
-
 		<div class="menu d-flex flex-column align-content-center">
 			<ul>
-			<li
-				class="flex-container"
-				routerLink="/"
-				routerLinkActive="active-link"
-				[routerLinkActiveOptions]="{exact:true}">
-				<i class="fa fa-home" aria-hidden="true"></i>
-				<span class="flex-item">Home</span>
-			</li>
+                <!-- Home button -->
+                <li
+                    class="flex-container"
+                    routerLink="/"
+                    routerLinkActive="active-link"
+                    [routerLinkActiveOptions]="{exact:true}">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    <span class="flex-item">Home</span>
+                </li>
 
-			<li
-				*ngFor="let module of modules"
-				class="flex-container"
-				routerLink="{{module.path}}"
-				routerLinkActive="active-link"
-				>
-				<i class="fa" aria-hidden="true" *ngIf="module.icon != ''" [ngClass]="module.icon"></i>
-				<span class="flex-item">{{ module.name }}</span>
+                <!-- All modules buttons -->
+                <li
+                    *ngFor="let module of modules"
+                    class="flex-container"
+                    routerLink="{{module.path}}"
+                    routerLinkActive="active-link"
+                    >
+                    <i class="fa" aria-hidden="true" *ngIf="module.icon != ''" [ngClass]="module.icon"></i>
+                    <span class="flex-item">{{ module.name }}</span>
+                </li>
 
-				<!-- <div *ngIf="router.url == '/' + module.path" class="flex-item">
-					<div *ngFor="let child of children">
-						<span *ngIf="child.path != ''">
-							<span (click)="setPath([module.path,'protected'])">
-								{{ child.data.name }}
-							</span>
-						</span>
-
-					</div>
-				</div> -->
-			</li>
+                <!-- Logout button -->
+                <li
+                    class="flex-container"
+                    routerLink="/logout">
+                    <small>
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        <span class="flex-item">Logout</span>
+                    </small>
+                </li>
             </ul>
-		</div>
-	  <!--button md-button #closeStartButton (click)="start.close()">Close</button-->
-	</div>
+        </div> <!-- /menu -->
 
-	<div class="content" [ngClass]="{'no-sidebar' : isLoginPage}">
+      <div class="arrow" (click)="toggleSidebar()">
+          <i class="fa fa-angle-double-{{ isOpen ? 'left' : 'right' }}" aria-hidden="true"></i>
+      </div>
+    </div> <!-- /sidebar -->
+
+	<div class="content" [ngClass]="{'no-sidebar' : isLoginPage, 'hidden-sidebar' : !isOpen}">
 		<router-outlet></router-outlet>
 	</div>
 

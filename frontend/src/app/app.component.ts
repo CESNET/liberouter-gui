@@ -10,6 +10,7 @@ import { AuthService, ConfigService } from './services';
 })
 export class AppComponent implements OnInit {
     isLoginPage = false;
+    isOpen : Boolean = JSON.parse(localStorage.getItem("isOpen"));
     user =  {};
     session_id = null;
     modules: Array<Object> = [];
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
                 private config: ConfigService) {}
 
     ngOnInit() {
+        this.getIsOpen();
         this.user = JSON.parse(localStorage.getItem('user'))
         this.session_id = localStorage.getItem('session_id')
         this.router.events.subscribe(val => {
@@ -59,8 +61,22 @@ export class AppComponent implements OnInit {
         }
     }
 
+    private getIsOpen() {
+        if (this.isOpen === null) {
+            this.isOpen = true;
+        }
+
+        localStorage.setItem('isOpen', JSON.stringify(this.isOpen));
+    }
+
     setPath(path: Array<String>) {
         this.router.navigate(path);
+    }
+
+    toggleSidebar() {
+        console.log("click")
+        this.isOpen = !this.isOpen;
+        localStorage.setItem('isOpen', JSON.stringify(this.isOpen));
     }
 
     private logout() {
