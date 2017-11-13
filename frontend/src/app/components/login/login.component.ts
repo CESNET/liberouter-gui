@@ -33,14 +33,11 @@ export class LoginComponent implements OnInit {
 
         // check if the user is logged in and if so redirect them to HP
         const session = localStorage.getItem('session');
-        console.log(session)
 
-        if (session != null) {
-            this.authService.checkSession().subscribe(
-                data => { this.router.navigate([this.returnUrl]) },
-                error => { console.error("Invalid session") }
-            )
-        }
+        this.authService.checkSession().subscribe(
+            data => { this.router.navigate([this.returnUrl]) },
+            error => { console.error("Invalid session") }
+        )
     }
 
     setError(msg: string) {
