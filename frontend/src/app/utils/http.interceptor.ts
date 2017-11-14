@@ -39,8 +39,7 @@ export class HttpInterceptor extends Http {
         // Obtain config from app config service
         // We must fetch once more because Observables somehow don't work properly
         this.appconfig.fetch().subscribe((data: string) => {
-            const conf = JSON.parse(data);
-            this.api = conf['api'];
+            this.api = data['api'];
         });
     }
 
