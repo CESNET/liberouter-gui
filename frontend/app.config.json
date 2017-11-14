@@ -1,0 +1,10 @@
+{
+    "logo" : "assets/logo.png",
+    "name" : "Liberouter GUI",
+    "api" : {
+		"url" : "/libapi",
+		"host" : null,
+		"port" : null,
+		"proto" : null
+	}
+}

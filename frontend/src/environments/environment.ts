@@ -8,7 +8,7 @@ export const environment = {
   /**
   	* Path to configuration file
   	*/
-  configPath : 'assets/config-sample.json',
+  configPath : 'assets/config.json',
   /**
   	* Used only when fetching config.json failed
   	*/

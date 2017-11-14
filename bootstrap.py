@@ -49,19 +49,6 @@ class Unify():
             dst[key] = add[key]
         return conflicts
 
-def recursive_glob(rootdir='.', pattern='*'):
-	"""Search recursively for files matching a specified pattern.
-	Adapted from http://stackoverflow.com/questions/2186525/use-a-glob-to-find-files-recursively-in-python
-	"""
-
-	matches = []
-	for root, dirnames, filenames in os.walk(rootdir):
-	  for filename in fnmatch.filter(filenames, pattern):
-		  matches.append(os.path.join(root, filename))
-
-	return matches
-
-
 def mergeNpmDeps(base, module, modulename):
     """
     Adds dependencies from module into base and reports any conflicts that happen.
@@ -178,7 +165,8 @@ def updateModuleList(moduleList, config, modulename):
     moduleList.append({
         'folder': modulename,
         'class': config['module']['class'],
-        'file': config['module']['file']
+        'file': config['module']['file'],
+        'name' : config['module']['name']
         })
     return True
 
@@ -288,6 +276,27 @@ def saveDependencies(deps):
         for key, value in deps[Deps.PIP].items():
             fh.write(key + '==' + value + '\n')
 
+def applicationConfig(modules):
+    """
+    Create assets/config.json file with base of app.config.json
+    """
+    with open(os.path.join(BASE_PATH, 'frontend/app.config.json')) as f:
+        config = json.load(f)
+        print(config)
+
+        if 'modules' in config:
+            log.warn("'modules' already present in config, skipping")
+            return
+
+        config['modules'] = dict()
+
+        for module in modules:
+            print(module)
+            config['modules'][module['name']] = { 'enabled' : True }
+
+        with open(os.path.join(BASE_PATH, 'frontend/src/assets/config.json'), 'w+') as c:
+            json.dump(config, c, indent = 4)
+
 # =====================
 # MAIN CODE STARTS HERE
 # =====================
@@ -310,7 +319,12 @@ if __name__ == "__main__":
         bootstrapModules(depsBase, moduleList)
 
         # Users module is always present
-        moduleList.append({'folder': 'users', 'class': 'UsersModule', 'file': 'users.module.ts'})
+        moduleList.append({
+            'folder': 'users',
+            'class': 'UsersModule',
+            'file': 'users.module.ts',
+            'name' : 'users'
+            })
 
         if args["with_mongo"] or args["with_sql"]:
             # Remove mongo or flask-sqlalchemy if one of the args is present
@@ -323,6 +337,7 @@ if __name__ == "__main__":
                 del depsBase[Deps.PIP]["Flask-SQLAlchemy"]
 
         registerModules(moduleList)
+        applicationConfig(moduleList)
         saveDependencies(depsBase)
 
     except (OSError, IOError) as e:
