@@ -16,9 +16,9 @@ export class AppConfigService {
     public obs;
 
     constructor() {
-        this.fetch().subscribe((data: string) => {
+        this.obs = this.fetch().subscribe((data: string) => {
             try {
-                this.config = JSON.parse(data);
+                this.config = data;
             } catch (e) {
                 console.log('Error', e);
                 const el = document.getElementById('error');
@@ -32,7 +32,15 @@ export class AppConfigService {
      * Config getter
      */
     public get() {
-        return this.config;
+        if (this.config) {
+            return Observable.of(this.config);
+        } else {
+            return this.fetch();
+        }
+    }
+
+    public set(config) {
+        this.config = config;
     }
 
     /**
@@ -46,7 +54,7 @@ export class AppConfigService {
             xhr.open('GET', environment.configPath);
             xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(xhr.response);
+                    resolve(JSON.parse(xhr.response));
                 } else {
                     reject(xhr.statusText);
                 }
