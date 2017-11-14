@@ -1,40 +1,45 @@
 <section class="main">
 	<div class="sidebar" *ngIf="!isLoginPage" [ngClass]="{'hidden' : !isOpen}" >
 		<h1 class="user-area">
-			<img src="assets/img/logo.png" alt="Liberouter GUI">
+			<img *ngIf="logo?.src" [src]="logo?.src" [alt]="logo?.alt">
 		</h1>
 
 		<div class="menu d-flex flex-column align-content-center">
 			<ul>
                 <!-- Home button -->
-                <li
-                    class="flex-container"
-                    routerLink="/"
-                    routerLinkActive="active-link"
-                    [routerLinkActiveOptions]="{exact:true}">
-                    <i class="fa fa-home" aria-hidden="true"></i>
-                    <span class="flex-item">Home</span>
+                <li>
+                    <div
+                        class="flex-container"
+                        routerLink="/"
+                        routerLinkActive="active-link"
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span class="flex-item">Home</span>
+                    </div>
                 </li>
 
                 <!-- All modules buttons -->
-                <li
-                    *ngFor="let module of modules"
-                    class="flex-container"
-                    routerLink="{{module.path}}"
-                    routerLinkActive="active-link"
-                    >
-                    <i class="fa" aria-hidden="true" *ngIf="module.icon != ''" [ngClass]="module.icon"></i>
-                    <span class="flex-item">{{ module.name }}</span>
+                <li *ngFor="let module of modules">
+                    <div
+                        *ngIf="enabledModules[module.path]?.enabled"
+                        class="flex-container"
+                        routerLink="{{module.path}}"
+                        routerLinkActive="active-link">
+                            <i class="fa" aria-hidden="true" *ngIf="module.icon != ''" [ngClass]="module.icon"></i>
+                            <span class="flex-item">{{ module.name }}</span>
+                    </div>
                 </li>
 
                 <!-- Logout button -->
-                <li
-                    class="flex-container"
-                    routerLink="/logout">
-                    <small>
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
-                        <span class="flex-item">Logout</span>
-                    </small>
+                <li>
+                    <div
+                        class="flex-container"
+                        routerLink="/logout">
+                        <small>
+                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            <span class="flex-item">Logout</span>
+                        </small>
+                    </div>
                 </li>
             </ul>
         </div> <!-- /menu -->

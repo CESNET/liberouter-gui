@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService, ConfigService } from './services';
+import { AppConfigService } from './services/app-config.service';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -14,17 +16,21 @@ export class AppComponent implements OnInit {
     user =  {};
     session_id = null;
     modules: Array<Object> = [];
+    enabledModules : Object = {};
     children: Array<Object>= [];
+    logo;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 private auth: AuthService,
-                private config: ConfigService) {}
+                private config: ConfigService,
+                private appConfig : AppConfigService,
+                private titleService: Title) {}
 
     ngOnInit() {
         this.getIsOpen();
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.session_id = localStorage.getItem('session_id')
+        this.user = JSON.parse(localStorage.getItem('user'));
+        this.session_id = localStorage.getItem('session_id');
         this.router.events.subscribe(val => {
             // the router will fire multiple events, we need NavigationEnd
             // we only want to react if it's the final active route
@@ -58,6 +64,14 @@ export class AppComponent implements OnInit {
                 this.modules.push(route.data);
             }
         }
+        this.appConfig.get().subscribe(data => {
+            this.enabledModules = data['modules'];
+            this.logo = {
+                src : data['logo'],
+                alt : data['name']
+            }
+            this.titleService.setTitle(data['name'])
+        })
     }
 
     private getIsOpen() {
