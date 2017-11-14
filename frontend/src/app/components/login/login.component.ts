@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Component({
   selector: 'app-login',
@@ -21,13 +22,21 @@ export class LoginComponent implements OnInit {
     formError = false;
     formErrorMsg = '';
     returnUrl: String;
+    logo;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authService: AuthService) {}
+        private authService: AuthService,
+        private appConfig : AppConfigService) {}
 
     ngOnInit() {
+        this.appConfig.get().subscribe(data => {
+            this.logo = {
+                src : data['logo'],
+                alt : data['name']
+            }
+        });
         // fetch the return URL and use it if set
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
