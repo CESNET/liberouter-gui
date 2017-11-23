@@ -6,6 +6,7 @@ from getpass import getpass
 from flask import request
 from bson import json_util
 import logging
+import os
 
 from liberouterapi import app, config
 from liberouterapi.modules.module import Module
