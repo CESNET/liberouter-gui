@@ -4,9 +4,9 @@ import logging
 
 from liberouterapi import auth, db
 from liberouterapi.dbConnector import dbConnector
-from .module import Module
-from ..user import User, UserException
-from ..role import Role
+from liberouterapi.modules.module import Module
+from liberouterapi.user import User, UserException
+from liberouterapi.role import Role
 
 log = logging.getLogger(__name__)
 
