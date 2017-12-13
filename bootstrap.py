@@ -187,7 +187,10 @@ def bootstrapModules(basedeps, moduleList):
     """
     log.info("Bootstrapping modules")
     #modules = getImmediateSubdirs('modules')
-    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules', '*/*config.json'))
+    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules', '**/*config.json'), recursive=True)
+
+    if os.path.join(BASE_PATH,"modules/app.config.json"):
+        cfgfiles.remove(os.path.join(BASE_PATH,"modules/app.config.json"))
 
     for cfgpath in cfgfiles:
         try:
@@ -294,6 +297,13 @@ def applicationConfig(modules):
         if 'name' not in config:
             log.error('Missing key "name" in modules/app.config.json')
             raise KeyError('missing "name" in app.config.json')
+
+        if 'assets' not in config:
+            log.error('Missing key "assets" in modules/app.config.json')
+            raise KeyError('missing "assets" in app.config.json')
+
+        createSymlink(os.path.join(BASE_PATH, 'modules', config['assets']['input']),
+                os.path.join(BASE_PATH, 'frontend/src/assets', config['assets']['output']))
 
         if 'modules' in config:
             log.warn("'modules' already present in config, skipping")
