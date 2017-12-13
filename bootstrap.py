@@ -282,19 +282,26 @@ def applicationConfig(modules):
     """
     Create assets/config.json file with base of app.config.json
     """
-    with open(os.path.join(BASE_PATH, 'frontend/app.config.json')) as f:
+    log.info("Creating application config")
+    with open(os.path.join(BASE_PATH, 'modules/app.config.json')) as f:
+        # Open module/app.config.json and load it
+        # Perform key checks for created dictionary
         config = json.load(f)
-        print(config)
+
+        if 'logo' not in config:
+            log.error('Missing key "logo" in modules/app.config.json')
+            raise KeyError('missing "logo" in app.config.json')
+        if 'name' not in config:
+            log.error('Missing key "name" in modules/app.config.json')
+            raise KeyError('missing "name" in app.config.json')
 
         if 'modules' in config:
             log.warn("'modules' already present in config, skipping")
-            return
+        else:
+            config['modules'] = dict()
 
-        config['modules'] = dict()
-
-        for module in modules:
-            print(module)
-            config['modules'][module['name']] = { 'enabled' : True }
+            for module in modules:
+                config['modules'][module['name']] = { 'enabled' : True }
 
         with open(os.path.join(BASE_PATH, 'frontend/src/assets/config.json'), 'w+') as c:
             log.info("Exporting application config")
