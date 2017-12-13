@@ -14,7 +14,7 @@
 			        "input": "./assets/",
 			        "output": "./assets/"
 			    },
-				"favicon.ico",
+				"favicon.png",
 				".htaccess",
 				"../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
 			],
