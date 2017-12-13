@@ -299,10 +299,9 @@ def applicationConfig(modules):
             raise KeyError('missing "name" in app.config.json')
 
         if 'assets' not in config:
-            log.error('Missing key "assets" in modules/app.config.json')
-            raise KeyError('missing "assets" in app.config.json')
-
-        createSymlink(os.path.join(BASE_PATH, 'modules', config['assets']['input']),
+            log.warn('Missing key "assets" in modules/app.config.json, skipping assets inclusion')
+        else:
+            createSymlink(os.path.join(BASE_PATH, 'modules', config['assets']['input']),
                 os.path.join(BASE_PATH, 'frontend/src/assets', config['assets']['output']))
 
         if 'modules' in config:
