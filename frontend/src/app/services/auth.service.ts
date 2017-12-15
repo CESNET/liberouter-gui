@@ -22,7 +22,7 @@ export class AuthService {
                 }
 
                 if (resp) {
-                    // store user details and token in local storage to keep user logged in between page refreshes
+                    // Store user details and token in local storage
                     localStorage.setItem('session', resp['session_id']);
                     localStorage.setItem('user', JSON.stringify(resp['user']));
                 }

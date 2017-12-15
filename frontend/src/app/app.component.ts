@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService, ConfigService } from './services';
+import { AppConfigService } from './services/app-config.service';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -10,24 +12,29 @@ import { AuthService, ConfigService } from './services';
 })
 export class AppComponent implements OnInit {
     isLoginPage = false;
+    isOpen: Boolean = JSON.parse(localStorage.getItem('isOpen'));
     user =  {};
     session_id = null;
     modules: Array<Object> = [];
+    enabledModules : Object = {};
     children: Array<Object>= [];
+    logo;
 
     constructor(private router: Router,
-                private route:ActivatedRoute,
+                private route: ActivatedRoute,
                 private auth: AuthService,
-                private config: ConfigService) {}
+                private config: ConfigService,
+                private appConfig : AppConfigService,
+                private titleService: Title) {}
 
     ngOnInit() {
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.session_id = localStorage.getItem('session_id')
+        this.getIsOpen();
+        this.user = JSON.parse(localStorage.getItem('user'));
+        this.session_id = localStorage.getItem('session_id');
         this.router.events.subscribe(val => {
-            /* the router will fire multiple events */
-            /* we only want to react if it's the final active route */
+            // the router will fire multiple events, we need NavigationEnd
+            // we only want to react if it's the final active route
             if (val instanceof NavigationEnd) {
-                /* the variable curUrlTree holds all params, queryParams, segments and fragments from the current (active) route */
                 if (this.router.url === '/setup') {
                     this.isLoginPage = true;
                 } else if (this.router.url === '/login') {
@@ -51,16 +58,37 @@ export class AppComponent implements OnInit {
     }
 
     getModules() {
-        for(const route of this.router.config ) {
+        for (const route of this.router.config ) {
             if (route.data && route.data['name']) {
                 route.data['path'] = route.path;
                 this.modules.push(route.data);
             }
         }
+        this.appConfig.get().subscribe(data => {
+            this.enabledModules = data['modules'];
+            this.logo = {
+                src : data['logo'],
+                alt : data['name']
+            }
+            this.titleService.setTitle(data['name'])
+        })
+    }
+
+    private getIsOpen() {
+        if (this.isOpen === null) {
+            this.isOpen = true;
+        }
+
+        localStorage.setItem('isOpen', JSON.stringify(this.isOpen));
     }
 
     setPath(path: Array<String>) {
         this.router.navigate(path);
+    }
+
+    toggleSidebar() {
+        this.isOpen = !this.isOpen;
+        localStorage.setItem('isOpen', JSON.stringify(this.isOpen));
     }
 
     private logout() {

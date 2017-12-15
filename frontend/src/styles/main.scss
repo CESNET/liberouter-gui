@@ -58,6 +58,10 @@ section.main {
 			width: 100%;
 			padding: 0;
 		}
+		&.hidden-sidebar {
+		    margin: 0;
+		    width: 100%;
+		}
 	}
 
 	.sidebar {
@@ -69,7 +73,7 @@ section.main {
 		position: fixed;
 		top: 0;
 		left: 0;
-		overflow: hidden;
+		overflow: visible;
 		display: block;
 		float: left;
 
@@ -79,15 +83,20 @@ section.main {
 			margin: 0.5em auto;
 		}
 
+		&.hidden {
+		    left: -150px;
+		}
+
 		.menu {
 			ul {
 				list-style-type: none;
 				padding: 0!important;
 				width: 100%;
 
-				li {
+				li div {
 					padding: 1em 0 1em 1em;
 					text-align: left;
+					cursor: pointer;
 
 					&:hover {
 						background: $dark-menu-active;
@@ -115,6 +124,17 @@ section.main {
 				cursor: pointer;
 				text-align: center;
 			}
+		}
+
+		.arrow {
+		    position: absolute;
+            right: -14px;
+            z-index: 9999;
+            color: $light-gray;
+            background: $dark-menu;
+            top: calc(50% - 16px);
+            padding: 5px 3px 7px 4px;
+            cursor: pointer;
 		}
 	}
 }

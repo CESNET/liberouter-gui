@@ -14,7 +14,8 @@
  * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
  */
 
-// Solution for shim reflect metadata: https://github.com/angular/angular-cli/issues/4335#issuecomment-276942165
+// Solution for shim reflect metadata:
+// https://github.com/angular/angular-cli/issues/4335#issuecomment-276942165
 import 'zone.js';
 import 'reflect-metadata';
 

@@ -5,12 +5,16 @@ import pkgutil
 from getpass import getpass
 from flask import request
 from bson import json_util
+import logging
+import os
 
 from liberouterapi import app, config
 from liberouterapi.modules.module import Module
 from .error import ApiException
 from .dbConnector import dbConnector
 from .Auth import Auth
+
+log = logging.getLogger(__name__)
 
 def routes():
     """
@@ -30,14 +34,20 @@ def import_modules():
     """
     Import all modules' Blueprints to register them as Routes
     """
-    modules = pkgutil.iter_modules([config['api']['module_path']])
+    modules = pkgutil.iter_modules([
+        config['api']['module_path'],
+        os.path.join(os.path.dirname(__file__), 'modules')]
+        )
+
+    # Append module folders to syspath so it can be imported easily
+    sys.path.append(os.path.join(
+        os.getcwd(), config['api']['module_path']))
+    sys.path.append(os.path.join(os.path.dirname(__file__), 'modules'))
 
     for importer, mod_name, _ in modules:
         if mod_name not in sys.modules:
-            loaded_mod = __import__("liberouterapi." +
-                    config['api']['modules'].split('/')[-1] + "." +  mod_name,
-                    fromlist=[str(mod_name)])
-            print("   > Imported module \"" + mod_name + "\"")
+            loaded_mod = __import__(mod_name, fromlist=[str(mod_name)])
+            log.info("Imported module '%s'" % mod_name)
 
             for obj in vars(loaded_mod).values():
                 if isinstance(obj, Module):
@@ -73,7 +83,7 @@ def check_users():
     """
     db = dbConnector()
     if db.count("users") == 0:
-        print("\033[1m" + "# Warning: * No users found *" + "\033[0m")
+        log.warn("\033[1m" + "* No users found *" + "\033[0m")
         app.add_url_rule('/setup', view_func = setup, methods=['POST'])
         config.setup = True
 
@@ -85,8 +95,7 @@ def handle_invalid_usage(error):
     """
     Handle ApiException as HTTP errors and react to its specification inside
     """
-    print("Caught error!")
-    print(error.to_dict())
+    log.warn("Caught ApiException. Reason: {}".format(str(error)))
     response = error.to_dict()
     return response, error.status_code
 

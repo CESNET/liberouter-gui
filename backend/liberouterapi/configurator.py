@@ -31,7 +31,7 @@ class Config(object):
         log.debug("Loading user configuration")
         self.config = configparser.ConfigParser()
 
-        res = self.config.read([self.DEFAULT_CONFIG, args['config']])
+        res = self.config.read([self.DEFAULT_CONFIG, 'config.ini', args['config']])
 
         # Check if config was loaded successfully, api section must be there
         if len(res) == 0:
@@ -51,7 +51,7 @@ class Config(object):
 
         # Create module path for module importing
         self.config.set("api", "module_path",
-                os.path.dirname(__file__) + self.config["api"].get("modules", "/modules"))
+                os.path.join(os.getcwd(), self.config["api"].get("modules", "./modules")))
 
         self.create_urls()
 
@@ -98,8 +98,8 @@ class Config(object):
             args = vars(parser.parse_args())
 
         except Exception as e:
-            print(e)
-            print("Failed to parse arguments")
+            log.error(e)
+            log.error("Failed to parse arguments")
             exit(1)
         return args
 

@@ -29,7 +29,9 @@ export class UsersEditComponent implements OnInit {
         {value: 255, viewValue: 'Guest'}
     ];
 
-    constructor(private usersService: UsersService, private route: ActivatedRoute, private router: Router) {}
+    constructor(private usersService: UsersService,
+                private route: ActivatedRoute,
+                private router: Router) {}
 
     ngOnInit() {
         this.route.params.subscribe(params => {

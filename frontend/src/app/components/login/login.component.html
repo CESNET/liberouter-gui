@@ -2,7 +2,7 @@
 	<section class="login box">
 		<h2>
 			<span>Liberouter GUI</span>
-			<img src="assets/img/logo.png" alt="Liberouter logo" />
+			<img [src]="logo?.src" [alt]="logo?.alt" *ngIf="logo?.src" />
 		</h2>
 
 		<form>

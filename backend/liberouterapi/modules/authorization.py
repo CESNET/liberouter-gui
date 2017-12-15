@@ -2,9 +2,9 @@ from flask import request
 from bson import json_util
 
 from liberouterapi import auth, db
-from .module import Module
-from ..Auth import AuthException
-from ..user import User
+from liberouterapi.modules.module import Module
+from liberouterapi.Auth import AuthException
+from liberouterapi.user import User
 
 au = Module('authorization', __name__, url_prefix='/authorization', no_version=True)
 

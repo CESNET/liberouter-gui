@@ -16,6 +16,8 @@ import { NullComponent } from './components/';
 import { AuthGuard, HttpInterceptor } from './utils';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
+import { AppConfigService } from 'app/services/app-config.service';
+
 import { modules } from './modules';
 
 /**
@@ -46,8 +48,11 @@ const appRoutes: Routes = [
     }
 ];
 
-export function httpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions, router: Router) : HttpInterceptor {
-    return new HttpInterceptor(xhrBackend, requestOptions, router);
+export function httpFactory(xhrBackend: XHRBackend,
+                            requestOptions: RequestOptions,
+                            router: Router,
+                            appconfig: AppConfigService): HttpInterceptor {
+    return new HttpInterceptor(xhrBackend, requestOptions, router, appconfig);
 }
 
 /**
@@ -74,10 +79,11 @@ export function httpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptio
   providers: [
     AuthGuard,
     SafePipe,
+    AppConfigService,
     {
         provide : Http,
         useFactory: (httpFactory),
-        deps: [XHRBackend, RequestOptions, Router]
+        deps: [XHRBackend, RequestOptions, Router, AppConfigService]
     }
   ],
   bootstrap: [AppComponent]

@@ -22,7 +22,7 @@ export class ConfigService {
         return new Promise((resolve, reject) => {
             this.http.get(this.baseUrl)
                 .map( res => res.json() )
-                .catch((error: any):any => {
+                .catch((error: any): any => {
                     console.log(`Configuration could not be read`);
                     reject(true);
                     return Observable.throw(error.json().error || 'Server error');
