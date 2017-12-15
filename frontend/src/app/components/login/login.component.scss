@@ -1,23 +1,18 @@
 .login-container {
 	height: 100%;
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c5deea+0,066dab+100 */
-background: #c5deea; /* Old browsers */
-background: -moz-linear-gradient(-45deg, #c5deea 0%, #066dab 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(-45deg, #c5deea 0%,#066dab 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(135deg, #c5deea 0%,#066dab 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	background-color: #FAFAFA;
 }
 
 .login {
-	width: 25%;
-	max-width: 300px;
-	max-height: 300px;
+	width: 22em;
 	-webkit-box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
 	box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
-	padding: 2em;
+	padding: 0em;
 
 	h2 {
-		padding-bottom: 0.25em;
+		padding: 0em 2em 0em 2em;
+		background-color: #313747;
+		color: #FAFAFA;
 		span {
 			display: none;
 		}
@@ -25,6 +20,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', end
 		img {
 			display: block;
 			width: 100%;
+		}
+	}
+
+	form {
+		padding: 1em 2em 2em 2em;
+		button {
+			cursor: pointer;
+			background-color: #313747;
+			border-color: #313747;
+			color: #FAFAFA;
+		}
+		button:hover {
+			background-color: #3b4257;
 		}
 	}
 }
