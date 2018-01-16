@@ -1,20 +1,27 @@
 .login-container {
 	height: 100%;
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c5deea+0,066dab+100 */
-background: #c5deea; /* Old browsers */
-background: -moz-linear-gradient(-45deg, #c5deea 0%, #066dab 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(-45deg, #c5deea 0%,#066dab 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(135deg, #c5deea 0%,#066dab 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6ec957+0,0a8a4e+99 */
+	background: #6ec957; /* Old browsers */
+	background: -moz-linear-gradient(-45deg, #6ec957 0%, #0a8a4e 99%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(-45deg, #6ec957 0%,#0a8a4e 99%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(135deg, #6ec957 0%,#0a8a4e 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6ec957', endColorstr='#0a8a4e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 .login {
+
 	width: 25%;
 	max-width: 300px;
 	max-height: 300px;
-	-webkit-box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
-	box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 5px 10px 0 rgba(0,0,0,0.25);
+	box-shadow: 0 5px 10px 0 rgba(0,0,0,0.25);
 	padding: 2em;
+
+	.btn-login{
+		background: #44af53;
+		border-color: darken(#44af53, 5%);
+		cursor: pointer;
+	}
 
 	h2 {
 		padding-bottom: 0.25em;

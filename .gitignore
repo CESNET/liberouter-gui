@@ -100,3 +100,4 @@ dist
 # Ignore local configs
 config.ini
 config.ts
+.idea/

@@ -32,7 +32,7 @@
 				</div>
 			</div>
 
-			<button type="submit" class="btn btn-primary btn-block" (click)="login()" [disabled]="loading">{{ loginBtn }}</button>
+			<button type="submit" class="btn btn-primary btn-block btn-login" (click)="login()" [disabled]="loading">{{ loginBtn }}</button>
 
 			<div class="error-message" *ngIf="formError">
 				Error: {{ formErrorMsg }}
