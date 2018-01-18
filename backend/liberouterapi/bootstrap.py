@@ -1,10 +1,10 @@
 from __future__ import print_function
 
 import sys
+import json
 import pkgutil
 from getpass import getpass
 from flask import request
-from bson import json_util
 import logging
 import os
 
@@ -136,6 +136,6 @@ def setup():
         res = unprotected_add_user(user)
 
         config.setup = False
-        return(json_util.dumps({ "user_id" : res}))
+        return(json.dumps({ "user_id" : res}))
     except Exception as e:
         raise ApiException({"error" : str(e)})
