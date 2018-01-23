@@ -40,7 +40,6 @@ from .role import Role
 
 # System tools
 import ssl
-from bson import json_util
 
 if config["api"].getboolean("ssl", False):
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)

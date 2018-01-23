@@ -1,3 +1,4 @@
+import json
 import bcrypt
 from functools import wraps
 from flask import request
@@ -43,7 +44,7 @@ class Auth(object):
             'code' : code,
             'description' : self.errors[str(code)]
         }
-        res = json_util.dumps(msg)
+        res = json.dumps(msg)
         return msg
 
     def login(self, user):

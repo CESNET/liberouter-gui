@@ -1,5 +1,5 @@
+import json
 from flask import request
-from bson import json_util
 import logging
 
 from liberouterapi import auth, db
@@ -28,13 +28,15 @@ def get_users():
     # Remove password hash from the resulting query
     for user in res:
         del user["password"]
-    return(json_util.dumps(res))
+    return(json.dumps(res))
+
 
 @auth.required()
 def get_user(user_id):
     user = db.get("users", "id", user_id)
     user.pop('password', None)
-    return(json_util.dumps(user))
+    return(json.dumps(user))
+
 
 def unprotected_add_user(user):
     """
@@ -67,7 +69,8 @@ def add_user():
     user.user_id = str(unprotected_add_user(user))
     user.password = None
 
-    return(json_util.dumps(user.to_dict()))
+    return(json.dumps(user.to_dict()))
+
 
 @auth.required(Role.admin)
 def remove_user(user_id):
@@ -89,7 +92,8 @@ def remove_user(user_id):
 
     user.password = None
 
-    return(json_util.dumps(user.to_dict()))
+    return(json.dumps(user.to_dict()))
+
 
 @auth.required()
 def edit_user(user_id):
@@ -139,7 +143,8 @@ def edit_user(user_id):
     # Remove password hash from the response
     del res['password']
 
-    return(json_util.dumps(res))
+    return(json.dumps(res))
+
 
 users.add_url_rule('', view_func=get_users, methods=['GET'])
 users.add_url_rule('', view_func=add_user, methods=['POST'])
