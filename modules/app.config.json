@@ -1,14 +1,24 @@
 {
-    "logo" : "assets/img/logo.png",
-    "name" : "Liberouter GUI",
-    "assets" : {
-        "input" : "example/assets",
-        "output" : "example"
-    },
-    "api" : {
-		"url" : "/libapi",
-		"host" : null,
-		"port" : null,
-		"proto" : null
-	}
+  "logo": "assets/img/logo.png",
+  "name": "Liberouter GUI",
+  "colorTheme": {
+    "colorMain": "#313747",
+    "colorHighlight": "#3b4257",
+    "colorBackground": "#fafafa",
+    "colorText": "#111",
+    "colorTextInverse": "#fff",
+    "colorLink": "#111",
+    "colorLinkHover": "#333",
+    "colorHeading": "#555"
+  },
+  "assets": {
+    "input": "example/assets",
+    "output": "example"
+  },
+  "api": {
+    "url": "/libapi",
+    "host": null,
+    "port": null,
+    "proto": null
+  }
 }

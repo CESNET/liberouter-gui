@@ -1,18 +1,21 @@
+@import "../../../styles/colors";
+
 .login-container {
 	height: 100%;
-	background-color: #FAFAFA;
+	background-color: $colorBackground;
 }
+
 
 .login {
 	width: 22em;
-	-webkit-box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
-	box-shadow: 0 0 15px 0px rgba(0,0,0,0.5);
-	padding: 0em;
+	-webkit-box-shadow: 0 0 15px 0 transparentize($black, 0.5);
+	box-shadow: 0 0 15px 0 rgba(0,0,0,0.5);
+	padding: 0;
 
 	h2 {
-		padding: 0em 2em 0em 2em;
-		background-color: #313747;
-		color: #FAFAFA;
+		padding: 0 2em 0 2em;
+		background-color: $colorMain;
+		color: $colorBackground;
 		span {
 			display: none;
 		}
@@ -27,12 +30,12 @@
 		padding: 1em 2em 2em 2em;
 		button {
 			cursor: pointer;
-			background-color: #313747;
-			border-color: #313747;
-			color: #FAFAFA;
+			background-color: $colorMain;
+			border-color: $colorMain;
+			color: $colorBackground;
 		}
 		button:hover {
-			background-color: #3b4257;
+			background-color: $colorHighlight;
 		}
 	}
 }
