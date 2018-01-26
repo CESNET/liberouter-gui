@@ -282,6 +282,34 @@ def saveDependencies(deps):
         for key, value in deps[Deps.PIP].items():
             fh.write(key + '==' + value + '\n')
 
+
+def loadColors(filename, colors = {}):
+    """
+    Create list of variables from the given scss file. Used to load predefined colors
+    """
+    log.info("Loading application colors from " + filename)
+    with open(filename) as f:
+        for line in f:
+            if line[0] != '$':
+                continue
+            colon = line.find(':')
+            semicolon = line.find(';')
+            if colon == -1 or semicolon == -1:
+                continue
+            colors[line[0:colon]] = line[colon + 1:semicolon]
+    return colors
+
+
+def saveColors(filename, colors):
+    """
+    Store colors into the file as SCSS variables
+    """
+    log.info("storing colors SCSS variables into " + filename)
+    with open(filename, 'w') as f:
+        for color in colors:
+            f.write(color + ': ' + colors[color] + ';\n')
+
+
 def applicationConfig(modules):
     """
     Create assets/config.json file with base of app.config.json
@@ -299,6 +327,13 @@ def applicationConfig(modules):
             log.error('Missing key "name" in modules/app.config.json')
             raise KeyError('missing "name" in app.config.json')
 
+        colors = loadColors(os.path.join(BASE_PATH, 'frontend/src/styles/_colors_template.scss'))
+        if 'colorTheme' in config:
+            for newColor in config['colorTheme']:
+                colors['$' + newColor] = config['colorTheme'][newColor]
+        colorsSCSS = os.path.join(BASE_PATH, 'frontend/src/styles/_colors.scss')
+        saveColors(colorsSCSS, colors)
+
         if 'assets' not in config:
             log.warn('Missing key "assets" in modules/app.config.json, skipping assets inclusion')
         else:
@@ -312,6 +347,7 @@ def applicationConfig(modules):
 
             for module in modules:
                 config['modules'][module['name']] = { 'enabled' : True }
+                createSymlink(colorsSCSS, os.path.join(BASE_PATH, 'frontend/src/app/modules', module['name'], '_colors.scss'))
 
         with open(os.path.join(BASE_PATH, 'frontend/src/assets/config.json'), 'w+') as c:
             log.info("Exporting application config")

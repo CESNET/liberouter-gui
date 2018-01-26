@@ -14,7 +14,7 @@ html, body {
 
 	font-size: $font-size;
 	font-family: $font-family;
-	background-color: darken($white, 2%);
+	background-color: $colorBackground;
 }
 
 .btn{
@@ -54,7 +54,7 @@ section.main {
 		margin-left: 150px;
 	    width: calc(100% - 150px);
 	    height: 100%;
-		background-color: darken($colorBackground, 2%);
+		background-color: $colorBackground;
 
 		&.no-sidebar {
 			margin: 0;
@@ -102,7 +102,7 @@ section.main {
 					cursor: pointer;
 
 					&:hover {
-						background: lighten($colorMain, 25%);
+						background: $colorHighlight;
 					}
 
 					i.fa {
@@ -113,9 +113,9 @@ section.main {
 
 				.active-link {
 					//border-left: 3px solid #1f6eaa;
-					-webkit-box-shadow:inset 3px 0 0 0 lighten($colorMain, 50%);
-					box-shadow:inset 3px 0 0 0 lighten($colorMain, 50%);
-					background: lighten($colorMain, 15%);
+					-webkit-box-shadow:inset 3px 0 0 0 $colorSelected2;
+					box-shadow:inset 3px 0 0 0 $colorSelected2;
+					background: $colorSelected;
 				}
 			}
 		}

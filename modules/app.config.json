@@ -3,7 +3,9 @@
   "name": "Liberouter GUI",
   "colorTheme": {
     "colorMain": "#313747",
-    "colorHighlight": "#3b4257",
+    "colorHighlight": "#717787",
+    "colorSelected": "#575d6d",
+    "colorSelected2": "#b0b6c6",
     "colorBackground": "#fafafa",
     "colorText": "#111",
     "colorTextInverse": "#fff",
