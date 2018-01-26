@@ -124,21 +124,22 @@ def getImmediateSubdirs(a_dir):
     return [name for name in os.listdir(a_dir)
         if os.path.isdir(os.path.join(a_dir, name))]
 
-def updateDeps(basedeps, deplist, modulename):
+
+def updateDeps(basedeps, deplist, path, modulename):
     """
     Scan deplist for dependency defined by the module and then merges that dependency file with
     basedeps.
     """
     if 'npm' in deplist:
-        npmd = loadJSON(os.path.join(BASE_PATH, 'modules', modulename, deplist['npm']))
+        npmd = loadJSON(os.path.join(path, deplist['npm']))
         mergeNpmDeps(basedeps[Deps.NPM], npmd, modulename)
 
     if 'ngc' in deplist:
-        ngcd = loadJSON(os.path.join(BASE_PATH, 'modules', modulename, deplist['ngc']))
+        ngcd = loadJSON(os.path.join(path, deplist['ngc']))
         mergeNgcDeps(basedeps[Deps.NGC], ngcd)
 
     if 'pip' in deplist:
-        pipd = loadReqs(os.path.join(BASE_PATH, 'modules', modulename, deplist['pip']))
+        pipd = loadReqs(os.path.join(path, deplist['pip']))
         mergePipDeps(basedeps[Deps.PIP], pipd, modulename)
 
 def updateModuleList(moduleList, config, modulename):
@@ -216,7 +217,7 @@ def bootstrapModules(basedeps, moduleList):
 
             # Module might not have dependencies, their absence is not an error
             if 'dependencies' in config:
-                updateDeps(basedeps, config['dependencies'], name)
+                updateDeps(basedeps, config['dependencies'], module_dir, name)
 
             if 'backend' in config['module']:
                 src = os.path.join(module_dir, config['module']['backend'])
