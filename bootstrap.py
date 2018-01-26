@@ -187,7 +187,8 @@ def bootstrapModules(basedeps, moduleList):
     """
     log.info("Bootstrapping modules")
     #modules = getImmediateSubdirs('modules')
-    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules', '**/*config.json'), recursive=True)
+    cfgfiles = glob.glob(os.path.join(BASE_PATH, 'modules/*config.json'))
+    cfgfiles.extend(glob.glob(os.path.join(BASE_PATH, 'modules/*/*config.json')))
 
     if os.path.join(BASE_PATH,"modules/app.config.json"):
         cfgfiles.remove(os.path.join(BASE_PATH,"modules/app.config.json"))
