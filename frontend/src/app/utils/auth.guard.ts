@@ -26,11 +26,8 @@ export class AuthGuard implements CanActivate, CanLoad {
             // logged in so return true
             const user = JSON.parse(localStorage.getItem('user'));
 
-            console.log(user)
-            console.log(route)
-
             if (route.data['role'] === undefined) {
-                console.warn('No role is set for route \'' + route.data['path'] + '\'');
+                console.warn('No role is set for route \'' + route['path'] + '\'');
                 return true;
             }
 
@@ -38,7 +35,7 @@ export class AuthGuard implements CanActivate, CanLoad {
                 return true;
             }
 
-            console.warn('User is not allowed to access \'' + route.data['path'] + '\'')
+            console.warn('User is not allowed to access \'' + route['path'] + '\'')
             return false;
         }
 
