@@ -134,6 +134,7 @@ def setup():
 
         user = User(settings['username'], password=settings['password'], role = Role.admin)
         res = unprotected_add_user(user)
+        del res['password']
 
         config.setup = False
         return(json.dumps({ "user_id" : res}))
