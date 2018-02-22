@@ -40,3 +40,8 @@
 		</form>
 	</section>
 </section>
+<section *ngIf="!appConfig.auth" class="d-flex justify-content-center align-content-center align-items-center login-container">
+    <div class="error-message" *ngIf="formError">
+        Error: {{ formErrorMsg }}
+    </div>
+</section>
