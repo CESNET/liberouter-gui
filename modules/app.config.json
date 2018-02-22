@@ -1,26 +1,17 @@
 {
-  "logo": "assets/img/logo.png",
-  "name": "Liberouter GUI",
-  "colorTheme": {
-    "colorMain": "#313747",
-    "colorHighlight": "#717787",
-    "colorSelected": "#575d6d",
-    "colorSelected2": "#b0b6c6",
-    "colorBackground": "#fafafa",
-    "colorText": "#111",
-    "colorTextInverse": "#fff",
-    "colorLink": "#111",
-    "colorLinkHover": "#333",
-    "colorHeading": "#555"
+  "logo" : "assets/netopeer/logo.png",
+  "name" : "Netopeer",
+  "authorization" : false,
+  "colorTheme" : {
+    "colorMain" : "#354b68",
+    "colorHighlight" : "#3d5676",
+    "colorSelected" : "#3d5676",
+    "colorSelected2" : "#6888b1"
   },
-  "assets": {
-    "input": "example/assets",
-    "output": "example"
-  },
-  "api": {
-    "url": "/libapi",
-    "host": null,
-    "port": null,
-    "proto": null
+  "api" : {
+    "url" : "/libapi",
+    "host" : null,
+    "port" : null,
+    "proto" : null
   }
 }

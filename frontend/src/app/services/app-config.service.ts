@@ -14,8 +14,15 @@ export class AppConfigService {
     private configPath: string = environment.configPath;
     private config;
     public obs;
+    public auth: boolean;
 
     constructor() {
+        let data = localStorage.getItem('auth');
+        if (!data || data == "true") {
+            this.auth = true;
+        } else {
+            this.auth = false;
+        }
         this.obs = this.fetch().subscribe((data: string) => {
             try {
                 this.config = data;

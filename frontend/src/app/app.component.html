@@ -31,7 +31,7 @@
                 </li>
 
                 <!-- Logout button -->
-                <li>
+                <li *ngIf="appConfig.auth">
                     <div
                         class="flex-container"
                         routerLink="/logout">

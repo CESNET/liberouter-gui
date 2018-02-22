@@ -53,6 +53,23 @@ def import_modules():
                 if isinstance(obj, Module):
                     app.register_blueprint(obj)
 
+
+def _first_user(username, password):
+    try:
+        # Insert user to database via user module
+        from .modules.users import unprotected_add_user
+        from .user import User
+        from .role import Role
+
+        user = User(username, password = password, role = Role.admin)
+        res = unprotected_add_user(user)
+        del res['password']
+
+        return(json.dumps({ "user_id" : res}))
+    except Exception as e:
+        raise ApiException({"error" : str(e)})
+
+
 def ask_for_username():
     print("Admin username [admin]: ", end="")
     name = input()
@@ -83,10 +100,14 @@ def check_users():
     """
     db = dbConnector()
     if db.count("users") == 0:
-        log.warn("\033[1m" + "* No users found *" + "\033[0m")
-        app.add_url_rule('/setup', view_func = setup, methods=['POST'])
-        config.setup = True
-
+        if app.config["AUTH"]:
+            log.warn("\033[1m" + "* No users found *" + "\033[0m")
+            app.add_url_rule('/setup', view_func = setup, methods = ['POST'])
+            config.setup = True
+        else:
+            log.info("Creating anonymous user for automatically authorized mode")
+            _first_user("anonymous", "anonymous")
+            config.setup = False
     else:
         config.setup = False
 
@@ -126,17 +147,6 @@ def setup():
     if settings['password'] != settings['password2']:
         raise ApiException("Mismatching password fields")
 
-    try:
-        # Insert user to database via user module
-        from .modules.users import unprotected_add_user
-        from .user import User
-        from .role import Role
-
-        user = User(settings['username'], password=settings['password'], role = Role.admin)
-        res = unprotected_add_user(user)
-        del res['password']
-
-        config.setup = False
-        return(json.dumps({ "user_id" : res}))
-    except Exception as e:
-        raise ApiException({"error" : str(e)})
+    result = _first_user(settings['username'], settings['password'])
+    config.setup = False
+    return(result)

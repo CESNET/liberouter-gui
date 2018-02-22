@@ -45,17 +45,6 @@ if config["api"].getboolean("ssl", False):
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(config['ssl']['certificate'], config['ssl']['key'])
 
-log.info("Connecting to database")
-db = dbConnector()
-
-log.info("Setting up session manager")
-session_manager = SessionManager.from_object(config)
-
-log.info("Setting up authorization module")
-auth = Auth(db, session_manager)
-
-check_users()
-
 log.info("Configuring server application")
 app.config.from_object(config)
 
@@ -67,6 +56,17 @@ if config['api'].getboolean('cors', False):
     except:
         log.error("Failed to initialize CORS. Is it installed?")
         exit(1)
+
+log.info("Connecting to database")
+db = dbConnector()
+
+log.info("Setting up session manager")
+session_manager = SessionManager.from_object(config)
+
+log.info("Setting up authorization module")
+auth = Auth(db, session_manager)
+
+check_users()
 
 """
 Import all modules from module path

@@ -10,6 +10,8 @@ import glob
 log = logging.getLogger("Bootstrap")
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
+APPCONFIG_HEADER = "\"\"\"\nAutomatically generated application configuration file, do not modify!\n\"\"\"\n"
+
 
 class Deps():
     """
@@ -347,12 +349,22 @@ def applicationConfig(modules):
             config['modules'] = dict()
 
             for module in modules:
+                if module['name'] == 'users' and 'authorization' in config and not config['authorization']:
+                    continue
                 config['modules'][module['name']] = { 'enabled' : True }
                 createSymlink(colorsSCSS, os.path.join(BASE_PATH, 'frontend/src/app/modules', module['name'], '_colors.scss'))
 
         with open(os.path.join(BASE_PATH, 'frontend/src/assets/config.json'), 'w+') as c:
-            log.info("Exporting application config")
+            log.info("Exporting frontend's application config")
             json.dump(config, c, indent = 4)
+
+        with open(os.path.join(BASE_PATH, 'backend/liberouterapi/appconfig.py'), 'w') as c:
+            log.info("Exporting backends's application config")
+            c.write(APPCONFIG_HEADER)
+            if 'authorization' in config and not config['authorization']:
+                c.write("APP_AUTHORIZATION = False")
+            else:
+                c.write("APP_AUTHORIZATION = True")
 
 # =====================
 # MAIN CODE STARTS HERE
