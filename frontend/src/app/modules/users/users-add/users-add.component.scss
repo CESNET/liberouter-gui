@@ -1,10 +1,12 @@
+@import "../../../../styles/colors";
+
 .pw-verify {
 	position: absolute;
 	right: -0.5em;
 	top: 2.5em;
-	color: green;
+	color: $green;
 
 	.fa-times {
-		color: red;
+		color: $red;
 	}
 }

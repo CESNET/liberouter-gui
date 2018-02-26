@@ -6,6 +6,7 @@ from argparse import RawTextHelpFormatter
 import sys
 import os
 import logging
+from .appconfig import APP_AUTHORIZATION
 
 log = logging.getLogger(__name__)
 
@@ -42,6 +43,7 @@ class Config(object):
         self.HOST = self.config["api"].get("host", "localhost")
         self.PORT = self.config["api"].getint("port", 5555)
         self.THREADED = self.config["api"].getboolean("threaded", True)
+        self.AUTH = APP_AUTHORIZATION
 
         # If in debug mode we want all logging messages
         if self.DEBUG:

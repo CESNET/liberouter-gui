@@ -1,11 +1,10 @@
 $fa-font-path: "../../node_modules/font-awesome/fonts";
 @import "../../node_modules/font-awesome/scss/font-awesome.scss";
 
+@import "colors";
 @import "variables";
 @import "typography";
-//@import "mixins";
-//@import "login";
-//@import "forms";
+@import "mixins";
 
 html, body {
 	padding: 0;
@@ -15,7 +14,11 @@ html, body {
 
 	font-size: $font-size;
 	font-family: $font-family;
-	background-color: darken(#FFF, 2%);
+	background-color: $colorBackground;
+}
+
+.btn{
+	cursor: pointer;
 }
 
 .preloader {
@@ -51,7 +54,7 @@ section.main {
 		margin-left: 150px;
 	    width: calc(100% - 150px);
 	    height: 100%;
-		background-color: darken(#FFF, 2%);
+		background-color: $colorBackground;
 
 		&.no-sidebar {
 			margin: 0;
@@ -66,8 +69,8 @@ section.main {
 
 	.sidebar {
 		box-shadow: none;
-		background: $dark-menu;
-		color: $light-gray;
+		background: $colorMain;
+		color: $colorTextInverse;
 		width: 150px;
 		height: 100%;
 		position: fixed;
@@ -99,7 +102,7 @@ section.main {
 					cursor: pointer;
 
 					&:hover {
-						background: $dark-menu-active;
+						background: $colorHighlight;
 					}
 
 					i.fa {
@@ -110,17 +113,18 @@ section.main {
 
 				.active-link {
 					//border-left: 3px solid #1f6eaa;
-					-webkit-box-shadow:inset 3px 0 0 0 $blue;
-					box-shadow:inset 3px 0 0 0 $blue;
-					background: $dark-menu-active;
+					-webkit-box-shadow:inset 3px 0 0 0 $colorSelected2;
+					box-shadow:inset 3px 0 0 0 $colorSelected2;
+					background: $colorSelected;
+					outline: none;
 				}
 			}
 		}
 
 		.user-area {
 			a.user {
-				color: $light-gray;
-				border-color: $light-gray;
+				color: $colorTextInverse;
+				border-color: $colorTextInverse;
 				cursor: pointer;
 				text-align: center;
 			}
@@ -130,8 +134,8 @@ section.main {
 		    position: absolute;
             right: -14px;
             z-index: 9999;
-            color: $light-gray;
-            background: $dark-menu;
+            color: $colorTextInverse;
+            background: $colorMain;
             top: calc(50% - 16px);
             padding: 5px 3px 7px 4px;
             cursor: pointer;
@@ -173,6 +177,6 @@ nemea-events .modal-dialog {
 }
 
 .grid-placeholder {
-	border: 2px dashed $gray!important;
+	border: 2px dashed $lightGrey !important;
 	background: rgba(0,0,0,0.05)!important;
 }

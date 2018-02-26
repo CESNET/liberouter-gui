@@ -7,9 +7,9 @@ Test Case for users endpoints
 /users/:user_id [DELETE] - delete the user specified by user_id
 """
 
+import json
 from tests.api import SecureAPI
 from tests.req import ApiAuth
-from bson import json_util
 
 class UsersTestCase(SecureAPI):
     def test_users_0_get_users(self):
@@ -106,7 +106,7 @@ class UsersTestCase(SecureAPI):
                 "first_name" : "John"
                 }
 
-        r = self.req.PUT('/users/' + user_id, auth = ApiAuth(self.user['session_id']), data = json_util.dumps(data))
+        r = self.req.PUT('/users/' + user_id, auth = ApiAuth(self.user['session_id']), data = json.dump(data))
 
         self.assertOK(r)
         new_user = r.json()
@@ -196,7 +196,7 @@ class UsersTestCase(SecureAPI):
                 "first_name" : "John"
                 }
 
-        r = self.req.PUT('/users/' + guest_id, auth = ApiAuth(user_role.json()['session_id']), data = json_util.dumps(data))
+        r = self.req.PUT('/users/' + guest_id, auth = ApiAuth(user_role.json()['session_id']), data = json.dumps(data))
 
         self.assertTrue(r.status_code == 401)
 

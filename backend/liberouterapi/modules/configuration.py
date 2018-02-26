@@ -15,7 +15,7 @@ from liberouterapi.error import ApiException
 from liberouterapi.role import Role
 from liberouterapi.modules.module import Module
 #from liberouterapi.ConfigurationDatabase import ConfigurationDatabase as ConfDB
-from bson import json_util as json
+import json
 from pymongo import ReturnDocument
 
 class ConfError(ApiException):

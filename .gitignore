@@ -100,3 +100,10 @@ dist
 # Ignore local configs
 config.ini
 config.ts
+frontend/package-lock.json
+database.sq3
+.idea/vcs.xml
+.idea/LiberRouterGUI.iml
+package-lock.json
+.idea/workspace.xml
+.idea/modules.xml

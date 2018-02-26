@@ -31,7 +31,8 @@ const appRoutes: Routes = [
     {
         path : 'logout',
         component : LogoutComponent,
-        canActivate : [AuthGuard]
+        canActivate : [AuthGuard],
+        data : { role : 255 }
     },
     {
         path : 'setup',
@@ -40,7 +41,8 @@ const appRoutes: Routes = [
     {
         path: '',
         component: HomeComponent,
-        canActivate : [AuthGuard]
+        canActivate : [AuthGuard],
+        data : { role : 255 }
     },
     {
         path: '**',
