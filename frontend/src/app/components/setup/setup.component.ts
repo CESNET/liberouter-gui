@@ -10,7 +10,7 @@ import { AuthService } from 'app/services';
 })
 export class SetupComponent implements OnInit {
 
-    admin: Object = {
+    admin = {
         username : '',
         password : '',
         password2 : ''
@@ -18,9 +18,7 @@ export class SetupComponent implements OnInit {
 
     error = '';
 
-    constructor( private authService: AuthService
-               , private router: Router
-               ) { }
+    constructor(private authService: AuthService, private router: Router) { }
 
     ngOnInit() {
     }

@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authService: AuthService,
-        private appConfig : AppConfigService) {}
+        public appConfig : AppConfigService) {}
 
     ngOnInit() {
         this.appConfig.get().subscribe(data => {

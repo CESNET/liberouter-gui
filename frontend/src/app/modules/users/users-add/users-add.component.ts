@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UsersService } from '../users.service';
+import { UsersService, User } from '../users.service';
 
 @Component({
     selector: 'users-add',
@@ -14,14 +14,7 @@ export class UsersAddComponent implements OnInit {
     returnUrl = '/users';
 
     // Default user model
-    user = {
-        first_name : '',
-        last_name : '',
-        username : '',
-        email : '',
-        password : '',
-        role : 10
-    }
+    user: User;
 
     // Default role model
     roles = [
@@ -35,7 +28,10 @@ export class UsersAddComponent implements OnInit {
     passwordValidation = '';
 
     constructor(private usersService: UsersService,
-                 private router: Router) {}
+                 private router: Router) {
+        this.user = new User();
+        this.user.role = 10;
+    }
 
     ngOnInit() {
     }
