@@ -2,6 +2,8 @@ from flask import Request
 from collections import OrderedDict
 from flask import json
 
+_missing = object()
+
 
 class RequestHandler(Request):
     """Extended Flask Request to provide JSON data with preserved data order.
@@ -9,8 +11,6 @@ class RequestHandler(Request):
     if the order should be preserved. By default, the order is preserved in contrast
     to the standard Flask Request class.
     """
-
-    _cached_json = Ellipsis
 
     def get_json(self, keep_order = False, force = False, silent = False, cache = True):
         """Parse and return the data as JSON. If the mimetype does not indicate
@@ -23,11 +23,13 @@ class RequestHandler(Request):
         :param silent: Silence parsing errors and return ``None`` instead.
         :param cache: Store the parsed JSON to return for subsequent calls.
         """
+
         if not keep_order:
             return Request.get_json(self)
 
-        if cache and self._cached_json is not Ellipsis:
-            return self._cached_json
+        rv = getattr(self, '_cached_json', _missing)
+        if rv is not _missing:
+            return rv
 
         if not (force or self.is_json):
             return None
