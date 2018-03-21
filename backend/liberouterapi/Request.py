@@ -12,7 +12,7 @@ class RequestHandler(Request):
 
     _cached_json = Ellipsis
 
-    def get_json(self, keep_order = True, force = False, silent = False, cache = True):
+    def get_json(self, keep_order = False, force = False, silent = False, cache = True):
         """Parse and return the data as JSON. If the mimetype does not indicate
         JSON (:mimetype:`application/json`, see :meth:`is_json`), this returns
         ``None`` unless ``force`` is true. If parsing fails,
