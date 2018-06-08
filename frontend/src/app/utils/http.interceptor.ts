@@ -33,12 +33,13 @@ export class RequestInterceptorService implements HttpInterceptor {
     private appConfig: AppConfigService;
     private router: Router;
 
-    constructor(router: Router, private appConfig: AppConfigService) {
+    constructor(router: Router, private _appConfig: AppConfigService) {
         //FIXME: _appConfig.fetch() returns undefined!
-        appConfig.fetch().subscribe((data: string) =>
-            this.api = data['api'],
+        this._appConfig.fetch().subscribe((data: string) =>
+            this.api = data['api']
         );
         this.router = router;
+        console.log("Interceptor created");
 
     }
 
@@ -73,6 +74,7 @@ export class RequestInterceptorService implements HttpInterceptor {
                         case 442:
                             this.handle442Error(error);
                             break;
+
                     }
                 }
 
@@ -97,8 +99,12 @@ export class RequestInterceptorService implements HttpInterceptor {
         this.router.navigate(['/setup']);
     }
 
+
     buildUrl(url: string): string {
+
         let urlString = '';
+
+        console.log("Building URL");
 
         urlString += this.api['proto'] || '';
         urlString += this.api['host'] || '';
