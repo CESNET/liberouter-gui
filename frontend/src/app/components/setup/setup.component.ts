@@ -29,6 +29,7 @@ export class SetupComponent implements OnInit {
                 this.router.navigate(['/login']);
             },
             err => {
+                console.log(err);
                 this.error = err;
             }
         )
