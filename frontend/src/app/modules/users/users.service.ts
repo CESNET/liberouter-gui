@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient } from "@angular/common/http";
 import 'rxjs/add/operator/map'
+import {catchError} from "rxjs/operators";
 
 export class User {
     constructor (
@@ -16,62 +16,43 @@ export class User {
 @Injectable()
 export class UsersService {
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
     add(user: User) {
-        return this.http.post('/users', user)
-            .map((response: Response) => {
-                // User successfully added
-                // Extract data from response
-                const body: Object = response.json();
-
-                return body;
-            })
-            .catch(this.handleError);
+        return this.http.post<object>('/users', user)
+            .pipe(
+                catchError(UsersService.handleError)
+            );
     }
 
     remove(id: string) {
         return this.http.delete('/users/' + id)
-            .map((response: Response) => {
-                // User successfully added
-                // Extract data from response
-                const body: Object = response.json();
-
-                return body;
-            })
-            .catch(this.handleError);
+            .pipe(
+                catchError(UsersService.handleError)
+            );
     }
 
     list() {
         return this.http.get('/users')
-            .map((response: Response) => response.json())
-            .catch(this.handleError);
+            .pipe(
+                catchError(UsersService.handleError)
+            );
     }
 
     get(id: String) {
         return this.http.get('/users/' + id)
-            .map((response: Response) => {
-                // User successfully added
-                // Extract data from response
-                const body: User = response.json();
-
-                return body;
-            })
-            .catch(this.handleError);
+            .pipe(
+                catchError(UsersService.handleError)
+            );
     }
 
     update(id: String, user: Object) {
         return this.http.put('/users/' + id, user)
-            .map((response: Response) => {
-                // User successfully updated
-                // Extract data from response
-                const body: Object = response.json();
-
-                return body;
-            })
-            .catch(this.handleError);
+            .pipe(
+                catchError(UsersService.handleError)
+            );
     }
-    handleError(err: Response | any) {
+    static handleError(err: Response | any) {
         return Promise.reject(err);
     }
 
