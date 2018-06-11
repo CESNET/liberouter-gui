@@ -29,10 +29,7 @@ import { environment } from "../../environments/environment";
 
 @Injectable()
 export class RequestInterceptorService implements HttpInterceptor {
-    private currentUser: Object;
-    private prefixUrl: string;
     private api: Object = {};
-    private appConfig: AppConfigService;
     private router: Router;
 
     constructor(router: Router, private _appConfig: AppConfigService) {
@@ -44,22 +41,21 @@ export class RequestInterceptorService implements HttpInterceptor {
     }
 
     addHeaders(request: HttpRequest<any>, options?: HttpHeaders): HttpRequest<any> {
+        //Build new url
         const url = this.buildUrl(request.url);
-
-
+        //Build new headers. If headers were empty, create new headers.
         let headers: HttpHeaders = RequestInterceptorService.buildHeaders(request.headers || new HttpHeaders());
 
-        const newRequest: HttpRequest<any> = request.clone({
+        return request.clone({
             url: url,
             headers: headers
         });
-
-        console.log('headers added, sending now..');
-        return newRequest;
     }
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
-        console.log('Intercepting request...');
+    /**
+     * Angular Interceptor implementation.
+     */
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.addHeaders(request))
             .catch(error => {
                 if (error instanceof HttpErrorResponse) {
@@ -90,13 +86,17 @@ export class RequestInterceptorService implements HttpInterceptor {
     }
 
     /**
-     * Setup is required, redirect to setup
+     * No users were found, setup is required.
+     * See backend docs for more info.
      */
     handle442Error(response: HttpErrorResponse) {
         this.router.navigate(['/setup']);
     }
 
-
+    /**
+     * Builds new url from API config.
+     * Reads config from path specified in environment.ts
+     */
     buildUrl(url: string): string {
 
         let urlString = '';
@@ -108,17 +108,22 @@ export class RequestInterceptorService implements HttpInterceptor {
         return urlString + url;
     }
 
+    /**
+     * Builds new headers for http requests.
+     * Headers in HttpRequests are read-only, so we need to create new headers and create a new request.
+     */
     static buildHeaders(headers: HttpHeaders): HttpHeaders {
+        //Get session ID from localstorage
         const session : string = localStorage.getItem('session');
+        //We found session ID, send it to server
         if (session !== null) {
-            console.log("Adding authorization headers");
-            console.log(session);
             headers = headers.set('Authorization', session)
         }
-
+        //Remove specific content types to prevent errors
         if (headers.has('specific-content-type')) {
             headers = headers.delete('specific-content-type');
         }
+        //Add default json content type
         else {
             headers = headers.set('Content-Type', 'application/json');
         }
