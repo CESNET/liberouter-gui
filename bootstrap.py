@@ -78,7 +78,7 @@ def mergeNgcDeps(base, module):
 
     for item in items:
         # NOTE: lgui is just a single app, so it's always on index 0
-        Unify.arrays(base['apps'][0][item], module['apps'][0][item])
+        Unify.arrays(base['projects'][0]['architect']['build']['options'][item], module['projects'][0]['architect']['build']['options'][item])
 
 def mergePipDeps(base, module, modulename):
     """
@@ -115,7 +115,7 @@ def loadBaseDeps():
     """
     deps = [None, None, None]
     deps[Deps.NPM] = loadJSON(os.path.join(BASE_PATH, 'frontend/package.base.json'))
-    deps[Deps.NGC] = loadJSON(os.path.join(BASE_PATH, 'frontend/.angular-cli.base.json'))
+    deps[Deps.NGC] = loadJSON(os.path.join(BASE_PATH, 'frontend/angular.base.json'))
     deps[Deps.PIP] = loadReqs(os.path.join(BASE_PATH, 'backend/requirements.base.txt'))
     return deps
 
@@ -295,7 +295,7 @@ def saveDependencies(deps):
     with open(os.path.join(BASE_PATH, 'frontend/package.json'), 'w') as fh:
         json.dump(deps[Deps.NPM], fh, indent = 4)
 
-    with open(os.path.join(BASE_PATH, 'frontend/.angular-cli.json'), 'w') as fh:
+    with open(os.path.join(BASE_PATH, 'frontend/angular.json'), 'w') as fh:
         json.dump(deps[Deps.NGC], fh, indent = 4)
 
     with open(os.path.join(BASE_PATH, 'backend/requirements.txt'), 'w') as fh:
