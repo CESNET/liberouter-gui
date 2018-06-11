@@ -44,7 +44,6 @@ export class AppComponent implements OnInit {
                     this.auth.checkSession().subscribe(
                         data => {},
                         error => {
-                            console.log(error.status);
                             console.error('The session "' + this.session_id + '" is invalid');
                             this.logout();
                         });
