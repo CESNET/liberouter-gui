@@ -19,7 +19,7 @@ export class UsersService {
     constructor(private http: HttpClient) { }
 
     add(user: User) {
-        return this.http.post<object>('/users', user)
+        return this.http.post<User>('/users', user)
             .pipe(
                 catchError(UsersService.handleError)
             );
@@ -33,14 +33,14 @@ export class UsersService {
     }
 
     list() {
-        return this.http.get('/users')
+        return this.http.get<User[]>('/users')
             .pipe(
                 catchError(UsersService.handleError)
             );
     }
 
     get(id: String) {
-        return this.http.get('/users/' + id)
+        return this.http.get<User>('/users/' + id)
             .pipe(
                 catchError(UsersService.handleError)
             );
