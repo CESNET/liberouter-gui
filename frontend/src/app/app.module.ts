@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 // import { HttpModule, Http, Request, XHRBackend, RequestOptions} from '@angular/http';
-import { HttpClientModule, HttpClient, HttpXhrBackend, HttpRequest, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { RouterModule, Routes, Router } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -51,11 +51,6 @@ const appRoutes: Routes = [
     }
 ];
 
-export function httpFactory(router: Router,
-                            appconfig: AppConfigService): RequestInterceptorService {
-    return new RequestInterceptorService(router, appconfig);
-}
-
 /**
   * Initialization class for the whole application
   */
@@ -78,11 +73,10 @@ export function httpFactory(router: Router,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
-    { //FIXME !!
+    {
         provide : HTTP_INTERCEPTORS,
         useClass: RequestInterceptorService,
         multi: true,
-        // deps: [HttpXhrBackend,HttpClientModule, Router, AppConfigService]
     },
     AuthGuard,
     SafePipe,

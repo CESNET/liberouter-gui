@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.getIsOpen();
         this.user = JSON.parse(localStorage.getItem('user'));
-        this.session_id = localStorage.getItem('session_id');
+        this.session_id = localStorage.getItem('session');
         this.router.events.subscribe(val => {
             // the router will fire multiple events, we need NavigationEnd
             // we only want to react if it's the final active route
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
                     this.auth.checkSession().subscribe(
                         data => {},
                         error => {
-                            console.log(error.status)
+                            console.log(error.status);
                             console.error('The session "' + this.session_id + '" is invalid');
                             this.logout();
                         });
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
             this.logo = {
                 src : data['logo'],
                 alt : data['name']
-            }
+            };
             this.titleService.setTitle(data['name'])
         })
     }

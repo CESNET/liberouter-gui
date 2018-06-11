@@ -7,6 +7,8 @@
  * Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
  * Based on file by: Petr Stehlik <stehlik@cesnet.cz>
  * Date: 07/06/2018
+ *
+ * Frankly, I have no idea how backend works..
  */
 
 import { Injectable, OnInit } from "@angular/core";
@@ -16,14 +18,14 @@ import {
     HttpRequest,
     HttpHandler,
     HttpResponse,
-    HttpErrorResponse, HttpEvent, HttpProgressEvent
+    HttpErrorResponse, HttpEvent, HttpProgressEvent,
+    HttpHeaders
 } from "@angular/common/http";
 
 import { Router } from "@angular/router";
 import { AppConfigService } from "../services/app-config.service";
 import { Observable } from "rxjs/Observable";
 import { environment } from "../../environments/environment";
-import { AuthService } from "../services";
 
 @Injectable()
 export class RequestInterceptorService implements HttpInterceptor {
@@ -34,36 +36,30 @@ export class RequestInterceptorService implements HttpInterceptor {
     private router: Router;
 
     constructor(router: Router, private _appConfig: AppConfigService) {
-        //FIXME: _appConfig.fetch() returns undefined!
         this._appConfig.fetch().subscribe((data: string) =>
             this.api = data['api']
         );
         this.router = router;
-        console.log("Interceptor created");
 
     }
 
-    addHeaders(request: HttpRequest<any>): HttpRequest<any> {
+    addHeaders(request: HttpRequest<any>, options?: HttpHeaders): HttpRequest<any> {
         const url = this.buildUrl(request.url);
-        request = request.clone({
-            url: url
-        });
-        const session = localStorage.getItem('session');
-        if (session !== null) {
-            request.headers.set('Authorization', session)
-        }
 
-        if (request.headers.has('specific-content-type')) {
-            request.headers.delete('specific-content-type');
-        }
-        else {
-            request.headers.set('Content-Type', 'application/json');
-        }
-        console.log(request);
-        return request;
+
+        let headers: HttpHeaders = RequestInterceptorService.buildHeaders(request.headers || new HttpHeaders());
+
+        const newRequest: HttpRequest<any> = request.clone({
+            url: url,
+            headers: headers
+        });
+
+        console.log('headers added, sending now..');
+        return newRequest;
     }
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpResponse<any> | HttpEvent<any> | HttpProgressEvent>{
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
+        console.log('Intercepting request...');
         return next.handle(this.addHeaders(request))
             .catch(error => {
                 if (error instanceof HttpErrorResponse) {
@@ -87,6 +83,7 @@ export class RequestInterceptorService implements HttpInterceptor {
      * Unauthorised access, redirect to login
      */
     handle401Error(response: HttpErrorResponse) {
+        console.warn('Unauthorised access');
         localStorage.removeItem('user');
         localStorage.removeItem('session');
         this.router.navigate(['/login']);
@@ -104,12 +101,28 @@ export class RequestInterceptorService implements HttpInterceptor {
 
         let urlString = '';
 
-        console.log("Building URL");
-
         urlString += this.api['proto'] || '';
         urlString += this.api['host'] || '';
         urlString += this.api['port'] ? ':' + this.api['port'] : '';
         urlString += this.api['url'] || environment.apiUrl || '';
         return urlString + url;
+    }
+
+    static buildHeaders(headers: HttpHeaders): HttpHeaders {
+        const session : string = localStorage.getItem('session');
+        if (session !== null) {
+            console.log("Adding authorization headers");
+            console.log(session);
+            headers = headers.set('Authorization', session)
+        }
+
+        if (headers.has('specific-content-type')) {
+            headers = headers.delete('specific-content-type');
+        }
+        else {
+            headers = headers.set('Content-Type', 'application/json');
+        }
+
+        return headers;
     }
 }
