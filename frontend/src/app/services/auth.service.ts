@@ -21,7 +21,6 @@ export class AuthService {
     setLocalStorage(resp: object) {
         // This should probably be replaced by a more secure method.
         // Storing session id in localStorage is problematic, when XSS attack happens.
-        console.log(resp);
         localStorage.setItem('session', resp['session_id']);
         localStorage.setItem('user', JSON.stringify(resp['user']));
     }
