@@ -28,7 +28,6 @@ export class AuthService {
     logout() {
         // remove user from local storage to log user out
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user);
         return this.http.delete('/authorization');
 
     }
@@ -36,7 +35,7 @@ export class AuthService {
     checkSession() {
         return this.http.get<object>('/authorization')
             .pipe(
-                tap((res: object) => console.log(res)),
+                //tap((res: object) => console.log(res)),
                 catchError(this.handleError)
             );
     }

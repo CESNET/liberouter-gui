@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
                 alt : data['name']
             };
             if ('authorization' in data) {
-                console.log(data['authorization']);
                 this.appConfig.auth = data['authorization'];
                 localStorage.setItem('auth', String(data['authorization']));
             } else {
