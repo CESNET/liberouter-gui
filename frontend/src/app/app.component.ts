@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.getIsOpen();
         this.user = JSON.parse(localStorage.getItem('user'));
-        this.session_id = localStorage.getItem('session');
+        this.session_id = localStorage.getItem('session_id');
         this.router.events.subscribe(val => {
             // the router will fire multiple events, we need NavigationEnd
             // we only want to react if it's the final active route
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
 
     private logout() {
         localStorage.removeItem('user');
-        localStorage.removeItem('session');
+        localStorage.removeItem('session_id');
         this.user = { user : {username : ''}};
         this.router.navigate(['/login']);
     }

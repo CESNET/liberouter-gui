@@ -81,7 +81,7 @@ export class RequestInterceptorService implements HttpInterceptor {
     handle401Error(response: HttpErrorResponse) {
         console.warn('Unauthorised access');
         localStorage.removeItem('user');
-        localStorage.removeItem('session');
+        localStorage.removeItem('session_id');
         this.router.navigate(['/login']);
     }
 
@@ -114,7 +114,7 @@ export class RequestInterceptorService implements HttpInterceptor {
      */
     static buildHeaders(headers: HttpHeaders): HttpHeaders {
         //Get session ID from localstorage
-        const session : string = localStorage.getItem('session');
+        const session : string = localStorage.getItem('session_id');
         //We found session ID, send it to server
         if (session !== null) {
             headers = headers.set('Authorization', session)
