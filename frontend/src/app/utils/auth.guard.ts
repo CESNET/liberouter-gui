@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate, CanLoad {
 
     isLoggedIn(): boolean {
         //TODO: Check session validity before returning true
-        if (localStorage.getItem('session')) {
+        if (localStorage.getItem('session_id')) {
             // logged in so return true
             return true;
         }
