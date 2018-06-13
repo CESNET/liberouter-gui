@@ -1,59 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import 'rxjs/add/operator/map'
+import {catchError, tap} from "rxjs/operators";
+
 
 @Injectable()
 export class AuthService {
 
-    constructor(private http: Http) { }
+
+    constructor(protected http: HttpClient) { }
 
     login(username: string, password: string) {
-        return this.http.post('/authorization',
-            JSON.stringify({ username: username, password: password })
-            )
-            .map((response: Response) => {
-                // login successful
-                const resp = response.json();
+        return this.http.post<object>('/authorization', { username: username, password: password })
+            .pipe(
+                tap((resp: object) => this.setLocalStorage(resp)),
+                catchError(this.handleError)
+            );
+    }
 
-                if (resp && resp['error']) {
-                    console.error(resp['error']);
-                    return;
-                }
-
-                if (resp) {
-                    // Store user details and token in local storage
-                    localStorage.setItem('session', resp['session_id']);
-                    localStorage.setItem('user', JSON.stringify(resp['user']));
-                }
-            })
-            .catch(this.handleError);
+    setLocalStorage(resp: object) {
+        // This should probably be replaced by a more secure method.
+        // Storing session id in localStorage is problematic, when XSS attack happens.
+        localStorage.setItem('session_id', resp['session_id']);
+        localStorage.setItem('user', JSON.stringify(resp['user']));
     }
 
     logout() {
         // remove user from local storage to log user out
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user);
-        return this.http.delete('/authorization')
-            .map((response: Response) => {});
+        return this.http.delete('/authorization');
 
     }
 
     checkSession() {
-        return this.http.get('/authorization').map(
-            (response: Response) => {})
-            .catch(this.handleError);
+        return this.http.get<object>('/authorization')
+            .pipe(
+                //tap((res: object) => console.log(res)),
+                catchError(this.handleError)
+            );
     }
 
     admin(user: Object) {
-        return this.http.post('/setup'
-            , JSON.stringify(user))
-            .map(
-            (resp: Response) => {})
+        return this.http.post<Object>('/setup', user)
             .catch(this.handleError);
     }
 
-    private handleError(err: Response | any) {
+    private handleError(err: HttpResponse<any> | any) {
         return Promise.reject(err);
     }
 }

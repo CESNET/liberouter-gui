@@ -37,11 +37,10 @@ export class LoginComponent implements OnInit {
             this.logo = {
                 src : data['logo'],
                 alt : data['name']
-            }
+            };
             if ('authorization' in data) {
-                console.log(data['authorization'])
-                this.appConfig.auth = data['authorization']
-                localStorage.setItem('auth', String(data['authorization']))
+                this.appConfig.auth = data['authorization'];
+                localStorage.setItem('auth', String(data['authorization']));
             } else {
                 this.appConfig.auth = true;
                 localStorage.setItem('auth', 'true')
@@ -51,7 +50,7 @@ export class LoginComponent implements OnInit {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
         // check if the user is logged in and if so redirect them to HP
-        const session = localStorage.getItem('session');
+        const session = localStorage.getItem('session_id');
 
         this.authService.checkSession().subscribe(
             data => { this.router.navigate([this.returnUrl]) },
@@ -75,6 +74,7 @@ export class LoginComponent implements OnInit {
                                     const body = JSON.parse(error['_body']);
                                     this.setError(body['message']);
                                 } catch (err) {
+                                    console.log(err);
                                     this.setError('Error logging in.');
                                 }
                             }
@@ -128,9 +128,15 @@ export class LoginComponent implements OnInit {
                         return;
                     }
                     try {
-                        const body = JSON.parse(error['_body']);
+                        // Correct JSON response formatting
+                        let errMessage= error.error.replace(/'/g,'"');
+                        errMessage = errMessage.replace("True","true");
+                        errMessage = errMessage.replace("False", "false");
+
+                        const body = JSON.parse(errMessage);
                         this.setError(body['message']);
                     } catch (err) {
+                        console.log(err);
                         this.setError('Error logging in.');
                     }
                 }

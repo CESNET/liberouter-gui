@@ -44,7 +44,6 @@ export class AppComponent implements OnInit {
                     this.auth.checkSession().subscribe(
                         data => {},
                         error => {
-                            console.log(error.status)
                             console.error('The session "' + this.session_id + '" is invalid');
                             this.logout();
                         });
@@ -69,7 +68,7 @@ export class AppComponent implements OnInit {
             this.logo = {
                 src : data['logo'],
                 alt : data['name']
-            }
+            };
             this.titleService.setTitle(data['name'])
         })
     }
@@ -93,7 +92,7 @@ export class AppComponent implements OnInit {
 
     private logout() {
         localStorage.removeItem('user');
-        localStorage.removeItem('session');
+        localStorage.removeItem('session_id');
         this.user = { user : {username : ''}};
         this.router.navigate(['/login']);
     }

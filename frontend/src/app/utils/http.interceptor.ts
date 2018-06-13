@@ -1,101 +1,104 @@
 /**
-  * HTTP Interceptor class for liberouterapi backend communication
-  *
-  * The interceptor adds to every request the Authorization header with session
-  * ID (if present) and prefixes each request with API URL (if set)
-  *
-  * Author: Petr Stehlik <stehlik@cesnet.cz>
-  * Date: 15/06/2017
-  */
+ * HTTP Interceptor class for liberouterapi backend communication
+ *
+ * The interceptor adds the Authorisation header with session ID (if present)
+ * to every request and prefixes each request with API URL (if set)
+ *
+ * Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
+ * Based on file by: Petr Stehlik <stehlik@cesnet.cz>
+ * Date: 07/06/2018
+ *
+ * Frankly, I have no idea how backend works..
+ */
 
-import { Injectable } from '@angular/core';
-import { Request,
-    XHRBackend,
-    RequestOptions,
-    RequestOptionsArgs,
-    RequestMethod,
-    URLSearchParams,
-    Response,
-    Http,
-    Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
-import { environment } from 'environments/environment';
+import { Injectable, OnInit } from "@angular/core";
+import {
+    HttpInterceptor,
+    HttpXhrBackend,
+    HttpRequest,
+    HttpHandler,
+    HttpResponse,
+    HttpErrorResponse, HttpEvent, HttpProgressEvent,
+    HttpHeaders
+} from "@angular/common/http";
 
-import { AppConfigService } from 'app/services/app-config.service';
+import { Router } from "@angular/router";
+import { AppConfigService } from "../services/app-config.service";
+import { Observable } from "rxjs/Observable";
+import { environment } from "../../environments/environment";
 
 @Injectable()
-export class HttpInterceptor extends Http {
-    private currentUser: Object;
-    private prefixUrl: string;
+export class RequestInterceptorService implements HttpInterceptor {
     private api: Object = {};
+    private router: Router;
 
-    constructor(backend: XHRBackend,
-        defaultOptions: RequestOptions,
-        private router: Router,
-        private appconfig: AppConfigService
-        ) {
-        super(backend, defaultOptions);
-        // Obtain config from app config service
-        // We must fetch once more because Observables somehow don't work properly
-        this.appconfig.fetch().subscribe((data: string) => {
-            this.api = data['api'];
+    constructor(router: Router, private _appConfig: AppConfigService) {
+        this._appConfig.fetch().subscribe((data: string) =>
+            this.api = data['api']
+        );
+        this.router = router;
+
+    }
+
+    addHeaders(request: HttpRequest<any>, options?: HttpHeaders): HttpRequest<any> {
+        //Build new url
+        const url = this.buildUrl(request.url);
+        //Build new headers. If headers were empty, create new headers.
+        let headers: HttpHeaders = RequestInterceptorService.buildHeaders(request.headers || new HttpHeaders());
+
+        return request.clone({
+            url: url,
+            headers: headers
         });
     }
 
     /**
-      * For each request add:
-      *     - Authorization header if session is present
-      *     - API URL prefix
-      */
-    request(url: Request,
-        options?: RequestOptionsArgs): Observable<Response> {
+     * Angular Interceptor implementation.
+     */
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(this.addHeaders(request))
+            .catch(error => {
+                if (error instanceof HttpErrorResponse) {
+                    switch((<HttpErrorResponse>error).status) {
+                        case 401:
+                            this.handle401Error(error);
+                            break;
+                        case 442:
+                            this.handle442Error(error);
+                            break;
 
-        // Prefix the URL with environment prefix if set
-        url.url = this.buildUrl(url.url);
+                    }
+                }
 
-        const session = localStorage.getItem('session');
+                return Observable.throwError(error);
 
-        // Set Authorization header
-        if (session !== null) {
-            url.headers.set('Authorization', session);
-        }
-
-        // Set specific content type if "specific-content-type" header is set
-        if (url.headers.has('specific-content-type')) {
-            url.headers.delete('specific-content-type')
-        } else {
-            url.headers.set('Content-Type', 'application/json')
-        }
-
-        // Call the original Http
-        if (!options) {
-            return super.request(url).catch(this.catchErrors());
-        } else {
-            return super.request(url, options).catch(this.catchErrors());
-        }
-    }
-
-    private catchErrors() {
-        return (res: Response) => {
-            if (res.status === 401) {
-                console.warn('Unauthorized access, remove session and user and redirect to /login');
-                localStorage.removeItem('user');
-                localStorage.removeItem('session');
-                this.router.navigate(['/login']);
-            } else if (res.status === 442) {
-                // SETUP is required
-                // Maybe you ask why 442. Well, 42 is answer to everything, right?
-                this.router.navigate(['/setup']);
-            }
-            return Observable.throw(res);
-        };
+            });
     }
 
     /**
-      * Create URL string for the request based on local configuration
-      */
-    private buildUrl(url: string) {
+     * Unauthorised access, redirect to login
+     */
+    handle401Error(response: HttpErrorResponse) {
+        console.warn('Unauthorised access');
+        localStorage.removeItem('user');
+        localStorage.removeItem('session_id');
+        this.router.navigate(['/login']);
+    }
+
+    /**
+     * No users were found, setup is required.
+     * See backend docs for more info.
+     */
+    handle442Error(response: HttpErrorResponse) {
+        this.router.navigate(['/setup']);
+    }
+
+    /**
+     * Builds new url from API config.
+     * Reads config from path specified in environment.ts
+     */
+    buildUrl(url: string): string {
+
         let urlString = '';
 
         urlString += this.api['proto'] || '';
@@ -105,4 +108,26 @@ export class HttpInterceptor extends Http {
         return urlString + url;
     }
 
+    /**
+     * Builds new headers for http requests.
+     * Headers in HttpRequests are read-only, so we need to create new headers and create a new request.
+     */
+    static buildHeaders(headers: HttpHeaders): HttpHeaders {
+        //Get session ID from localstorage
+        const session : string = localStorage.getItem('session_id');
+        //We found session ID, send it to server
+        if (session !== null) {
+            headers = headers.set('Authorization', session)
+        }
+        //Remove specific content types to prevent errors
+        if (headers.has('specific-content-type')) {
+            headers = headers.delete('specific-content-type');
+        }
+        //Add default json content type
+        else {
+            headers = headers.set('Content-Type', 'application/json');
+        }
+
+        return headers;
+    }
 }
