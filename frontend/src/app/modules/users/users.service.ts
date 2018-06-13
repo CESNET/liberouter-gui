@@ -3,12 +3,22 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 
+export class User {
+    constructor (
+        public first_name = '',
+        public last_name = '',
+        public username = '',
+        public email = '',
+        public password = '',
+        public role = -1) {}
+}
+
 @Injectable()
 export class UsersService {
 
     constructor(private http: Http) { }
 
-    add(user: Object) {
+    add(user: User) {
         return this.http.post('/users', user)
             .map((response: Response) => {
                 // User successfully added
@@ -43,7 +53,7 @@ export class UsersService {
             .map((response: Response) => {
                 // User successfully added
                 // Extract data from response
-                const body: Object = response.json();
+                const body: User = response.json();
 
                 return body;
             })

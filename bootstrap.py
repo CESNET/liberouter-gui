@@ -164,12 +164,16 @@ def updateModuleList(moduleList, config, modulename):
         log.warn(modulename + ': No "file" key in config, skipping module')
         return False
 
-    moduleList.append({
+    module = {
         'folder': modulename,
         'class': config['module']['class'],
         'file': config['module']['file'],
         'name' : config['module']['name']
-        })
+        }
+    if 'hooks' in config['module']:
+        module['hooks'] = config['module']['hooks']
+
+    moduleList.append(module)
     return True
 
 def createSymlink(src, dst):
@@ -260,15 +264,28 @@ def registerModules(modules):
         for module in modules:
             file = re.sub('\.ts$', '', module['file'])
             path = os.path.join('modules', module['folder'], file)
-            fh.write('import { ' + module['class'] + ' } from \'./' + path + '\';\n')
+            fh.write('import { ' + module['class'])
+            if 'hooks' in module:
+                fh.write(', ' + module['hooks'])
+            fh.write(' } from \'./' + path + '\';\n')
 
-        fh.write('\n')
-        fh.write('export const modules: Array<Object> = [')
+        fh.write('\nexport const modules: Array<Object> = [')
 
         fh.write(modules[0]['class'])
         for i in range(1, len(modules)):
             fh.write(',' + modules[i]['class'])
         fh.write(']')
+
+        fh.write('\nexport const hooks: Array<any> = [')
+        first = True
+        for i in range(0, len(modules)):
+            if 'hooks' in modules[i]:
+                if not first:
+                    fh.write(',')
+                    first = False
+                fh.write(modules[i]['hooks'])
+        fh.write(']')
+
 
 def saveDependencies(deps):
     """

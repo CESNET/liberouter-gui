@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
-import { UsersService } from '../users.service';
+import { UsersService, User } from '../users.service';
 
 enum Roles {
     'Administrator' = 0,
@@ -17,7 +17,7 @@ enum Roles {
 })
 export class UsersListComponent implements OnInit {
 
-    users: Array<Object> = [];
+    users: Array<User> = [];
     currentUser = JSON.parse(localStorage.getItem('user'));
     roles = Roles;
     user = {};
@@ -46,7 +46,7 @@ export class UsersListComponent implements OnInit {
         this.user = user;
     }
 
-    removeUser(user: Object) {
+    removeUser(user: User) {
         this.usersService.remove(user['id']).subscribe(
             data => {
                 this.listUsers();

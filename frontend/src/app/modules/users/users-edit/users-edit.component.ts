@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { UsersService } from '../users.service';
+import { UsersService, User } from '../users.service';
 
 @Component({
     selector: 'app-users-edit',
@@ -13,15 +13,8 @@ export class UsersEditComponent implements OnInit {
     userId: String;
     error: String;
     passwordValidation = '';
-    user: Object = {
-        first_name : '',
-        last_name : '',
-        username : '',
-        email : '',
-        password : '',
-        role : -1
-    }
-    user_original: Object;
+    user: User = new User();
+    user_original: User;
 
     roles = [
         {value: 0, viewValue: 'Administrator'},
@@ -29,7 +22,7 @@ export class UsersEditComponent implements OnInit {
         {value: 255, viewValue: 'Guest'}
     ];
 
-    constructor(private usersService: UsersService,
+    constructor(public usersService: UsersService,
                 private route: ActivatedRoute,
                 private router: Router) {}
 
@@ -38,7 +31,7 @@ export class UsersEditComponent implements OnInit {
             this.userId = params['id'];
 
             this.usersService.get(this.userId).subscribe(
-                (data: Object) => {
+                (data: User) => {
                     console.log(data);
                     this.user = data;
                     this.user_original = JSON.parse(JSON.stringify(data));

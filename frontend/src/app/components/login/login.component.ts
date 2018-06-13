@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services';
 import { AppConfigService } from 'app/services/app-config.service';
 
+import { hooks } from '../../modules';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -28,7 +30,7 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authService: AuthService,
-        private appConfig : AppConfigService) {}
+        public appConfig : AppConfigService) {}
 
     ngOnInit() {
         this.appConfig.get().subscribe(data => {
@@ -110,6 +112,14 @@ export class LoginComponent implements OnInit {
             .subscribe(
                 data => {
                     this.unsetError();
+                    /* perform modules' hooks */
+                    for (let constr of hooks) {
+                        let hook = new constr();
+                        if (typeof hook['login'] === 'function') {
+                            hook.login();
+                        }
+                    }
+                    /* open application */
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {

@@ -1,8 +1,11 @@
 from flask import Flask
 from .Response import ResponseHandler
+from .Request import RequestHandler
+
 
 class Router(Flask):
 	response_class = ResponseHandler
+	request_class = RequestHandler
 
 	def add_route(self, rule, view_func, **options):
 		"""

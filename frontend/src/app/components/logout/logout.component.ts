@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'app/services';
 import { Router } from '@angular/router';
 
+import { hooks } from '../../modules';
+
 @Component({
   selector: 'app-logout',
   templateUrl: './logout.component.html',
@@ -19,6 +21,13 @@ export class LogoutComponent implements OnInit {
         this.authService.logout()
             .subscribe(
                 data => {
+                    /* perform modules' hooks */
+                    for (let constr of hooks) {
+                        let hook = new constr();
+                        if (typeof hook['logout'] === 'function') {
+                            hook.logout();
+                        }
+                    }
                     console.log('Success logging out.');
                     localStorage.removeItem('user');
                     localStorage.removeItem('session');
