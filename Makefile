@@ -7,11 +7,10 @@ init:
 
 .PHONY: build
 build:
-	cd frontend && ng build --prod --preserve-symlinks --bh="/" --output-path=../dist --extract-licenses=false
+	cd frontend && ng build --prod --base-href="/" --output-path=../dist --extract-licenses=false
 	cp -rL backend -t dist
 
 .PHONY: run
 run:
 	cd frontend && ng serve --preserve-symlinks --proxy proxy.json &
 	source ./venv/bin/activate && python3 backend
-
