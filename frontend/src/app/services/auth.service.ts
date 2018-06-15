@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import 'rxjs/add/operator/map'
-import {catchError, tap} from "rxjs/operators";
-
+import { catchError, tap} from "rxjs/operators";
+import { SocketService } from "./socket.service";
 
 @Injectable()
 export class AuthService {
 
-
-    constructor(protected http: HttpClient) { }
+    constructor(private http: HttpClient, private socket: SocketService) { }
 
     login(username: string, password: string) {
         return this.http.post<object>('/authorization', { username: username, password: password })
             .pipe(
-                tap((resp: object) => this.setLocalStorage(resp)),
+                tap((resp: object) => {
+                    this.setLocalStorage(resp);
+                    this.socket.send('login', resp['session_id']);
+                    }),
                 catchError(this.handleError)
             );
     }
@@ -28,8 +30,8 @@ export class AuthService {
     logout() {
         // remove user from local storage to log user out
         const user = JSON.parse(localStorage.getItem('user'));
+        this.socket.send('logout');
         return this.http.delete('/authorization');
-
     }
 
     checkSession() {
