@@ -26,6 +26,18 @@ export class LoginComponent implements OnInit {
     formErrorMsg = '';
     returnUrl: String;
     logo;
+    colors: object = {
+        "colorMain": "#313747",
+        "colorHighlight": "#717787",
+        "colorSelected": "#575d6d",
+        "colorSelected2": "#b0b6c6",
+        "colorBackground": "#fafafa",
+        "colorText": "#111",
+        "colorTextInverse": "#fff",
+        "colorLink": "#111",
+        "colorLinkHover": "#333",
+        "colorHeading": "#555"
+    };
 
     constructor(
         private route: ActivatedRoute,
@@ -35,6 +47,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.appConfig.get().subscribe(data => {
+            this.colors = data['colorTheme'];
             this.logo = {
                 src : data['logo'],
                 alt : data['name']

@@ -1,17 +1,37 @@
-$black:     #000;
-$white:     #fff;
-$grey:      grey;
-$lightGrey: #ccc;
-$red:       red;
-$green:     green;
+/* Cesnet official colors */
 
-$colorMain:        #313747;
-$colorHighlight:   #717787; // lighten($colorMain, 25%);
-$colorSelected:    #575D6D; // lighten($colorMain, 15%);
-$colorSelected2:   #B0B6C6; // lighten($colorMain, 50%);
-$colorBackground:  #FAFAFA;
-$colorText:        #111;
+/* Blacks */
+$fullBlack: #000;
+$black:     #231f20; /* Cesnet black */
+$white:     #fff;
+$grey:      #5a5a5a;
+$lightGrey: #aaa;
+
+/*
+ * Logo colors
+ * Can be used for accents in Cesnet GUIs
+ */
+//OfficialName     Value     Usage in logos
+$freshBlue:        #00a1e3; /* Mentat, Flab, Certs, Warden  */
+$cesnetBlue:       #0068a2; /* Cesnet */
+$ruby:             #a90156; /* DataCare */
+$red:              #ee1d23; /* EduID, Perun, CA */
+$liberouterGreen:  #008545; /* LibeRouter */
+$orange:           #f47921; /* MetaCentrum */
+$yellow:           #fcb814; /* CzechLight */
+$petrol:           #008185; /* Fond rozvoje */
+
+/* Other colors */
+$green:            green;
+
+/* GUI customizations */
+$colorMain:        $liberouterGreen;
+$colorHighlight:   lighten($colorMain, 25%); // #717787; // lighten($colorMain, 25%);
+$colorSelected:    lighten($colorMain, 15%); // #575D6D; // lighten($colorMain, 15%);
+$colorSelected2:   lighten($colorMain, 50%);// #B0B6C6; // lighten($colorMain, 50%);
+$colorBackground:   #FAFAFA;
+$colorText:        $black;
 $colorTextInverse: #fff;
-$colorLink:        #111;
-$colorLinkHover:   #333;
+$colorLink:        $cesnetBlue;
+$colorLinkHover:   $freshBlue;
 $colorHeading:     #555;
