@@ -1,10 +1,7 @@
 
 <section class="lrg-screen-center">
-    <div class="lrg-form-container" [ngStyle]="{
-    'color': config.colorTheme.colorText}" >
-        <div class="lrg-form-header" [ngStyle]="{
-        'background-color': config.colorTheme.colorMain,
-        'color': config.colorTheme.colorTextInverse}">
+    <div class="lrg-form-container" >
+        <div class="lrg-form-header">
             <h1 class="lrg-form-heading">Welcome to {{ config.name }}</h1>
             <p class="lrg-form-header-text">You are now all set! Just create an administrator account and you can start using {{ config.name }}.</p>
         </div>
@@ -15,9 +12,7 @@
             <input class="lrg-form-input" type="password" name="password" id="password" placeholder="password" [(ngModel)]="admin.password" required><br>
             <label for="username" class="lrg-form-label">Re-enter the same password</label><br>
             <input class="lrg-form-input" type="password" name="password2" id="password2" placeholder="repeat password" [(ngModel)]="admin.password2" required><br>
-            <input type="submit" value="Create" class="lrg-form-button-big" [class.disabled]="admin.password != admin.password2 || !setupForm.form.valid"
-            [ngStyle]="{
-            'background-color': (admin.password != admin.password2 || !setupForm.form.valid) ? 'rgba(0, 0, 0, 0.3)' : config.colorTheme.colorMain}"><br>
+            <input type="submit" value="Create" class="lrg-form-button-big" [class.disabled]="admin.password != admin.password2 || !setupForm.form.valid"><br>
 
             <p class="lrg-form-error" role="alert" *ngIf="error != ''">
                 <span *ngIf="error['error']"> {{ error['error'] }}</span>

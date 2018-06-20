@@ -192,6 +192,7 @@ nemea-events .modal-dialog {
     width: 500px;
     max-width: 100%;
     padding-bottom: 50px;
+    color: $colorText;
     background: white;
     border: 2px solid white;
     border-radius: 5px;
@@ -200,6 +201,8 @@ nemea-events .modal-dialog {
 .lrg-form-header {
     padding: 20px;
     margin-bottom: 40px;
+    color: $colorTextInverse;
+    background-color: $colorMain;
     border-radius: 5px 5px 0 0;
 }
 .lrg-form-heading {
