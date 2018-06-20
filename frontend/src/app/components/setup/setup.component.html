@@ -15,8 +15,7 @@
             <input type="submit" value="Create" class="lrg-form-button-big" [class.disabled]="admin.password != admin.password2 || !setupForm.form.valid"><br>
 
             <p class="lrg-form-error" role="alert" *ngIf="error != ''">
-                <span *ngIf="error['error']"> {{ error['error'] }}</span>
-                <span *ngIf="!error['error']">{{ error }}</span>
+                <span>{{ error }}</span>
             </p>
         </form>
     </div>

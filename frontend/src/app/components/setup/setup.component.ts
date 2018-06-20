@@ -34,7 +34,14 @@ export class SetupComponent implements OnInit {
             },
             err => {
                 console.log(err);
-                this.error = err;
+                // Server returns HTML 404 response, if setup was already completed.
+                // This overrides the message with human readable message, instead of [Object object]
+                if(err['status'] == 404) {
+                    this.error = "Setup was already completed. You can not create new users using setup. (Got 404 when accessing setup)";
+                }
+                else {
+                    this.error = err;
+                }
             }
         )
     }
