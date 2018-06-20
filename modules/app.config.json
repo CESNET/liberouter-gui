@@ -8,6 +8,7 @@
     "colorSelected": "#00a354",
     "colorSelected2": "#00b55d",
     "colorBackground": "#fafafa",
+    "colorItemBackground": "#fff",
     "colorText": "#231f20",
     "colorTextInverse": "#fff",
     "colorLink": "#0068a2",
