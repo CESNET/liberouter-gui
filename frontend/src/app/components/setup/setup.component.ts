@@ -9,7 +9,6 @@ import { AuthService } from 'app/services';
   providers : [AuthService]
 })
 export class SetupComponent implements OnInit {
-
     admin = {
         username : '',
         password : '',

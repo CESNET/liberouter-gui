@@ -1,44 +1,35 @@
-<section *ngIf="appConfig.auth" class="d-flex justify-content-center align-content-center align-items-center login-container">
-	<section class="login box">
-		<h2>
-			<span>Liberouter GUI</span>
-			<img [src]="logo?.src" [alt]="logo?.alt" *ngIf="logo?.src" />
-		</h2>
+<section *ngIf="appConfig.auth" class="lrg-screen-center">
+    <div class="lrg-form-container">
+        <div class="lrg-form-header">
+            <img class="lrg-form-logo" [src]="logo?.src" [alt]="logo?.alt" *ngIf="logo?.src" />
+        </div>
+        <form>
+            <label for="username" class="lrg-form-label">Enter your username</label><br>
+            <input class="lrg-form-input"
+                   type="text"
+                   id="username"
+                   [(ngModel)]="user.username"
+                   placeholder="Username"
+                   name="username"><br>
+            <label for="username" class="lrg-form-label">Enter your password</label><br>
+            <input class="lrg-form-input"
+                   type="password"
+                   id="password"
+                   placeholder="Password"
+                   [(ngModel)]="user.password"
+                   name="password"><br>
 
-		<form>
-			<div class="form-group">
-				<label for="username" class="sr-only">Username</label>
-				<div class="input-group">
-					<div class="input-group-addon">Username</div>
-					<input type="text"
-						class="form-control"
-						id="username"
-						[(ngModel)]="user.username"
-						placeholder="Username"
-						name="username">
-				</div>
-			</div>
+            <button class="lrg-form-button-big"
+                    (click)="login()"
+                    [disabled]="loading">
+                {{ loginBtn }}</button><br>
 
-			<div class="form-group">
-				<label for="password" class="sr-only">Password</label>
-				<div class="input-group">
-					<div class="input-group-addon">Password&nbsp;</div>
-					<input type="password"
-						class="form-control"
-						id="password"
-						placeholder="Password"
-						[(ngModel)]="user.password"
-						name="password">
-				</div>
-			</div>
+            <p class="lrg-form-error" role="alert" *ngIf="error != ''">
+                <span *ngIf="formErrorMsg"> {{ formErrorMsg }}</span>
+            </p>
+        </form>
+    </div>
 
-			<button type="submit" class="btn btn-primary btn-block" (click)="login()" [disabled]="loading">{{ loginBtn }}</button>
-
-			<div class="error-message" *ngIf="formError">
-				Error: {{ formErrorMsg }}
-			</div>
-		</form>
-	</section>
 </section>
 <section *ngIf="!appConfig.auth" class="d-flex justify-content-center align-content-center align-items-center login-container">
     <div class="error-message" *ngIf="formError">

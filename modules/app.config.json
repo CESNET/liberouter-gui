@@ -3,15 +3,16 @@
   "name": "Liberouter GUI",
   "authorization" : true,
   "colorTheme": {
-    "colorMain": "#313747",
-    "colorHighlight": "#717787",
-    "colorSelected": "#575d6d",
-    "colorSelected2": "#b0b6c6",
+    "colorMain": "#008545",
+    "colorHighlight": "#016d39",
+    "colorSelected": "#00a354",
+    "colorSelected2": "#00b55d",
     "colorBackground": "#fafafa",
-    "colorText": "#111",
+    "colorItemBackground": "#fff",
+    "colorText": "#231f20",
     "colorTextInverse": "#fff",
-    "colorLink": "#111",
-    "colorLinkHover": "#333",
+    "colorLink": "#0068a2",
+    "colorLinkHover": "#00a1e3",
     "colorHeading": "#555"
   },
   "assets": {

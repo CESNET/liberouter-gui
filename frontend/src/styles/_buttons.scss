@@ -1,0 +1,14 @@
+@import "colors";
+
+.btn {
+    border: none;
+    border-radius: 5px;
+}
+.btn-primary {
+    color: $colorTextInverse;
+    background-color: $colorMain;
+}
+
+.btn-primary:hover {
+    background-color: $colorHighlight;
+}

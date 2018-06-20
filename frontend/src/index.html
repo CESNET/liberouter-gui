@@ -9,22 +9,55 @@
   <link rel="icon" type="image/x-icon" href="favicon.png?v=2">
 
     <style>
-        .loader {
-            text-align: center;
-            padding-top: 2em;
+        html, body, .loader {
+            height: 100%;
+            background-color: #fafafa;
         }
-
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
         .loader #error {
             color: red;
-            font-size: 1.5em;
+            font-size: 3em;
+
+        }
+        .loader h1 {
+            font-family: sans-serif;
+            font-size: 2.5em;
+            color: rgba(0, 0, 0, 0.3);
+            margin-top: 50px;
+            font-weight: 200;
+        }
+
+        #loading {
+            display: inline-block;
+            width: 74px;
+            height: 74px;
+            border: 5px solid rgba(0,0,0,.3);
+            border-radius: 50%;
+            border-top-color: #0068a2;
+            animation: spin 1s ease-in-out infinite;
+            -webkit-animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+        @-webkit-keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
   <app-root>
       <section class="loader">
-        <h1>Loading user interface...</h1>
-        <div id="error"></div>
+          <!-- <img src="assets/img/logo-sm.png"> -->
+          <div id="loading"></div>
+          <h1>Loading user interface...</h1>
+          <div id="error"></div>
       </section>
   </app-root>
 </body>

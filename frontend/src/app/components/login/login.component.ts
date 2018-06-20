@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services';
 import { AppConfigService } from 'app/services/app-config.service';
+import { JSONHelper } from 'app/utils/json-helper';
 
 import { hooks } from '../../modules';
 
@@ -129,11 +130,7 @@ export class LoginComponent implements OnInit {
                     }
                     try {
                         // Correct JSON response formatting
-                        let errMessage= error.error.replace(/'/g,'"');
-                        errMessage = errMessage.replace("True","true");
-                        errMessage = errMessage.replace("False", "false");
-
-                        const body = JSON.parse(errMessage);
+                        let body = JSONHelper.parsePythonJSON(error.error);
                         this.setError(body['message']);
                     } catch (err) {
                         console.log(err);

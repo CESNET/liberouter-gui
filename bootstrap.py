@@ -347,7 +347,7 @@ def applicationConfig(modules):
             log.error('Missing key "name" in modules/app.config.json')
             raise KeyError('missing "name" in app.config.json')
 
-        colors = loadColors(os.path.join(BASE_PATH, 'frontend/src/styles/_colors_template.scss'))
+        colors = loadColors(os.path.join(BASE_PATH, 'frontend/src/styles/_colors_defaults.scss'))
         if 'colorTheme' in config:
             for newColor in config['colorTheme']:
                 colors['$' + newColor] = config['colorTheme'][newColor]
