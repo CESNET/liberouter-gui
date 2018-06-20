@@ -32,8 +32,8 @@
               "src/.htaccess"
             ],
             "styles": [
-              "src/styles/main.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles/main.scss"
             ],
             "scripts": []
           },
