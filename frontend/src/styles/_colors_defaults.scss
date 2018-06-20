@@ -25,13 +25,13 @@ $petrol:           #008185; /* Fond rozvoje */
 $green:            green;
 
 /* GUI customizations */
-$colorMain:        $liberouterGreen;
-$colorHighlight:   lighten($colorMain, 25%); // #717787; // lighten($colorMain, 25%);
-$colorSelected:    lighten($colorMain, 15%); // #575D6D; // lighten($colorMain, 15%);
-$colorSelected2:   lighten($colorMain, 50%);// #B0B6C6; // lighten($colorMain, 50%);
-$colorBackground:   #FAFAFA;
-$colorText:        $black;
+$colorMain:        #c5ae85;
+$colorHighlight:   #717787; // lighten($colorMain, 25%);
+$colorSelected:    #575D6D; // lighten($colorMain, 15%);
+$colorSelected2:   #B0B6C6; // lighten($colorMain, 50%);
+$colorBackground:  #FAFAFA;
+$colorText:        #231f20;
 $colorTextInverse: #fff;
-$colorLink:        $cesnetBlue;
-$colorLinkHover:   $freshBlue;
+$colorLink:        #0068a2;
+$colorLinkHover:   #00a1e3;
 $colorHeading:     #555;
