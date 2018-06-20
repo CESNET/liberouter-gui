@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/services';
+import { AppConfigService } from "app/services/app-config.service";
 
 @Component({
   selector: 'app-setup',
@@ -16,10 +17,14 @@ export class SetupComponent implements OnInit {
     };
 
     error = '';
+    name = 'Liberouter GUI'; // Rewritten by AppConfig service
 
-    constructor(private authService: AuthService, private router: Router) { }
+    constructor(private authService: AuthService, private router: Router, private appConfig: AppConfigService) { }
 
     ngOnInit() {
+        this.appConfig.get().subscribe(data => {
+            this.name = data['name'];
+        });
     }
 
     onSubmit() {
