@@ -3,9 +3,17 @@
  */
 
 @import url('https://fonts.googleapis.com/css?family=Lato');
-
+@import "colors";
 $font-size : 1em;
 $font-family : "Lato", sans-serif;
+
+body, p, h5, h6 {
+    color: $colorText;
+}
+
+h1, h2, h3, h4 {
+    color: $colorHeading;
+}
 
 h1 {
 	font-size: calc(1.5vw);
