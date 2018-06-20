@@ -102,9 +102,10 @@ section.main {
 					padding: 1em 0 1em 1em;
 					text-align: left;
 					cursor: pointer;
+                    transition: background-color 100ms ease-in-out;
 
 					&:hover {
-						background: $colorHighlight;
+						background-color: $colorHighlight;
 					}
 
 					i.fa {
