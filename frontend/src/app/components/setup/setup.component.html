@@ -2,8 +2,8 @@
 <section class="lrg-screen-center">
     <div class="lrg-form-container" >
         <div class="lrg-form-header">
-            <h1 class="lrg-form-heading">Welcome to {{ config.name }}</h1>
-            <p class="lrg-form-header-text">You are now all set! Just create an administrator account and you can start using {{ config.name }}.</p>
+            <h1 class="lrg-form-heading">Welcome to {{ name }}</h1>
+            <p class="lrg-form-header-text">You are now all set! Just create an administrator account and you can start using {{ name }}.</p>
         </div>
         <form (ngSubmit)="onSubmit()" #setupForm="ngForm" novalidate>
             <label for="username" class="lrg-form-label">Choose your username</label><br>
@@ -15,8 +15,7 @@
             <input type="submit" value="Create" class="lrg-form-button-big" [class.disabled]="admin.password != admin.password2 || !setupForm.form.valid"><br>
 
             <p class="lrg-form-error" role="alert" *ngIf="error != ''">
-                <span *ngIf="error['error']"> {{ error['error'] }}</span>
-                <span *ngIf="!error['error']">{{ error }}</span>
+                <span>{{ error }}</span>
             </p>
         </form>
     </div>

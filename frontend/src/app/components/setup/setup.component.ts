@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/services';
+import { AppConfigService } from "app/services/app-config.service";
 
 @Component({
   selector: 'app-setup',
@@ -16,10 +17,14 @@ export class SetupComponent implements OnInit {
     };
 
     error = '';
+    name = 'Liberouter GUI'; // Rewritten by AppConfig service
 
-    constructor(private authService: AuthService, private router: Router) { }
+    constructor(private authService: AuthService, private router: Router, private appConfig: AppConfigService) { }
 
     ngOnInit() {
+        this.appConfig.get().subscribe(data => {
+            this.name = data['name'];
+        });
     }
 
     onSubmit() {
@@ -29,7 +34,14 @@ export class SetupComponent implements OnInit {
             },
             err => {
                 console.log(err);
-                this.error = err;
+                // Server returns HTML 404 response, if setup was already completed.
+                // This overrides the message with human readable message, instead of [Object object]
+                if(err['status'] == 404) {
+                    this.error = "Setup was already completed. You can not create new users using setup. (Got 404 when accessing setup)";
+                }
+                else {
+                    this.error = err;
+                }
             }
         )
     }

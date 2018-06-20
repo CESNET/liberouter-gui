@@ -40,10 +40,10 @@ html, body, .lrg-screen-center {
 }
 
 section.box {
-	background: $white;
+	background: $colorItemBackground;
 	padding: 1em;
 	margin: 0.5em;
-	border: 1px solid darken($white, 5%);
+	border: 1px solid darken($colorItemBackground, 5%);
 }
 
 section.main {
@@ -102,9 +102,10 @@ section.main {
 					padding: 1em 0 1em 1em;
 					text-align: left;
 					cursor: pointer;
+                    transition: background-color 100ms ease-in-out;
 
 					&:hover {
-						background: $colorHighlight;
+						background-color: $colorHighlight;
 					}
 
 					i.fa {
@@ -172,7 +173,6 @@ nemea-events .modal-dialog {
 	margin: 1em;
 }
 
-
 .CodeMirror {
   border: 1px solid #eee;
   height: calc(90vh - 2em)!important;
@@ -193,5 +193,10 @@ nemea-events .modal-dialog {
 .card {
     background-color: $colorItemBackground;
 }
-
+.table td, .table tr, .table th  {
+    border-top: 1px solid darken($colorItemBackground, 15%);
+}
+.table thead th {
+    border-bottom: 2px solid darken($colorItemBackground, 15%);
+}
 
