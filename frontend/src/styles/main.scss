@@ -189,9 +189,9 @@ nemea-events .modal-dialog {
     flex-direction: column;
 }
 .lrg-form-container {
-    width: 500px;
+    width: 400px;
     max-width: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
     color: $colorText;
     background: white;
     border: 2px solid white;
@@ -200,28 +200,28 @@ nemea-events .modal-dialog {
 }
 .lrg-form-header {
     padding: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     color: $colorTextInverse;
     background-color: $colorMain;
     border-radius: 5px 5px 0 0;
 }
 .lrg-form-heading {
-    font-size: 2.5em;
+    font-size: 2em;
     border-bottom: 2px solid $white;
 }
 .lrg-form-header-text {
-    font-size: 1.3em;
+    font-size: 1.2em;
 }
 .lrg-form-logo {
-    max-width: 60%;
+    max-width: 80%;
     height: auto;
 }
 .lrg-form-input {
-    width: 450px;
+    width: 350px;
     max-width: 90%;
     padding: 5px 0;
-    margin-bottom: 20px;
-    font-size: 1.3em;
+    margin-bottom: 10px;
+    font-size: 1.2em;
     color: black;
     text-align: center;
     background: white;
@@ -234,7 +234,7 @@ nemea-events .modal-dialog {
     font-size: 1.2em;
 }
 .lrg-form-error {
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: $red;
 }
 .lrg-form-button-big {
@@ -242,7 +242,7 @@ nemea-events .modal-dialog {
     max-width: 90%;
     padding: 5px 0;
     margin-top: 1em;
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: $white;
     text-align: center;
     cursor: pointer;
