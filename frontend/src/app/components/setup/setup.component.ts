@@ -25,6 +25,15 @@ export class SetupComponent implements OnInit {
         this.appConfig.get().subscribe(data => {
             this.name = data['name'];
         });
+        this.authService.checkSetup().subscribe((result) => {
+            if(result['result'] === 'false') {
+                this.router.navigate(['/login']);
+            }
+        },
+        (err) => {
+            console.warn("Auth service errored :(");
+            console.warn(err);
+        });
     }
 
     onSubmit() {

@@ -1,7 +1,7 @@
 <div class="container-fluid">
 <section class="home row">
     <div *ngFor="let module of modules; let i = index"
-        class="col-md-12 col-lg col"
+        class="col-md-12 col-lg col home-item"
         [ngStyle]="{'display' : enabledModules[module?.path]?.enabled ? 'block' : 'none'}">
             <div class="card">
                 <div class="card-body">
