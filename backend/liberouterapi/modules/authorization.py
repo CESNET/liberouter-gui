@@ -33,7 +33,7 @@ def login():
 @au.route('', methods=['DELETE'])
 @auth.required()
 def logout():
-	session_id = request.headers.get('Authorization', None)
+	session_id = request.headers.get('lgui-Authorization', None)
 	auth.delete(session_id)
 	return(json.dumps({"success" : True}))
 
