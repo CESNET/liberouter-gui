@@ -57,6 +57,11 @@ section.main {
 	    width: calc(100% - 150px);
 	    height: 100%;
 		background-color: $colorBackground;
+        transition: all 150ms ease-in-out;
+        @media screen and (max-width: 600px) {
+            width: calc(100% - 50px);
+            margin-left: 50px;
+        }
 
 		&.no-sidebar {
 			margin: 0;
@@ -81,6 +86,10 @@ section.main {
 		overflow: visible;
 		display: block;
 		float: left;
+        transition: all 150ms ease-in-out;
+        @media screen and (max-width: 600px) {
+            width: 50px;
+        }
 
 		h1 img {
 			display: block;
@@ -90,6 +99,9 @@ section.main {
 
 		&.hidden {
 		    left: -150px;
+            @media screen and (max-width: 600px) {
+                left: -50px;
+            }
 		}
 
 		.menu {
@@ -104,6 +116,11 @@ section.main {
 					text-align: left;
 					cursor: pointer;
                     transition: background-color 100ms ease-in-out;
+                    @media screen and (max-width: 600px) {
+                        span {
+                            display: none;
+                        }
+                    }
 
 					&:hover {
 						background-color: $colorHighlight;
