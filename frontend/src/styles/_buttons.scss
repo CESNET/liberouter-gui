@@ -12,3 +12,10 @@
 .btn-primary:hover {
     background-color: $colorHighlight;
 }
+.btn:active,
+.btn:target,
+.btn-primary:active,
+.btn-primary:target{
+    background-color: $colorSelected;
+    box-shadow: none;
+}
