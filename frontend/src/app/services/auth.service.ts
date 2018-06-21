@@ -46,7 +46,7 @@ export class AuthService {
     }
 
     checkSetup() {
-        return this.http.get<object>('/setup');
+        return this.http.get<string>('/setup');
     }
 
     private handleError(err: HttpResponse<any> | any) {
