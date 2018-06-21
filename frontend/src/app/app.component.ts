@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { AuthService, ConfigService } from './services';
+import { AuthService, ConfigService, SocketService } from './services';
 import { AppConfigService } from './services/app-config.service';
 import { Title }     from '@angular/platform-browser';
 
@@ -8,7 +8,7 @@ import { Title }     from '@angular/platform-browser';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers : [AuthService, ConfigService]
+  providers : [AuthService, ConfigService, SocketService]
 })
 export class AppComponent implements OnInit {
     isLoginPage = false;
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
                 private route: ActivatedRoute,
                 private auth: AuthService,
                 private config: ConfigService,
+                private socket: SocketService,
                 private appConfig : AppConfigService,
                 private titleService: Title) {}
 

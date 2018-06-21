@@ -16,9 +16,10 @@ The basic steps:
     * import all modules and its Blueprints
 """
 import logging
+from flask_socketio import SocketIO
 from .Router import Router
 app = Router(__name__)
-
+socketio = SocketIO(app, manage_session = True)
 log = logging.getLogger("INIT")
 
 """

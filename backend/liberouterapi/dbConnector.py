@@ -139,7 +139,9 @@ class dbConnector(object):
             is easily upgradeable to MySQL or PostgreSQL.
             """
             import sqlite3
-            path = os.getcwd() + "/" + self.config.get('file', 'database.sq3')
+            path = self.config.get('file', 'database.sq3')
+            if path[0] is not '/':
+                path = os.getcwd() + "/" + path
             self.connection = sqlite3.connect(path, check_same_thread=False)
             self.connection.row_factory = sqlite3.Row
             self.db = self.connection.cursor()
