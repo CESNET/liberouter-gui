@@ -14,9 +14,9 @@
         <tbody>
         <tr *ngFor="let user of users; let i = '0'">
             <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.last_name }}</td>
+            <td>{{ user.email !== "null" ? user.email : "" }}</td>
+            <td>{{ user.first_name !== "null" ? user.first_name : "" }}</td>
+            <td>{{ user.last_name !== "null" ? user.last_name : "" }}</td>
             <td>{{ roles[user.role] }}</td>
             <td>
                 <button class="btn btn-secondary" routerLink="{{user.id}}">View user</button>
