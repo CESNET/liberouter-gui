@@ -117,7 +117,7 @@ export class RequestInterceptorService implements HttpInterceptor {
         const session : string = localStorage.getItem('session_id');
         //We found session ID, send it to server
         if (session !== null) {
-            headers = headers.set('Authorization', session)
+            headers = headers.set('lgui-Authorization', session)
         }
         //Remove specific content types to prevent errors
         if (headers.has('specific-content-type')) {

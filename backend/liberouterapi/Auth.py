@@ -117,9 +117,9 @@ class Auth(object):
         def auth_decorator(f):
             @wraps(f)
             def verify(*args, **kwargs):
-                session_id = request.headers.get('Authorization', None)
+                session_id = request.headers.get('lgui-Authorization', None)
                 if not session_id:
-                    raise SessionException("Header field 'Authorization' not found.")
+                    raise SessionException("Header field 'lgui-Authorization' not found.")
 
                 try:
                     session = self.lookup(session_id)
