@@ -40,9 +40,13 @@ export class AuthService {
             );
     }
 
-    admin(user: Object) {
-        return this.http.post<Object>('/setup', user)
+    admin(user: object) {
+        return this.http.post<object>('/setup', user)
             .catch(this.handleError);
+    }
+
+    checkSetup() {
+        return this.http.get<object>('/setup');
     }
 
     private handleError(err: HttpResponse<any> | any) {
