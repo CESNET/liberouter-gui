@@ -22,9 +22,13 @@ export class SocketService {
         }
     }
 
-    listen(event: string) {
+    subscribe(event: string) {
         return new Observable<any>(observer => {
             this.socket.on(event, (data) => observer.next(data));
         });
+    }
+
+    unsubscribe(event: string) {
+        this.socket.removeListener(event)
     }
 }
