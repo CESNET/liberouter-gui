@@ -77,8 +77,11 @@ def mergeNgcDeps(base, module):
     items = ['assets', 'styles', 'scripts']
 
     for item in items:
-        # NOTE: lgui is just a single app, so it's always on index 0
-        Unify.arrays(base['projects'][0]['architect']['build']['options'][item], module['projects'][0]['architect']['build']['options'][item])
+        try:
+            Unify.arrays(base['projects']['liberouter-gui']['architect']['build']['options'][item], module['projects']['liberouter-gui']['architect']['build']['options'][item])
+            break
+        except KeyError:
+            pass
 
 def mergePipDeps(base, module, modulename):
     """
