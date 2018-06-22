@@ -79,7 +79,6 @@ def mergeNgcDeps(base, module):
     for item in items:
         try:
             Unify.arrays(base['projects']['liberouter-gui']['architect']['build']['options'][item], module['projects']['liberouter-gui']['architect']['build']['options'][item])
-            break
         except KeyError:
             pass
 
