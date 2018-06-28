@@ -11,9 +11,9 @@
 }
 .btn-primary {
     color: $colorTextInverse;
-    background-color: $colorMain;
+    background: $colorMain;
     &:hover {
-        background-color: $colorHighlight;
+        background: $colorHighlight;
     }
 }
 
@@ -22,6 +22,6 @@
 .btn:target,
 .btn-primary:active,
 .btn-primary:target{
-    background-color: $colorSelected;
+    background: $colorSelected;
     box-shadow: none;
 }

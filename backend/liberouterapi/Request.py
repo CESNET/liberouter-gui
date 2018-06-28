@@ -2,7 +2,6 @@ from flask import Request
 from collections import OrderedDict
 from flask import json
 
-_missing = object()
 
 
 class RequestHandler(Request):
@@ -27,9 +26,8 @@ class RequestHandler(Request):
         if not keep_order:
             return Request.get_json(self)
 
-        rv = getattr(self, '_cached_json', _missing)
-        if rv is not _missing:
-            return rv
+        if cache and self._cached_json[silent] is not Ellipsis:
+            return self._cached_json[silent]
 
         if not (force or self.is_json):
             return None
@@ -45,10 +43,16 @@ class RequestHandler(Request):
         except ValueError as e:
             if silent:
                 rv = None
+                if cache:
+                    normal_rv, _ = self._cached_json
+                    self._cached_json = (normal_rv, rv)
             else:
-                rv = Request.on_json_loading_failed(self, e)
+                rv = self.on_json_loading_failed(e)
+                if cache:
+                    _, silent_rv = self._cached_json
+                    self._cached_json = (rv, silent_rv)
 
         if cache:
-            self._cached_json = rv
+            self._cached_json = (rv, rv)
 
         return rv
