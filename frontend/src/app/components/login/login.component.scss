@@ -2,7 +2,7 @@
 
 .login-container {
 	height: 100%;
-	background-color: $colorBackground;
+	background: $colorBackground;
 }
 
 
@@ -30,7 +30,7 @@
 		padding: 1em 2em 2em 2em;
 		button {
 			cursor: pointer;
-			background-color: $colorMain;
+			background: $colorMain;
 			border-color: $colorMain;
 			color: $colorBackground;
 		}
