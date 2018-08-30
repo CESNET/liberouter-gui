@@ -1,16 +1,16 @@
 {
 	"/libapi": {
-		"target": "http://[::1]:5555/",
+		"target": "http://127.0.0.1:5555/",
 	  	"secure": false,
 	  	"pathRewrite" : {"/libapi" : ""}
 	},
 	"/virt/*": {
-		"target": "http://[::1]:15555/",
+		"target": "http://127.0.0.1:15555/",
 		"secure": false,
 		"pathRewrite": {"/virt" : ""}
 	},
 	"/socket.io/*": {
-		"target": "http://[::1]:5555/",
+		"target": "http://127.0.0.1:5555/",
 		"secure": false,
 		"ws": true
 	}

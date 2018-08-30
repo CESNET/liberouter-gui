@@ -40,7 +40,7 @@ class Config(object):
             sys.exit(1)
 
         self.DEBUG = self.config["api"].getboolean("debug", False)
-        self.HOST = self.config["api"].get("host", "localhost")
+        self.HOST = self.config["api"].get("host", "127.0.0.1")
         self.PORT = self.config["api"].getint("port", 5555)
         self.THREADED = self.config["api"].getboolean("threaded", True)
         self.AUTH = APP_AUTHORIZATION
