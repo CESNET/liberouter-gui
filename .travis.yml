@@ -38,7 +38,7 @@ script:
     # List will fail because of unmet peer dependencies from an outdated package which requires
     # lower version of a package that is actually installed in higher version
     - npm list || true
-    - ng build --prod --bh="/" --aot=false
+    - ng build --prod --base-href="/" --aot=false
     # Backend build procedure
     - cd $TRAVIS_BUILD_DIR/backend
     - virtualenv venv -p python3
