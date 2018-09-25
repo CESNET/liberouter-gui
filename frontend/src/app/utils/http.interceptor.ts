@@ -25,6 +25,7 @@ import {
 import { Router } from "@angular/router";
 import { AppConfigService } from "../services/app-config.service";
 import { Observable } from "rxjs/Observable";
+import { throwError } from 'rxjs';
 import { environment } from "../../environments/environment";
 
 @Injectable()
@@ -70,7 +71,7 @@ export class RequestInterceptorService implements HttpInterceptor {
                     }
                 }
 
-                return Observable.throwError(error);
+                return throwError(error);
 
             });
     }

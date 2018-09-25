@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
+import { throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 
 @Injectable()
@@ -24,7 +25,7 @@ export class ConfigService {
                 .catch((error: any): any => {
                     console.log(`Configuration could not be read`);
                     reject(true);
-                    return Observable.throwError(error.json().error || 'Server error');
+                    return throwError(error.json().error || 'Server error');
                 })
         });
     }

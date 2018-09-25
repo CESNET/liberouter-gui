@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs';
+import { from } from 'rxjs';
 
 /**
  * Application configuration service
@@ -40,7 +42,7 @@ export class AppConfigService {
      */
     public get() {
         if (this.config) {
-            return Observable.of(this.config);
+            return of(this.config);
         } else {
             return this.fetch();
         }
@@ -56,7 +58,7 @@ export class AppConfigService {
      * This cannot use the Angular HTTP module, therefore uses good old XMLHttpRequest
      */
     public fetch() {
-        return Observable.fromPromise(new Promise((resolve, reject) => {
+        return from(new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('GET', environment.configPath);
             xhr.onload = () => {
