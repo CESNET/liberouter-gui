@@ -30,13 +30,13 @@ export class LogoutComponent implements OnInit {
                     }
                     console.log('Success logging out.');
                     localStorage.removeItem('user');
-                    localStorage.removeItem('session');
+                    localStorage.removeItem('session_id');
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
                     console.log('Error logging out.');
                     localStorage.removeItem('user');
-                    localStorage.removeItem('session');
+                    localStorage.removeItem('session_id');
                     this.router.navigate([this.returnUrl]);
                 }
             );

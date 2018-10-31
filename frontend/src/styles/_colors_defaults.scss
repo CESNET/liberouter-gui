@@ -1,0 +1,38 @@
+/* Cesnet official colors */
+
+/* Blacks */
+$fullBlack: #000;
+$black:     #231f20; /* Cesnet black */
+$white:     #fff;
+$grey:      #5a5a5a;
+$lightGrey: #aaa;
+
+/*
+ * Logo colors
+ * Can be used for accents in Cesnet GUIs
+ */
+//OfficialName     Value     Usage in logos
+$freshBlue:        #00a1e3; /* Mentat, Flab, Certs, Warden  */
+$cesnetBlue:       #0068a2; /* Cesnet */
+$ruby:             #a90156; /* DataCare */
+$red:              #ee1d23; /* EduID, Perun, CA */
+$liberouterGreen:  #008545; /* LibeRouter */
+$orange:           #f47921; /* MetaCentrum */
+$yellow:           #fcb814; /* CzechLight */
+$petrol:           #008185; /* Fond rozvoje */
+
+/* Other colors */
+$green:            green;
+
+/* GUI customizations */
+$colorMain:        #008545;
+$colorHighlight:   #016d39;
+$colorSelected:    #016d39;
+$colorSelected2:   #00b55d;
+$colorBackground:  #fafafa;
+$colorItemBackground: #fff;
+$colorText:        #231f20;
+$colorTextInverse: #fff;
+$colorLink:        #0068a2;
+$colorLinkHover:   #00a1e3;
+$colorHeading:     #555;

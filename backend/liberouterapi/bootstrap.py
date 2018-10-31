@@ -110,6 +110,7 @@ def check_users():
             config.setup = False
     else:
         config.setup = False
+    app.add_url_rule('/setup', view_func = setup_check, methods = ['GET'])
 
 @app.errorhandler(ApiException)
 def handle_invalid_usage(error):
@@ -126,6 +127,9 @@ def setup_mode(response):
         response.headers['Warning'] = 'setup-required'
         response.status_code = 442
     return response
+
+def setup_check():
+    return( json.dumps({'result': str(config.setup).lower()}))
 
 def setup():
     """

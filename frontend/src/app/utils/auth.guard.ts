@@ -12,7 +12,8 @@ export class AuthGuard implements CanActivate, CanLoad {
     constructor(private router: Router) { }
 
     isLoggedIn(): boolean {
-        if (localStorage.getItem('session')) {
+        //TODO: Check session validity before returning true
+        if (localStorage.getItem('session_id')) {
             // logged in so return true
             return true;
         }
@@ -34,8 +35,7 @@ export class AuthGuard implements CanActivate, CanLoad {
             if (user['role'] <= route.data['role']) {
                 return true;
             }
-
-            console.warn('User is not allowed to access \'' + route['path'] + '\'')
+            console.warn('User is not allowed to access \'' + route.url[0]['path'] + '\'');
             return false;
         }
 
@@ -45,9 +45,6 @@ export class AuthGuard implements CanActivate, CanLoad {
     }
 
     canLoad(route: Route): boolean {
-        if (this.isLoggedIn()) {
-            return true;
-        }
-        return false;
+        return this.isLoggedIn();
     }
 }

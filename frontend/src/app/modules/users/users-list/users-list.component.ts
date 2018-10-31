@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from '@angular/core';
 
 import { UsersService, User } from '../users.service';
 
@@ -26,7 +25,7 @@ export class UsersListComponent implements OnInit {
     constructor (private usersService: UsersService) {}
 
     ngOnInit() {
-        console.log('trying to list users')
+        console.log('trying to list users');
         this.listUsers();
     }
 

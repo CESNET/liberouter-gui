@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { AuthService, ConfigService } from './services';
+import { AuthService, ConfigService, SocketService } from './services';
 import { AppConfigService } from './services/app-config.service';
 import { Title }     from '@angular/platform-browser';
 
@@ -8,7 +8,7 @@ import { Title }     from '@angular/platform-browser';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers : [AuthService, ConfigService]
+  providers : [AuthService, ConfigService, SocketService]
 })
 export class AppComponent implements OnInit {
     isLoginPage = false;
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
                 private route: ActivatedRoute,
                 private auth: AuthService,
                 private config: ConfigService,
+                private socket: SocketService,
                 private appConfig : AppConfigService,
                 private titleService: Title) {}
 
@@ -44,7 +45,6 @@ export class AppComponent implements OnInit {
                     this.auth.checkSession().subscribe(
                         data => {},
                         error => {
-                            console.log(error.status)
                             console.error('The session "' + this.session_id + '" is invalid');
                             this.logout();
                         });
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
             this.logo = {
                 src : data['logo'],
                 alt : data['name']
-            }
+            };
             this.titleService.setTitle(data['name'])
         })
     }
@@ -93,7 +93,7 @@ export class AppComponent implements OnInit {
 
     private logout() {
         localStorage.removeItem('user');
-        localStorage.removeItem('session');
+        localStorage.removeItem('session_id');
         this.user = { user : {username : ''}};
         this.router.navigate(['/login']);
     }

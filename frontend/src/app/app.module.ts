@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http, Request, XHRBackend, RequestOptions} from '@angular/http';
-import { RouterModule, Routes, Router } from '@angular/router';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,7 +13,7 @@ import { LogoutComponent } from './components/';
 import { SetupComponent } from './components/';
 import { NullComponent } from './components/';
 
-import { AuthGuard, HttpInterceptor } from './utils';
+import { AuthGuard, RequestInterceptorService } from './utils';
 import { SafePipe, SafePipeModule } from 'app/utils/safe.pipe';
 
 import { AppConfigService } from 'app/services/app-config.service';
@@ -50,13 +50,6 @@ const appRoutes: Routes = [
     }
 ];
 
-export function httpFactory(xhrBackend: XHRBackend,
-                            requestOptions: RequestOptions,
-                            router: Router,
-                            appconfig: AppConfigService): HttpInterceptor {
-    return new HttpInterceptor(xhrBackend, requestOptions, router, appconfig);
-}
-
 /**
   * Initialization class for the whole application
   */
@@ -74,19 +67,20 @@ export function httpFactory(xhrBackend: XHRBackend,
     SafePipeModule,
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
+    {
+        provide : HTTP_INTERCEPTORS,
+        useClass: RequestInterceptorService,
+        multi: true,
+    },
     AuthGuard,
     SafePipe,
     AppConfigService,
-    {
-        provide : Http,
-        useFactory: (httpFactory),
-        deps: [XHRBackend, RequestOptions, Router, AppConfigService]
-    }
+
   ],
   bootstrap: [AppComponent]
 })

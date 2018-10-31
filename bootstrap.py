@@ -77,8 +77,10 @@ def mergeNgcDeps(base, module):
     items = ['assets', 'styles', 'scripts']
 
     for item in items:
-        # NOTE: lgui is just a single app, so it's always on index 0
-        Unify.arrays(base['apps'][0][item], module['apps'][0][item])
+        try:
+            Unify.arrays(base['projects']['liberouter-gui']['architect']['build']['options'][item], module['projects']['liberouter-gui']['architect']['build']['options'][item])
+        except KeyError:
+            pass
 
 def mergePipDeps(base, module, modulename):
     """
@@ -115,7 +117,7 @@ def loadBaseDeps():
     """
     deps = [None, None, None]
     deps[Deps.NPM] = loadJSON(os.path.join(BASE_PATH, 'frontend/package.base.json'))
-    deps[Deps.NGC] = loadJSON(os.path.join(BASE_PATH, 'frontend/.angular-cli.base.json'))
+    deps[Deps.NGC] = loadJSON(os.path.join(BASE_PATH, 'frontend/angular.base.json'))
     deps[Deps.PIP] = loadReqs(os.path.join(BASE_PATH, 'backend/requirements.base.txt'))
     return deps
 
@@ -295,7 +297,7 @@ def saveDependencies(deps):
     with open(os.path.join(BASE_PATH, 'frontend/package.json'), 'w') as fh:
         json.dump(deps[Deps.NPM], fh, indent = 4)
 
-    with open(os.path.join(BASE_PATH, 'frontend/.angular-cli.json'), 'w') as fh:
+    with open(os.path.join(BASE_PATH, 'frontend/angular.json'), 'w') as fh:
         json.dump(deps[Deps.NGC], fh, indent = 4)
 
     with open(os.path.join(BASE_PATH, 'backend/requirements.txt'), 'w') as fh:
@@ -347,7 +349,7 @@ def applicationConfig(modules):
             log.error('Missing key "name" in modules/app.config.json')
             raise KeyError('missing "name" in app.config.json')
 
-        colors = loadColors(os.path.join(BASE_PATH, 'frontend/src/styles/_colors_template.scss'))
+        colors = loadColors(os.path.join(BASE_PATH, 'frontend/src/styles/_colors_defaults.scss'))
         if 'colorTheme' in config:
             for newColor in config['colorTheme']:
                 colors['$' + newColor] = config['colorTheme'][newColor]

@@ -103,7 +103,7 @@ def edit_user(user_id):
     user = User.from_dict(request.get_json())
     user.id = user_id
 
-    session_id = request.headers.get('Authorization', None)
+    session_id = request.headers.get('lgui-Authorization', None)
     session = auth.lookup(session_id)
 
     if session["user"].role != Role.admin:
