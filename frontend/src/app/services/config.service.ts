@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { throwError } from 'rxjs';
 import { environment } from 'environments/environment';
+import { catchError } from "rxjs/operators";
 
 @Injectable()
 export class ConfigService {
@@ -10,7 +11,8 @@ export class ConfigService {
     private config: Object = null;
     private baseUrl = '/configuration';
 
-    constructor(protected http: HttpClient) {}
+    constructor(protected http: HttpClient) {
+    }
 
     /**
      * Load configuration of modules from the database.
@@ -22,41 +24,55 @@ export class ConfigService {
     public load() {
         return new Promise((resolve, reject) => {
             this.http.get(this.baseUrl)
-                .catch((error: any): any => {
-                    console.log(`Configuration could not be read`);
-                    reject(true);
-                    return throwError(error.json().error || 'Server error');
-                })
+                .pipe(
+                    catchError(ConfigService.handleLoadErr)
+                );
         });
     }
 
     public getModule(name: string) {
         return this.http.get<any>(this.baseUrl + '/' + name)
-            .catch(ConfigService.handleError);
+            .pipe(
+                catchError(ConfigService.handleError)
+            );
     }
 
     public get() {
         return this.http.get(this.baseUrl)
-            .catch(ConfigService.handleError);
+            .pipe(
+                catchError(ConfigService.handleError)
+            );
     }
 
     public update(name: string, data: Object) {
         console.log(data);
         return this.http.put(this.baseUrl + '/' + name, data)
-            .catch(ConfigService.handleError);
+            .pipe(
+                catchError(ConfigService.handleError)
+            );
     }
 
     public add(data: Object) {
         return this.http.post(this.baseUrl, data)
-            .catch(ConfigService.handleError);
+            .pipe(
+                catchError(ConfigService.handleError)
+            );
     }
 
     public remove(name: string) {
         return this.http.delete(this.baseUrl + '/' + name)
-            .catch(ConfigService.handleError);
+            .pipe(
+                catchError(ConfigService.handleError)
+            );
     }
 
     private static handleError(err: Response | any) {
         return Promise.reject(err);
+    }
+
+    private static handleLoadErr(err: Response | any) {
+        console.log(`Configuration could not be read`);
+        //reject(true);
+        return throwError(err.json().error || 'Server error');
     }
 }

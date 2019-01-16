@@ -43,8 +43,10 @@ export class AuthService {
     }
 
     admin(user: object) {
-        return this.http.post<object>('/setup', user)
-            .catch(this.handleError);
+        return this.http.post<object>('/setup', user).
+            pipe(
+                catchError(this.handleError)
+            )
     }
 
     checkSetup() {
