@@ -21,6 +21,7 @@ import {
     HttpErrorResponse, HttpEvent, HttpProgressEvent,
     HttpHeaders
 } from "@angular/common/http";
+import { catchError } from "rxjs/operators";
 
 import { Router } from "@angular/router";
 import { AppConfigService } from "../services/app-config.service";
@@ -58,22 +59,22 @@ export class RequestInterceptorService implements HttpInterceptor {
      */
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.addHeaders(request))
-            .catch(error => {
-                if (error instanceof HttpErrorResponse) {
-                    switch((<HttpErrorResponse>error).status) {
-                        case 401:
-                            this.handle401Error(error);
-                            break;
-                        case 442:
-                            this.handle442Error(error);
-                            break;
+            .pipe(
+                catchError(error => {
+                    if (error instanceof HttpErrorResponse) {
+                        switch((<HttpErrorResponse>error).status) {
+                            case 401:
+                                this.handle401Error(error);
+                                break;
+                            case 442:
+                                this.handle442Error(error);
+                                break;
 
+                        }
                     }
-                }
-
-                return throwError(error);
-
-            });
+                    return throwError(error);}
+                    )
+        );
     }
 
     /**
