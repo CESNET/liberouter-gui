@@ -31,6 +31,7 @@ const routes: Routes = [{
         NgbModule,
     ],
     declarations: [
+	    ExampleComponent
     ],
     providers: [
         SafePipe
