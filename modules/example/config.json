@@ -1,12 +1,11 @@
 {
     "dependencies": {
         "npm": "frontend/package.json",
-        "ngc": "frontend/.angular-cli.json",
         "pip": "backend/requirements.txt"
     },
     "module": {
         "class": "ExampleModule",
-        "file": "frontend/example.module.ts",
+        "file": "example.module.ts",
         "frontend": "frontend/",
         "backend": "backend/",
         "name" : "example"
