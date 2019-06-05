@@ -29,7 +29,7 @@ before_install:
 
 before_script:
     - python3 bootstrap.py
-    - npm install @angular/cli -g
+    - npm install @angular/cli@^6.0.0 -g
 
 script:
     # Frontend build procedure
