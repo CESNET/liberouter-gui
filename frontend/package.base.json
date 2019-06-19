@@ -5,8 +5,8 @@
     "angular-cli": {},
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
-        "build": "ng build",
+        "start": "ng serve --proxy-config proxy.json",
+        "build": "ng build --prod --aot=false --build-optimizer=false",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"
